@@ -16,7 +16,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		
 		ob_start();
 		
-		?><a class="<?= $class; ?>" rel="<?= $rel; ?>" <?= (!empty($onclick)) ? 'onclick="' . $onclick . '"' : ''; ?> href="<?= $href; ?>" target="<?= $target; ?>" title="<?= $title; ?>"><?= $name; ?></a><?php
+		?><a class="<?php echo $class; ?>" rel="<?php echo $rel; ?>" <?php echo (!empty($onclick)) ? 'onclick="' . $onclick . '"' : ''; ?> href="<?php echo $href; ?>" target="<?php echo $target; ?>" title="<?php echo $title; ?>"><?php echo $name; ?></a><?php
 		
 		$link = ob_get_clean();
 		return $link;

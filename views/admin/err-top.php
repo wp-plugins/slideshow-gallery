@@ -1,5 +1,5 @@
 <?php if (!empty($message)) : ?>
 	<div class="error fade">
-		<p><?= $message; ?></p>
+		<p><?php echo $message; ?></p>
 	</div>
 <?php endif; ?>

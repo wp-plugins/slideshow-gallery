@@ -1,21 +1,42 @@
 <?php if (!empty($slides)) : ?>
 	<ul id="slideshow" style="display:none;">
-		<?php foreach ($slides as $slide) : ?>		
-			<li>
-				<h3><?= $slide -> title; ?></h3>
-				<span><?= get_option('siteurl'); ?>/wp-content/uploads/<?= $this -> plugin_name; ?>/<?= basename($slide -> image_url); ?></span>
-				<p><?= $slide -> description; ?></p>
-				<?php if ($this -> get_option('thumbnails') == "Y") : ?>
-					<?php if (!empty($slide -> link)) : ?>
-						<a href="<?= $slide -> link; ?>" title="<?= $slide -> title; ?>"><img src="<?= $this -> Html -> image_url($this -> Html -> thumbname(basename($slide -> image_url))); ?>" alt="<?= $this -> Html -> sanitize($slide -> title); ?>" /></a>
+		<?php if ($frompost) : ?>
+			<?php foreach ($slides as $slide) : ?>
+				<li>
+					<h3><?php echo $slide -> post_title; ?></h3>
+					<?php $full_image_href = wp_get_attachment_image_src($slide -> ID, 'full', false); ?>
+					<span><?php echo $full_image_href[0]; ?></span>
+					<p><?php echo $slide -> post_content; ?></p>
+					<?php $thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false); ?>
+					<?php if ($this -> get_option('thumbnails') == "Y") : ?>
+						<?php if (!empty($slide -> guid)) : ?>
+							<a href="<?php echo $slide -> guid; ?>" title="<?php echo $slide -> post_title; ?>"><img style="height:75px;" src="<?php echo $thumbnail_link[0]; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
+						<?php else : ?>
+							<img style="height:75px;" src="<?php echo $thumbnail_link[0]; ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" />
+						<?php endif; ?>
 					<?php else : ?>
-						<img src="<?= $this -> Html -> image_url($this -> Html -> thumbname(basename($slide -> image_url))); ?>" alt="<?= $this -> Html -> sanitize($slide -> title); ?>" />
+						<a href="<?php echo $slide -> guid; ?>" title="<?php echo $slide -> post_title; ?>"></a>
 					<?php endif; ?>
-				<?php else : ?>
-					<a href="<?= $slide -> link; ?>" title="<?= $slide -> title; ?>"></a>
-				<?php endif; ?>
-			</li>
-		<?php endforeach; ?>
+				</li>
+			<?php endforeach; ?>
+		<?php else : ?>
+			<?php foreach ($slides as $slide) : ?>		
+				<li>
+					<h3><?php echo $slide -> title; ?></h3>
+					<span><?php echo get_bloginfo('wpurl'); ?>/wp-content/uploads/<?php echo $this -> plugin_name; ?>/<?php echo basename($slide -> image_url); ?></span>
+					<p><?php echo $slide -> description; ?></p>
+					<?php if ($this -> get_option('thumbnails') == "Y") : ?>
+						<?php if (!empty($slide -> link)) : ?>
+							<a href="<?php echo $slide -> link; ?>" title="<?php echo $slide -> title; ?>"><img style="height:75px;" src="<?php echo $this -> Html -> image_url($this -> Html -> thumbname(basename($slide -> image_url))); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+						<?php else : ?>
+							<img style="height:75px;" src="<?php echo $this -> Html -> image_url($this -> Html -> thumbname(basename($slide -> image_url))); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" />
+						<?php endif; ?>
+					<?php else : ?>
+						<a href="<?php echo $slide -> link; ?>" title="<?php echo $slide -> title; ?>"></a>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		<?php endif; ?>
 	</ul>
 	
 	<div id="wrapper">
@@ -62,23 +83,23 @@
 	
 	var slideshow = new TINY.slideshow("slideshow");
 	
-	jQuery(document).ready(function() {
+	jQuery(document).ready(function() {	
 		<?php if ($this -> get_option('autoslide')) : ?>slideshow.auto = true;<?php else : ?>slideshow.auto = false;<?php endif; ?>
-		slideshow.speed = <?= $this -> get_option('autospeed'); ?>;
-		slideshow.imgSpeed = <?= $this -> get_option('fadespeed'); ?>;
-		slideshow.navOpacity = <?= $this -> get_option('navopacity'); ?>;
-		slideshow.navHover = <?= $this -> get_option('navhover'); ?>;
+		slideshow.speed = <?php echo $this -> get_option('autospeed'); ?>;
+		slideshow.imgSpeed = <?php echo $this -> get_option('fadespeed'); ?>;
+		slideshow.navOpacity = <?php echo $this -> get_option('navopacity'); ?>;
+		slideshow.navHover = <?php echo $this -> get_option('navhover'); ?>;
 		slideshow.letterbox = "#000000";
 		slideshow.link = "linkhover";
-		slideshow.info = "<?= ($this -> get_option('information') == "Y") ? 'information' : ''; ?>";
-		slideshow.infoSpeed = <?= $this -> get_option('infospeed'); ?>;
-		slideshow.thumbs = "<?= ($this -> get_option('thumbnails') == "Y") ? 'slider' : ''; ?>";
-		slideshow.thumbOpacity = <?= $this -> get_option('thumbopacity'); ?>;
+		slideshow.info = "<?php echo ($this -> get_option('information') == "Y") ? 'information' : ''; ?>";
+		slideshow.infoSpeed = <?php echo $this -> get_option('infospeed'); ?>;
+		slideshow.thumbs = "<?php echo ($this -> get_option('thumbnails') == "Y") ? 'slider' : ''; ?>";
+		slideshow.thumbOpacity = <?php echo $this -> get_option('thumbopacity'); ?>;
 		slideshow.left = "slideleft";
 		slideshow.right = "slideright";
-		slideshow.scrollSpeed = <?= $this -> get_option('thumbscrollspeed'); ?>;
-		slideshow.spacing = <?= $this -> get_option('thumbspacing'); ?>;
-		slideshow.active = "<?= $this -> get_option('thumbactive'); ?>";
+		slideshow.scrollSpeed = <?php echo $this -> get_option('thumbscrollspeed'); ?>;
+		slideshow.spacing = <?php echo $this -> get_option('thumbspacing'); ?>;
+		slideshow.active = "<?php echo $this -> get_option('thumbactive'); ?>";
 		slideshow.init("slideshow","image","imgprev","imgnext","imglink");
 	});
 	</script>

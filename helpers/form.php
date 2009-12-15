@@ -14,7 +14,7 @@ class GalleryFormHelper extends GalleryPlugin {
 		
 		ob_start();
 		
-		?><input type="hidden" name="<?= $this -> Html -> field_name($name); ?>" value="<?= $value; ?>" id="<?= $name; ?>" /><?php
+		?><input type="hidden" name="<?php echo $this -> Html -> field_name($name); ?>" value="<?php echo $value; ?>" id="<?php echo $name; ?>" /><?php
 		
 		$hidden = ob_get_clean();
 		return $hidden;
@@ -38,7 +38,7 @@ class GalleryFormHelper extends GalleryPlugin {
 		
 		ob_start();
 		
-		?><input class="<?= $class; ?>" type="text" autocomplete="<?= $autocomplete; ?>" style="width:<?= $width; ?>" name="<?= $this -> Html -> field_name($name); ?>" value="<?= $value; ?>" id="<?= $id; ?>" /><?php
+		?><input class="<?php echo $class; ?>" type="text" autocomplete="<?php echo $autocomplete; ?>" style="width:<?php echo $width; ?>" name="<?php echo $this -> Html -> field_name($name); ?>" value="<?php echo $value; ?>" id="<?php echo $id; ?>" /><?php
 		
 		if ($error == true) {
 			echo $this -> Html -> field_error($name);
@@ -62,7 +62,7 @@ class GalleryFormHelper extends GalleryPlugin {
 		
 		ob_start();
 		
-		?><textarea class="<?= $class; ?>" name="<?= $this -> Html -> field_name($name); ?>" rows="<?= $rows; ?>" style="width:<?= $width; ?>;" cols="<?= $cols; ?>" id="<?= $name; ?>"><?= $this -> Html -> field_value($name); ?></textarea><?php
+		?><textarea class="<?php echo $class; ?>" name="<?php echo $this -> Html -> field_name($name); ?>" rows="<?php echo $rows; ?>" style="width:<?php echo $width; ?>;" cols="<?php echo $cols; ?>" id="<?php echo $name; ?>"><?php echo $this -> Html -> field_value($name); ?></textarea><?php
 		
 		if ($error == true) {
 			echo $this -> Html -> field_error($name);
@@ -79,7 +79,7 @@ class GalleryFormHelper extends GalleryPlugin {
 		
 		ob_start();
 		
-		?><input class="<?= $class; ?>" type="submit" name="<?= $this -> Html -> sanitize($name); ?>" value="<?= $name; ?>" /><?php
+		?><input class="<?php echo $class; ?>" type="submit" name="<?php echo $this -> Html -> sanitize($name); ?>" value="<?php echo $name; ?>" /><?php
 		
 		$submit = ob_get_clean();
 		return $submit;

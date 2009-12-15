@@ -2,9 +2,8 @@
 
 class GalleryPlugin {
 
-	//the plugin internal name
+	var $version = '1.0.3';
 	var $plugin_name;
-	//the plugin absolute path
 	var $plugin_base;
 	var $pre = 'Gallery';
 	var $debugging = true;
@@ -14,13 +13,23 @@ class GalleryPlugin {
 
 	function register_plugin($name, $base) {
 		$this -> plugin_name = $name;
-		$this -> plugin_base = rtrim(dirname($base), '/');
+		$this -> plugin_base = rtrim(dirname($base), DS);
 		
 		$this -> enqueue_scripts();
 		$this -> enqueue_styles();
 		
 		$this -> initialize_classes();
 		$this -> initialize_options();
+		
+		if (function_exists('load_plugin_textdomain')) {
+			$currentlocale = get_locale();
+			if(!empty($currentlocale)) {
+				$moFile = dirname(__FILE__) . DS . "languages" . DS . $this -> plugin_name . "-" . $currentlocale . ".mo";				
+				if(@file_exists($moFile) && is_readable($moFile)) {
+					load_textdomain($this -> plugin_name, $moFile);
+				}
+			}
+		}
 		
 		return true;
 	}
@@ -44,7 +53,7 @@ class GalleryPlugin {
 	function initialize_classes() {
 		if (!empty($this -> helpers)) {
 			foreach ($this -> helpers as $helper) {
-				$hfile = dirname(__FILE__) . '/helpers/' . strtolower($helper) . '.php';
+				$hfile = dirname(__FILE__) . DS . 'helpers' . DS . strtolower($helper) . '.php';
 				
 				if (file_exists($hfile)) {
 					require_once($hfile);
@@ -52,7 +61,7 @@ class GalleryPlugin {
 					if (!is_object($this -> {$helper})) {
 						$classname = $this -> pre . $helper . 'Helper';
 						
-						if (class_exists($classname, true)) {
+						if (class_exists($classname)) {
 							$this -> {$helper} = new $classname;
 						}
 					}
@@ -62,7 +71,7 @@ class GalleryPlugin {
 	
 		if (!empty($this -> models)) {
 			foreach ($this -> models as $model) {
-				$mfile = dirname(__FILE__) . '/models/' . strtolower($model) . '.php';
+				$mfile = dirname(__FILE__) . DS . 'models' . DS . strtolower($model) . '.php';
 				
 				if (file_exists($mfile)) {
 					require_once($mfile);
@@ -70,7 +79,7 @@ class GalleryPlugin {
 					if (!is_object($this -> {$model})) {
 						$classname = $this -> pre . $model;
 						
-						if (class_exists($classname, true)) {
+						if (class_exists($classname)) {
 							$this -> {$model} = new $classname;
 						}
 					}
@@ -87,6 +96,7 @@ class GalleryPlugin {
 			'background'		=>	"#000000",
 			'infobackground'	=>	"#000000",
 			'infocolor'			=>	"#FFFFFF",
+			'resizeimages'		=>	"Y",
 		);
 		
 		$this -> add_option('styles', $styles);
@@ -131,7 +141,7 @@ class GalleryPlugin {
 		?>
 		
 		<script type="text/javascript">
-		window.location = '<?= (empty($url)) ? get_option('home') : $url; ?>';
+		window.location = '<?php echo (empty($url)) ? get_option('home') : $url; ?>';
 		</script>
 		
 		<?php
@@ -176,7 +186,7 @@ class GalleryPlugin {
 	function vendor($name = '', $folder = '') {
 		if (!empty($name)) {
 			$filename = 'class.' . strtolower($name) . '.php';
-			$filepath = rtrim(dirname(__FILE__), '/') . '/vendors/' . $folder . '';
+			$filepath = rtrim(dirname(__FILE__), DS) . DS . 'vendors' . DS . $folder . '';
 			$filefull = $filepath . $filename;
 		
 			if (file_exists($filefull)) {
@@ -193,7 +203,7 @@ class GalleryPlugin {
 	}
 	
 	function check_uploaddir() {
-		$uploaddir = ABSPATH . 'wp-content/uploads/' . $this -> plugin_name . '/';
+		$uploaddir = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
 		
 		if (!file_exists($uploaddir)) {
 			if (@mkdir($uploaddir, 0777)) {
@@ -253,9 +263,12 @@ class GalleryPlugin {
 		return true;
 	}
 	
+	function plugin_base() {
+		return rtrim(dirname(__FILE__), '/');
+	}
+	
 	function url() {
-		$url = get_option('siteurl') . substr($this -> plugin_base, strlen(realpath(ABSPATH)));		
-		return $url;
+		return rtrim(get_bloginfo('wpurl'), '/') . '/' . substr(preg_replace("/\\" . DS . "/si", "/", $this -> plugin_base()), strlen(ABSPATH));
 	}
 	
 	function add_option($name = '', $value = '') {
@@ -338,7 +351,7 @@ class GalleryPlugin {
 				}
 				
 				if (!empty($this -> table_query)) {				
-					require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
+					require_once(ABSPATH . 'wp-admin' . DS . 'upgrade-functions.php');
 					dbDelta($this -> table_query, true);
 				}
 			}
@@ -433,13 +446,10 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function render($file = '', $params = array(), $output = true, $folder = 'admin') {
-		//the absolute path to the plugin base
-		$this -> plugin_base = rtrim(dirname(__FILE__), '/');
-	
+	function render($file = '', $params = array(), $output = true, $folder = 'admin') {	
 		if (!empty($file)) {
 			$filename = $file . '.php';
-			$filepath = $this -> plugin_base . '/views/' . $folder . '/';
+			$filepath = $this -> plugin_base() . DS . 'views' . DS . $folder . DS;
 			$filefull = $filepath . $filename;
 		
 			if (file_exists($filefull)) {

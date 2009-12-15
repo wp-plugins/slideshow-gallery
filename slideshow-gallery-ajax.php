@@ -1,7 +1,8 @@
 <?php
 
+define('DS', DIRECTORY_SEPARATOR);
 include_once('../../../wp-config.php');
-include_once(ABSPATH . 'wp-admin/admin-functions.php');
+include_once(ABSPATH . 'wp-admin' . DS . 'admin-functions.php');
 
 class GalleryAjax extends GalleryPlugin {
 

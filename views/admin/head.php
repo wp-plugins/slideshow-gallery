@@ -1,3 +1,3 @@
 <script type="text/javascript">
-var GalleryAjax = "<?= $this -> url(); ?>/<?= $this -> plugin_name; ?>-ajax.php";
+var GalleryAjax = "<?php echo $this -> url(); ?>/<?php echo $this -> plugin_name; ?>-ajax.php";
 </script>

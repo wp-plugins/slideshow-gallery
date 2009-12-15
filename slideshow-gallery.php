@@ -5,12 +5,12 @@ Plugin Name: Slideshow Gallery
 Plugin URI: http://wpgallery.tribulant.net
 Author: Antonie Potgieter
 Author URI: http://tribulant.com
-Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content. To hardcode into your theme, simply use <code>&lt;?php $Gallery -> slideshow(); ?&gt;</code>.
-Version: 1.0
+Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); } ?&gt;</code> and specify the required <code>$post_id</code> parameter accordingly.
+Version: 1.0.3
 */
 
-//include the GalleryPlugin class file
-require_once(dirname(__FILE__) . '/slideshow-gallery-plugin.php');
+define('DS', DIRECTORY_SEPARATOR);
+require_once(dirname(__FILE__) . DS . 'slideshow-gallery-plugin.php');
 
 class Gallery extends GalleryPlugin {
 	
@@ -30,6 +30,7 @@ class Gallery extends GalleryPlugin {
 	
 	function admin_menu() {
 		add_menu_page(__('Slideshow', $this -> plugin_name), __('Slideshow', $this -> plugin_name), 10, basename(__FILE__), array($this, 'admin_slides'), $this -> url() . '/images/icon.png');
+		add_submenu_page(basename(__FILE__), __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 10, $this -> plugin_name . '.php', array($this, 'admin_slides'));
 		add_submenu_page(basename(__FILE__), __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 10, $this -> plugin_name . '-settings', array($this, 'admin_settings'));
 	}
 	
@@ -46,25 +47,40 @@ class Gallery extends GalleryPlugin {
 		}
 	}
 	
-	function slideshow($output = true) {
-		if ($slides = $this -> Slide -> find_all(null, null, array('order', "ASC"))) {
-			if ($output) {
-				$this -> render('gallery', array('slides' => $slides), true, 'default');
-			} else {
-				$content = $this -> render('gallery', array('slides' => $slides), false, 'default');
-				return $content;
+	function slideshow($output = true, $post_id = null) {		
+		global $wpdb;
+		
+		if (!empty($post_id) && $post = get_post($post_id)) {
+			if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
+				$content = $this -> render('gallery', array('slides' => $attachments, 'frompost' => true), false, 'default');
 			}
+		} else {
+			$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
+			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
 		}
 		
-		return false;
+		if ($output) { echo $content; } else { return $content; }
 	}
 	
-	function embed($atts = array()) {
-		$defaults = array();
+	function embed($atts = array(), $content = null) {
+		//global variables
+		global $wpdb;
+	
+		$defaults = array('post_id' => null, 'custom' => null);		
 		extract(shortcode_atts($defaults, $atts));
 		
-		if ($slides = $this -> Slide -> find_all(null, null, array('order', "ASC"))) {
-			$content = $this -> render('gallery', array('slides' => $slides), false, 'default');
+		if (!empty($custom)) {
+			$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
+			$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
+		} else {
+			global $post;
+			$pid = (empty($post_id)) ? $post -> ID : $post_id;
+		
+			if (!empty($pid) && $post = get_post($pid)) {
+				if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
+					$content = $this -> render('gallery', array('slides' => $attachments, 'frompost' => true), false, 'default');
+				}
+			}
 		}
 		
 		return $content;
@@ -78,21 +94,19 @@ class Gallery extends GalleryPlugin {
 						$message = __('Slide has been saved', $this -> plugin_name);
 						$this -> redirect($this -> url, "message", $message);
 					} else {
-						$this -> render('slides/save', false, true, 'admin');
+						$this -> render('slides' . DS . 'save', false, true, 'admin');
 					}
 				} else {
 					$this -> Db -> model = $this -> Slide -> model;
 					$this -> Slide -> find(array('id' => $_GET['id']));
-					$this -> render('slides/save', false, true, 'admin');
+					$this -> render('slides' . DS . 'save', false, true, 'admin');
 				}
 				break;
 			case 'mass'				:
 				if (!empty($_POST['action'])) {
 					if (!empty($_POST['Slide']['checklist'])) {						
 						switch ($_POST['action']) {
-							case 'delete'				:
-								$this -> debug($_POST);
-							
+							case 'delete'				:							
 								foreach ($_POST['Slide']['checklist'] as $slide_id) {
 									$this -> Slide -> delete($slide_id);
 								}
@@ -112,11 +126,11 @@ class Gallery extends GalleryPlugin {
 				break;
 			case 'order'			:
 				$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
-				$this -> render('slides/order', array('slides' => $slides), true, 'admin');
+				$this -> render('slides' . DS . 'order', array('slides' => $slides), true, 'admin');
 				break;
 			default					:
 				$data = $this -> paginate('Slide');				
-				$this -> render('slides/index', array('slides' => $data[$this -> Slide -> model], 'paginate' => $data['Paginate']), true, 'admin');
+				$this -> render('slides' . DS . 'index', array('slides' => $data[$this -> Slide -> model], 'paginate' => $data['Paginate']), true, 'admin');
 				break;
 		}
 	}
