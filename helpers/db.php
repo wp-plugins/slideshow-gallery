@@ -132,11 +132,17 @@ class GalleryDbHelper extends GalleryPlugin {
 			switch ($this -> model) {
 				case 'Slide'				:
 					$this -> data -> image = basename($this -> data -> image_url);
+					
+					if (empty($this -> data -> uselink) || $this -> data -> uselink == "N") {
+						$this -> data -> link = "";
+					}
 					break;
 			}
 			
 			//the MySQL query
 			$query = (empty($this -> data -> id)) ? $this -> insert_query($this -> model) : $this -> update_query($this -> model);			
+			echo $query;
+			//return false;
 			
 			if ($wpdb -> query($query)) {
 				$this -> insertid = $insertid = (empty($this -> data -> id)) ? $wpdb -> insert_id : $this -> data -> id;				

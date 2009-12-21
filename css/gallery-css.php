@@ -9,12 +9,12 @@
 #slideshow span { display:none; }
 #wrapper { width:<?php echo ((int) $styles['width'] - 6); ?>px; background:<?php echo $styles['background']; ?>; padding:2px; border:<?php echo $styles['border']; ?>; margin:25px auto; display:none; }
 #wrapper * { margin:0; padding:0; }
-#fullsize { position:relative; overflow:hidden; width:<?php echo ((int) $styles['width'] - 6); ?>px; height:<?php echo $styles['height']; ?>px; }
+#fullsize { position:relative; z-index:1; overflow:hidden; width:<?php echo ((int) $styles['width'] - 6); ?>px; height:<?php echo $styles['height']; ?>px; }
 #information { position:absolute; bottom:0; width:<?php echo ((int) $styles['width'] - 6); ?>px; height:0; background:<?php echo $styles['infobackground']; ?>; color:<?php echo $styles['infocolor']; ?>; overflow:hidden; z-index:200; opacity:.7; filter:alpha(opacity=70); }
 #information h3 { color:<?php echo $styles['infocolor']; ?>; padding:4px 8px 3px; font-size:14px; }
 #information p { color:<?php echo $styles['infocolor']; ?>; padding:0 8px 8px; }
 #image { width:<?php echo ((int) $styles['width'] - 6); ?>px; }
-<?php if (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y") : ?>#image img { position:absolute; border:none; width:<?php echo ((int) $styles['width'] - 6); ?>px; }<?php else : ?>#image img { position:absolute; border:none; width:auto; }<?php endif; ?> 
+<?php if (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y") : ?>#image img { position:absolute; border:none; width:<?php echo ((int) $styles['width'] - 6); ?>px; height:auto; }<?php else : ?>#image img { position:absolute; border:none; width:auto; }<?php endif; ?> 
 .imgnav { position:absolute; width:25%; height:<?php echo ((int) $styles['height'] + 6); ?>px; cursor:pointer; z-index:150; }
 #imgprev { left:0; background:url('../images/left.gif') left center no-repeat; }
 #imgnext { right:0; background:url('../images/right.gif') right center no-repeat; }

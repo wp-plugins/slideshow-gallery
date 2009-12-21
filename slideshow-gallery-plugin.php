@@ -2,11 +2,11 @@
 
 class GalleryPlugin {
 
-	var $version = '1.0.3';
+	var $version = '1.0.4';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
-	var $debugging = true;
+	var $debugging = false;
 	
 	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
 	var $models = array('Slide');
@@ -226,24 +226,36 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function enqueue_scripts() {
+	function enqueue_scripts() {	
 		wp_enqueue_script('jquery');
-		wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/gallery.js', null, "1.0");
 		
 		if (is_admin()) {
+			require_once(ABSPATH . 'wp-admin' . DS . 'admin.php');
+		
 			if (!empty($_GET['page'])) {
-				if ($_GET['page'] == "slideshow-gallery-settings" || ($_GET['page'] == $this -> plugin_name . ".php" && $_GET['method'] == "order")) {				
+				if ($_GET['page'] == "slideshow-gallery-settings" || ($_GET['page'] == $this -> plugin_name . ".php" && $_GET['method'] == "order")) {
+					wp_enqueue_script('utils');
+					wp_enqueue_script('autosave');
+					wp_enqueue_script('editor');
+					wp_enqueue_script('media-upload');
+					wp_enqueue_script('word-count');
 					wp_enqueue_script('suggest');
+					wp_enqueue_script('jquery-ui-core');
 					wp_enqueue_script('jquery-ui-tabs');
 					wp_enqueue_script('wp-lists');
 					wp_enqueue_script('jquery-ui-sortable');
+					wp_enqueue_script('jquery-ui-draggable');
+					wp_enqueue_script('jquery-ui-droppable');
 					wp_enqueue_script('postbox');
 					wp_enqueue_script('post');
+					wp_enqueue_script('admin-widgets');
 				}
 			}
 		
 			wp_enqueue_script($this -> plugin_name . 'admin', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/admin.js', null, '1.0');
 			add_thickbox();
+		} else {
+			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/gallery.js', null, "1.0");
 		}
 		
 		return true;

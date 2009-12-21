@@ -3,8 +3,8 @@ Contributors: Antonie Potgieter
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 2.8
-Tested up to: 2.9 beta 2
-Stable tag: 1.0.3
+Tested up to: 2.9
+Stable tag: 1.0.4
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -53,3 +53,7 @@ Yes, you can
 * IMPROVED: Plugin doesn't utilize PHP short open tags anymore.
 * COMPATIBILITY: Removed `autoLoad` (introduced in PHP 5) parameter from `class_exists` function for PHP 4 compatibility.
 * IMPROVED: Directory separator constant DS from DIRECTORY_SEPARATOR.
+
+= 1.0.4 =
+* COMPATIBILITY: WordPress 2.9
+* FIXED: #fullsize z-index to keep below other elements such as drop down menus.

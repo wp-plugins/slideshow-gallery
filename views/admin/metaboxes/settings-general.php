@@ -110,7 +110,7 @@
 			<tr>
 				<th><label for="thumbscrollspeed"><?php _e('Thumbnails Scroll Speed', $this -> plugin_name); ?></label></th>
 				<td>
-					<input style="width:45px;" name="thumbscrollspeed" value="<?php echo $this -> get_option('thumbscrollspeed'); ?>" id="thumbscrollspeed" /> <?php _e('speed', $this -> plugin_name); ?>
+					<input class="widefat" style="width:45px;" name="thumbscrollspeed" value="<?php echo $this -> get_option('thumbscrollspeed'); ?>" id="thumbscrollspeed" /> <?php _e('speed', $this -> plugin_name); ?>
 					<span class="howto"><?php _e('default:5 recommended:1-20', $this -> plugin_name); ?></span>
 				</td>
 			</tr>
