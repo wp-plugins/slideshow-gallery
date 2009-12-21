@@ -26,7 +26,7 @@
 					<span><?php echo get_bloginfo('wpurl'); ?>/wp-content/uploads/<?php echo $this -> plugin_name; ?>/<?php echo basename($slide -> image_url); ?></span>
 					<p><?php echo $slide -> description; ?></p>
 					<?php if ($this -> get_option('thumbnails') == "Y") : ?>
-						<?php if (!empty($slide -> link)) : ?>
+						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
 							<a href="<?php echo $slide -> link; ?>" title="<?php echo $slide -> title; ?>"><img style="height:75px;" src="<?php echo $this -> Html -> image_url($this -> Html -> thumbname(basename($slide -> image_url))); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
 						<?php else : ?>
 							<img style="height:75px;" src="<?php echo $this -> Html -> image_url($this -> Html -> thumbname(basename($slide -> image_url))); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" />

@@ -29,11 +29,25 @@
 					</td>
 				</tr>
 				<tr>
-					<th><label for="Slide.link"><?php _e('Link To', $this -> plugin_name); ?></label></th>
-					<td><input class="widefat" type="text" name="Slide[link]" value="<?php echo esc_attr($this -> Slide -> data -> link); ?>" id="Slide.link" /></td>
+					<th><label for=""><?php _e('Use Link', $this -> plugin_name); ?></label></th>
+					<td>
+						<label><input onclick="jQuery('#Slide_uselink_div').show();" <?php echo ($this -> Slide -> data -> uselink == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[uselink]" value="Y" id="Slide_uselink_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
+						<label><input onclick="jQuery('#Slide_uselink_div').hide();" <?php echo (empty($this -> Slide -> data -> uselink) || $this -> Slide -> data -> uselink == "N") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[uselink]" value="N" id="Slide_uselink_N" /> <?php _e('No', $this -> plugin_name); ?></label>
+					</td>
 				</tr>
 			</tbody>
 		</table>
+		
+		<div id="Slide_uselink_div" style="display:<?php echo ($this -> Slide -> data -> uselink == "Y") ? 'block' : 'none'; ?>;">
+			<table class="form-table">
+				<tbody>
+					<tr>
+						<th><label for="Slide.link"><?php _e('Link To', $this -> plugin_name); ?></label></th>
+						<td><input class="widefat" type="text" name="Slide[link]" value="<?php echo esc_attr($this -> Slide -> data -> link); ?>" id="Slide.link" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		
 		<p class="submit">
 			<input class="button-primary" type="submit" name="submit" value="<?php _e('Save Slide', $this -> plugin_name); ?>" />

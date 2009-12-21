@@ -16,6 +16,7 @@ class GallerySlide extends GalleryDbHelper {
 		'description'		=>	"TEXT NOT NULL",
 		'image'				=>	"VARCHAR(50) NOT NULL DEFAULT ''",
 		'image_url'			=>	"VARCHAR(200) NOT NULL DEFAULT ''",
+		'uselink'			=>	"ENUM('Y','N') NOT NULL DEFAULT 'N'",
 		'link'				=>	"VARCHAR(200) NOT NULL DEFAULT ''",
 		'order'				=>	"INT(11) NOT NULL DEFAULT '0'",
 		'created'			=>	"DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'",
@@ -65,7 +66,7 @@ class GallerySlide extends GalleryDbHelper {
 			else {
 				if ($image = wp_remote_fopen($image_url)) {
 					$filename = basename($image_url);
-					$filepath = ABSPATH . 'wp-content/uploads/' . $this -> plugin_name . '/';
+					$filepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
 					$filefull = $filepath . $filename;
 					
 					if (!file_exists($filefull)) {

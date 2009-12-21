@@ -23,6 +23,7 @@ TINY.slideshow.prototype={
 		this.f=tid(z);
 		this.r=tid(this.info);
 		this.o=parseInt(TINY.style.val(z,'width'));
+		
 		if(this.thumbs){
 			var u=tid(this.left), r=tid(this.right);
 			u.onmouseover=new Function('TINY.scroll.init("'+this.thumbs+'",-1,'+this.scrollSpeed+')');
@@ -30,6 +31,7 @@ TINY.slideshow.prototype={
 			r.onmouseover=new Function('TINY.scroll.init("'+this.thumbs+'",1,'+this.scrollSpeed+')');
 			this.p=tid(this.thumbs)
 		}
+		
 		for(i;i<this.l;i++){
 			this.a[i]={};
 			var h=m[i], a=this.a[i];
@@ -38,7 +40,7 @@ TINY.slideshow.prototype={
 			a.l= tag('a',h)[0]? tag('a',h)[0].href:'';
 			a.p= tag('span',h)[0].innerHTML;
 			if(this.thumbs){
-				var g= tag('img',h)[0];
+				var g = tag('img',h)[0];
 				this.p.appendChild(g);
 				w+=parseInt(g.offsetWidth);
 				if(i!=this.l-1){
@@ -109,17 +111,17 @@ TINY.slideshow.prototype={
 		if(!c){
 			this.at=setTimeout(new Function(this.n+'.mv(1,0)'),this.speed*1000)
 		}
-		if(this.a[s].l!=''){
-			this.q.onclick=new Function('window.location="'+this.a[s].l+'"');
-			this.q.onmouseover=new Function('this.className="'+this.link+'"');
-			this.q.onmouseout=new Function('this.className=""');
-			this.q.style.cursor='pointer'
+		if(this.a[s].l != ""){
+			this.q.onclick = new Function('window.location="'+this.a[s].l+'"');
+			this.q.onmouseover = new Function('this.className="'+this.link+'"');
+			this.q.onmouseout = new Function('this.className=""');
+			this.q.style.cursor = 'pointer';
 		}else{
 			this.q.onclick=this.q.onmouseover=null;
-			this.q.style.cursor='default'
+			this.q.style.cursor='default';
 		}
 		var m= tag('img',this.f);
-		if(m.length>2){
+		if(m.length > 2){
 			this.f.removeChild(m[0])
 		}
 	},
@@ -157,7 +159,7 @@ TINY.height=function(){
 		},
 		tw:function(e,h,ho,hd,s){
 			var oh=e.offsetHeight-ho;
-			if(oh==h){clearInterval(e.si)}else{if(oh!=h){e.style.height=oh+(Math.ceil(Math.abs(h-oh)/s)*hd)+'px'}}
+			if(oh == h){clearInterval(e.si)}else{if(oh!=h){e.style.height=oh+(Math.ceil(Math.abs(h-oh)/s)*hd)+'px'}}
 		}
 	}
 }();
