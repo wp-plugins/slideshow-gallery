@@ -39,7 +39,7 @@
 		<?php endif; ?>
 	</ul>
 	
-	<div id="wrapper">
+	<div id="slideshow-wrapper">
 		<?php if ($this -> get_option('thumbnails') == "Y" && $this -> get_option('thumbposition') == "top") : ?>
 			<div id="thumbnails" class="thumbstop">
 				<div id="slideleft" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
@@ -79,7 +79,7 @@
 	<script type="text/javascript">
 	jQuery.noConflict();
 	tid('slideshow').style.display = "none";
-	tid('wrapper').style.display = 'block';
+	tid('slideshow-wrapper').style.display = 'block';
 	
 	var slideshow = new TINY.slideshow("slideshow");
 	

@@ -25,20 +25,21 @@ Installing the WordPress slideshow gallery plugin is very easy. Simply follow th
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Configure the settings according to your needs through the 'Slideshow' > 'Configuration' menu
 1. Add and manage your slides in the 'Slideshow' section
-1. Put `[slideshow post_id=X]` into your posts/pages or `<?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); }; ?>` into your WordPress theme
+1. Put `[slideshow post_id="X" exclude=""]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow custom=1]` to embed a slideshow with your custom added slides or `<?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); }; ?>` into your WordPress theme
 
 == Frequently Asked Questions ==
 
 = Can I display/embed multiple instances of the slideshow gallery? =
 
-Yes, you can
+Yes, you can, but only one slideshow per page.
 
 == Screenshots ==
 
-1. Slideshow gallery with thumbnails at the bottom
-2. Slideshow gallery with thumbnails turned OFF
-3. Slideshow gallery with thumbnails at the top
-4. Different styles/colors
+1. Slideshow gallery with thumbnails at the bottom.
+2. Slideshow gallery with thumbnails turned OFF.
+3. Slideshow gallery with thumbnails at the top.
+4. Different styles/colors.
+5. TinyMCE editor button to insert shortcodes.
 
 == Changelog ==
 
@@ -57,3 +58,10 @@ Yes, you can
 = 1.0.4 =
 * COMPATIBILITY: WordPress 2.9
 * FIXED: #fullsize z-index to keep below other elements such as drop down menus.
+
+= 1.0.4 =
+* IMPROVED: WordPress 2.9 sortable meta boxes.
+* FIXED: `wp_redirect()` fatal error in dashboard.
+* ADDED: TinyMCE editor button to quickly insert slideshows into posts/pages.
+* ADDED: `exclude` parameter to use in conjunction with the `post_id` parameter to exclude attachments by order.
+* CHANGED: Changed `#wrapper` in the HTML markup to `#slideshow-wrapper` due to some theme conflicts.

@@ -7,8 +7,8 @@
 
 #slideshow { list-style:none; color:#fff; }
 #slideshow span { display:none; }
-#wrapper { width:<?php echo ((int) $styles['width'] - 6); ?>px; background:<?php echo $styles['background']; ?>; padding:2px; border:<?php echo $styles['border']; ?>; margin:25px auto; display:none; }
-#wrapper * { margin:0; padding:0; }
+#slideshow-wrapper { width:<?php echo ((int) $styles['width'] - 6); ?>px; background:<?php echo $styles['background']; ?>; padding:2px; border:<?php echo $styles['border']; ?>; margin:25px auto; display:none; }
+#slideshow-wrapper * { margin:0; padding:0; }
 #fullsize { position:relative; z-index:1; overflow:hidden; width:<?php echo ((int) $styles['width'] - 6); ?>px; height:<?php echo $styles['height']; ?>px; }
 #information { position:absolute; bottom:0; width:<?php echo ((int) $styles['width'] - 6); ?>px; height:0; background:<?php echo $styles['infobackground']; ?>; color:<?php echo $styles['infocolor']; ?>; overflow:hidden; z-index:200; opacity:.7; filter:alpha(opacity=70); }
 #information h3 { color:<?php echo $styles['infocolor']; ?>; padding:4px 8px 3px; font-size:14px; }
@@ -29,4 +29,4 @@
 #slideright:hover { background-color:#333; }
 #slidearea { float:left; background:<?php echo $styles['background']; ?>; position:relative; width:<?php echo ((int) $styles['width'] - 55); ?>px; margin-left:5px; height:81px; overflow:hidden; }
 #slider { position:absolute; left:0; height:81px; }
-#slider img { cursor:pointer; border:1px solid #666; padding:2px; -moz-border-radius:4px; -webkit-border-radius:4px; float:left; }
+#slider img { cursor:pointer; border:1px solid #666; padding:2px; -moz-border-radius:4px; -webkit-border-radius:4px; float:left !important; }

@@ -13,7 +13,7 @@
 		<form onsubmit="if (!confirm('<?php _e('Are you sure you wish to execute this action on the selected slides?', $this -> plugin_name); ?>')) { return false; }" action="<?php echo $this -> url; ?>&amp;method=mass" method="post">
 			<div class="tablenav">
 				<div class="alignleft actions">
-					<a href="<?php echo $this -> url; ?>&amp;method=order" title="<?php _e('Order all your slides', $this -> plugin_name); ?>" class="button button-secondary"><?php _e('Order Slides', $this -> plugin_name); ?></a>
+					<a href="<?php echo $this -> url; ?>&amp;method=order" title="<?php _e('Order all your slides', $this -> plugin_name); ?>" class="button"><?php _e('Order Slides', $this -> plugin_name); ?></a>
 				
 					<select name="action" class="action">
 						<option value="">- <?php _e('Bulk Actions', $this -> plugin_name); ?> -</option>

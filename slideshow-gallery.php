@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Antonie Potgieter
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); } ?&gt;</code> and specify the required <code>$post_id</code> parameter accordingly.
-Version: 1.0.4
+Version: 1.0.5
 */
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -25,17 +25,32 @@ class Gallery extends GalleryPlugin {
 		$this -> add_action('admin_head');
 		$this -> add_action('admin_notices');
 		
+		//WordPress filter hooks
+		$this -> add_filter('mce_buttons');
+		$this -> add_filter('mce_external_plugins');
+		
 		add_shortcode('slideshow', array($this, 'embed'));
 	}
 	
 	function admin_menu() {
-		add_menu_page(__('Slideshow', $this -> plugin_name), __('Slideshow', $this -> plugin_name), 10, basename(__FILE__), array($this, 'admin_slides'), $this -> url() . '/images/icon.png');
-		add_submenu_page(basename(__FILE__), __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 10, $this -> plugin_name . '.php', array($this, 'admin_slides'));
-		add_submenu_page(basename(__FILE__), __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 10, $this -> plugin_name . '-settings', array($this, 'admin_settings'));
+		add_menu_page(__('Slideshow', $this -> plugin_name), __('Slideshow', $this -> plugin_name), 10, "gallery", array($this, 'admin_slides'), $this -> url() . '/images/icon.png');
+		$this -> menus['gallery'] = add_submenu_page("gallery", __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 10, "gallery", array($this, 'admin_slides'));
+		$this -> menus['gallery-settings'] = add_submenu_page("gallery", __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 10, "gallery-settings", array($this, 'admin_settings'));
+		
+		add_action('admin_head-' . $this -> menus['gallery-settings'], array($this, 'admin_head_gallery_settings'));
 	}
 	
 	function admin_head() {
 		$this -> render('head', false, true, 'admin');
+	}
+	
+	function admin_head_gallery_settings() {		
+		add_meta_box('submitdiv', __('Save Settings', $this -> plugin_name), array($this -> Metabox, "settings_submit"), $this -> menus['gallery-settings'], 'side', 'core');
+		add_meta_box('generaldiv', __('General Settings', $this -> plugin_name), array($this -> Metabox, "settings_general"), $this -> menus['gallery-settings'], 'normal', 'core');
+		add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name), array($this -> Metabox, "settings_styles"), $this -> menus['gallery-settings'], 'normal', 'core');
+		
+		do_action('do_meta_boxes', $this -> menus['gallery-settings'], 'normal');
+		do_action('do_meta_boxes', $this -> menus['gallery-settings'], 'side');
 	}
 	
 	function admin_notices() {
@@ -47,11 +62,34 @@ class Gallery extends GalleryPlugin {
 		}
 	}
 	
-	function slideshow($output = true, $post_id = null) {		
+	function mce_buttons($buttons) {
+		array_push($buttons, "separator", "gallery");
+		return $buttons;
+	}
+	
+	function mce_external_plugins($plugins) {
+		$plugins['gallery'] = $this -> url() . '/js/tinymce/editor_plugin.js';
+		return $plugins;
+	}
+	
+	function slideshow($output = true, $post_id = null, $exclude = null) {		
 		global $wpdb;
 		
 		if (!empty($post_id) && $post = get_post($post_id)) {
 			if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
+				if (!empty($exclude)) {
+					$exclude = array_map('trim', explode(',', $exclude));
+					
+					$a = 0;
+					foreach ($attachments as $id => $attachment) {
+						
+						$a++;
+						if (in_array($a, $exclude)) {
+							unset($attachments[$id]);
+						}
+					}
+				}
+			
 				$content = $this -> render('gallery', array('slides' => $attachments, 'frompost' => true), false, 'default');
 			}
 		} else {
@@ -66,7 +104,7 @@ class Gallery extends GalleryPlugin {
 		//global variables
 		global $wpdb;
 	
-		$defaults = array('post_id' => null, 'custom' => null);		
+		$defaults = array('post_id' => null, 'exclude' => null, 'custom' => null);		
 		extract(shortcode_atts($defaults, $atts));
 		
 		if (!empty($custom)) {
@@ -78,6 +116,19 @@ class Gallery extends GalleryPlugin {
 		
 			if (!empty($pid) && $post = get_post($pid)) {
 				if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
+					if (!empty($exclude)) {
+						$exclude = array_map('trim', explode(',', $exclude));
+						
+						$a = 0;
+						foreach ($attachments as $id => $attachment) {
+							
+							$a++;
+							if (in_array($a, $exclude)) {
+								unset($attachments[$id]);
+							}
+						}
+					}
+				
 					$content = $this -> render('gallery', array('slides' => $attachments, 'frompost' => true), false, 'default');
 				}
 			}

@@ -2,11 +2,12 @@
 
 class GalleryPlugin {
 
-	var $version = '1.0.4';
+	var $version = '1.0.5';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
 	var $debugging = false;
+	var $menus = array();
 	
 	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
 	var $models = array('Slide');
@@ -29,6 +30,13 @@ class GalleryPlugin {
 					load_textdomain($this -> plugin_name, $moFile);
 				}
 			}
+		}
+		
+		if ($this -> debugging == true) {
+			global $wpdb;
+			$wpdb -> show_errors();
+			error_reporting(E_ALL);
+			@ini_set('display_errors', 1);
 		}
 		
 		return true;
@@ -58,7 +66,7 @@ class GalleryPlugin {
 				if (file_exists($hfile)) {
 					require_once($hfile);
 					
-					if (!is_object($this -> {$helper})) {
+					if (empty($this -> {$helper}) || !is_object($this -> {$helper})) {
 						$classname = $this -> pre . $helper . 'Helper';
 						
 						if (class_exists($classname)) {
@@ -76,7 +84,7 @@ class GalleryPlugin {
 				if (file_exists($mfile)) {
 					require_once($mfile);
 					
-					if (!is_object($this -> {$model})) {
+					if (empty($this -> {$model}) || !is_object($this -> {$model})) {
 						$classname = $this -> pre . $model;
 						
 						if (class_exists($classname)) {
@@ -226,36 +234,37 @@ class GalleryPlugin {
 		return false;
 	}
 	
+	function add_filter($filter, $function = null, $priority = 10, $params = 1) {
+		if (add_filter($filter, array($this, (empty($function)) ? $filter : $function), $priority, $params)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	function enqueue_scripts() {	
 		wp_enqueue_script('jquery');
 		
 		if (is_admin()) {
-			require_once(ABSPATH . 'wp-admin' . DS . 'admin.php');
-		
 			if (!empty($_GET['page'])) {
-				if ($_GET['page'] == "slideshow-gallery-settings" || ($_GET['page'] == $this -> plugin_name . ".php" && $_GET['method'] == "order")) {
-					wp_enqueue_script('utils');
-					wp_enqueue_script('autosave');
-					wp_enqueue_script('editor');
-					wp_enqueue_script('media-upload');
-					wp_enqueue_script('word-count');
-					wp_enqueue_script('suggest');
-					wp_enqueue_script('jquery-ui-core');
-					wp_enqueue_script('jquery-ui-tabs');
+				wp_enqueue_script('autosave');
+			
+				if ($_GET['page'] == 'gallery-settings') {
+					wp_enqueue_script('common');
 					wp_enqueue_script('wp-lists');
-					wp_enqueue_script('jquery-ui-sortable');
-					wp_enqueue_script('jquery-ui-draggable');
-					wp_enqueue_script('jquery-ui-droppable');
 					wp_enqueue_script('postbox');
-					wp_enqueue_script('post');
-					wp_enqueue_script('admin-widgets');
+					
+					wp_enqueue_script('settings-editor', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/settings-editor.js', array('jquery'), '1.0');
+				}
+				
+				if ($_GET['page'] == "gallery" && $_GET['method'] == "order") {
+					wp_enqueue_script('jquery-ui-sortable');
 				}
 			}
-		
+			
 			wp_enqueue_script($this -> plugin_name . 'admin', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/admin.js', null, '1.0');
-			add_thickbox();
 		} else {
-			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/gallery.js', null, "1.0");
+			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/gallery.js', null, '1.0');
 		}
 		
 		return true;
