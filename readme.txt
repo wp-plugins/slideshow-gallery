@@ -59,7 +59,7 @@ Yes, you can, but only one slideshow per page.
 * COMPATIBILITY: WordPress 2.9
 * FIXED: #fullsize z-index to keep below other elements such as drop down menus.
 
-= 1.0.4 =
+= 1.0.5 =
 * IMPROVED: WordPress 2.9 sortable meta boxes.
 * FIXED: `wp_redirect()` fatal error in dashboard.
 * ADDED: TinyMCE editor button to quickly insert slideshows into posts/pages.
