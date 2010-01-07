@@ -1,15 +1,15 @@
 <?php
 
-define('DS', DIRECTORY_SEPARATOR);
-include_once('../../../wp-config.php');
-include_once(ABSPATH . 'wp-admin' . DS . 'admin-functions.php');
+if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
+require_once($_SERVER['DOCUMENT_ROOT'] . DS . 'wp-config.php');
+require_once(ABSPATH . 'wp-admin' . DS . 'admin-functions.php');
 
 class GalleryAjax extends GalleryPlugin {
 
 	var $safecommands = array('slides_order');
 
 	function GalleryAjax($cmd) {
-		$this -> register_plugin('gallery', __FILE__);
+		$this -> register_plugin('slideshow-gallery', __FILE__);
 	
 		if (!empty($cmd)) {		
 			if (in_array($cmd, $this -> safecommands) || current_user_can('edit_plugins')) {			
