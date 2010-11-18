@@ -1,10 +1,10 @@
 === Slideshow Gallery ===
-Contributors: Antonie Potgieter
+Contributors: Antonie Potgieter, Tribulant Software
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
-Requires at least: 2.8
-Tested up to: 2.9.1
-Stable tag: 1.0.5
+Requires at least: 2.9
+Tested up to: 3.0.1
+Stable tag: 1.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -12,9 +12,13 @@ Feature content in a JavaScript powered slideshow gallery showcase on your WordP
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website.
 
+You can easily display multiple galleries throughout your WordPress website displaying your custom added slides or showing slides from WordPress posts.
+
 The slideshow is flexible and all aspects can easily be configured.
 
-Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert `[slideshow]` into its content with an optional `post_id` parameter to display the gallery images uploaded to that post/page. To hardcode into any PHP file of your WordPress theme, simply use `<?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); }; ?>`.
+Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert `[slideshow]` into its content with an optional `post_id` parameter to display the gallery images uploaded to that post/page `[slideshow post_id=123]`. You can also use an `exclude` parameter to exclude certain images by their order in the gallery (comma separated) from the slideshow like this `[slideshow post_id=123 exclude="3,7,9"]`. 
+
+To hardcode into any PHP file of your WordPress theme, simply use `<?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); }; ?>`.
 
 == Installation ==
 
@@ -33,6 +37,14 @@ Installing the WordPress slideshow gallery plugin is very easy. Simply follow th
 
 Yes, you can, but only one slideshow per page.
 
+= How do I display the images uploaded to a post? =
+
+You can embed a slideshow and show the images uploaded to a post with the `post_id` parameter. Like this `[slideshow post_id="123"]`.
+
+= Can I exclude certain images from a post in the slideshow? =
+
+Yes, you can use the `exclude` parameter to exclude post images by their order in the gallery (comma separated) like this `[slideshow post_id=123 exclude="2,4,8"]`.
+
 == Screenshots ==
 
 1. Slideshow gallery with thumbnails at the bottom.
@@ -40,6 +52,7 @@ Yes, you can, but only one slideshow per page.
 3. Slideshow gallery with thumbnails at the top.
 4. Different styles/colors.
 5. TinyMCE editor button to insert shortcodes.
+6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
 
@@ -59,9 +72,21 @@ Yes, you can, but only one slideshow per page.
 * COMPATIBILITY: WordPress 2.9
 * FIXED: #fullsize z-index to keep below other elements such as drop down menus.
 
-= 1.0.5 =
+= 1.0.4 =
 * IMPROVED: WordPress 2.9 sortable meta boxes.
 * FIXED: `wp_redirect()` fatal error in dashboard.
 * ADDED: TinyMCE editor button to quickly insert slideshows into posts/pages.
 * ADDED: `exclude` parameter to use in conjunction with the `post_id` parameter to exclude attachments by order.
 * CHANGED: Changed `#wrapper` in the HTML markup to `#slideshow-wrapper` due to some theme conflicts.
+
+= 1.1 =
+* ADDED: "THIS POST" added to the TinyMCE dialog to insert a shortcode for a slideshow of the current post
+* IMPROVED: Some CSS improvements to the slideshow
+* ADDED: Thickbox to show images in overlay. Can be turned On/Off
+* FIXED: Fixed all thumbnails not preloading on first load
+* FIXED: Slide HREF in IE
+* ADDED: Spinner loading indicator to show the slideshow is loading up
+* ADDED: "Link" column in the "Manage Slides" section
+* FIXED: Load Thickbox on the 'Manage Slides' page for the enlargements
+* ADDED: Ability to upload an image when saving a slide rather than specifying a URL
+* ADDED: Row actions in the 'Manage Slides' section

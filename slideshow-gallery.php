@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Antonie Potgieter
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); } ?&gt;</code> and specify the required <code>$post_id</code> parameter accordingly.
-Version: 1.0.5
+Version: 1.1
 */
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -17,10 +17,12 @@ class Gallery extends GalleryPlugin {
 	function Gallery() {
 		$url = explode("&", $_SERVER['REQUEST_URI']);
 		$this -> url = $url[0];
+		$this -> referer = (empty($_SERVER['HTTP_REFERER'])) ? $this -> url : $_SERVER['HTTP_REFERER'];
 		
 		$this -> register_plugin('slideshow-gallery', __FILE__);
 		
 		//WordPress action hooks
+		$this -> add_action('wp_head');
 		$this -> add_action('admin_menu');
 		$this -> add_action('admin_head');
 		$this -> add_action('admin_notices');
@@ -30,6 +32,17 @@ class Gallery extends GalleryPlugin {
 		$this -> add_filter('mce_external_plugins');
 		
 		add_shortcode('slideshow', array($this, 'embed'));
+	}
+	
+	function wp_head() {
+		?>
+        
+        <script type="text/javascript">
+        var tb_pathToImage = "<?php echo rtrim(get_bloginfo('wpurl'), '/'); ?>/wp-includes/js/thickbox/loadingAnimation.gif";
+		var tb_closeImage = "<?php echo rtrim(get_bloginfo('wpurl'), '/'); ?>/wp-includes/js/thickbox/tb-close.png";
+		</script>
+        
+        <?php	
 	}
 	
 	function admin_menu() {
@@ -47,6 +60,7 @@ class Gallery extends GalleryPlugin {
 	function admin_head_gallery_settings() {		
 		add_meta_box('submitdiv', __('Save Settings', $this -> plugin_name), array($this -> Metabox, "settings_submit"), $this -> menus['gallery-settings'], 'side', 'core');
 		add_meta_box('generaldiv', __('General Settings', $this -> plugin_name), array($this -> Metabox, "settings_general"), $this -> menus['gallery-settings'], 'normal', 'core');
+		add_meta_box('linksimagesdiv', __('Links &amp; Images Overlay', $this -> plugin_name), array($this -> Metabox, "settings_linksimages"), $this -> menus['gallery-settings'], 'normal', 'core');
 		add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name), array($this -> Metabox, "settings_styles"), $this -> menus['gallery-settings'], 'normal', 'core');
 		
 		do_action('do_meta_boxes', $this -> menus['gallery-settings'], 'normal');
@@ -139,6 +153,22 @@ class Gallery extends GalleryPlugin {
 	
 	function admin_slides() {	
 		switch ($_GET['method']) {
+			case 'delete'			:
+				if (!empty($_GET['id'])) {
+					if ($this -> Slide -> delete($_GET['id'])) {
+						$msg_type = 'message';
+						$message = __('Slide has been removed', $this -> plugin_name);
+					} else {
+						$msg_type = 'error';
+						$message = __('Slide cannot be removed', $this -> plugin_name);	
+					}
+				} else {
+					$msg_type = 'error';
+					$message = __('No slide was specified', $this -> plugin_name);
+				}
+				
+				$this -> redirect($this -> referer, $msg_type, $message);
+				break;
 			case 'save'				:
 				if (!empty($_POST)) {
 					if ($this -> Slide -> save($_POST, true)) {

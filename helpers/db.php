@@ -131,7 +131,11 @@ class GalleryDbHelper extends GalleryPlugin {
 		if (empty($this -> errors)) {
 			switch ($this -> model) {
 				case 'Slide'				:
-					$this -> data -> image = basename($this -> data -> image_url);
+					if ($this -> data -> type == "file") {
+						//$this -> data -> image = $_FILES['image_file']['name'];	
+					} else {
+						$this -> data -> image = basename($this -> data -> image_url);
+					}
 					
 					if (empty($this -> data -> uselink) || $this -> data -> uselink == "N") {
 						$this -> data -> link = "";
@@ -141,7 +145,7 @@ class GalleryDbHelper extends GalleryPlugin {
 			
 			//the MySQL query
 			$query = (empty($this -> data -> id)) ? $this -> insert_query($this -> model) : $this -> update_query($this -> model);			
-			echo $query;
+			//echo $query;
 			//return false;
 			
 			if ($wpdb -> query($query)) {

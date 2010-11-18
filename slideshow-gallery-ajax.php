@@ -1,7 +1,10 @@
 <?php
 
 if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
-require_once($_SERVER['DOCUMENT_ROOT'] . DS . 'wp-config.php');
+
+$root = __FILE__;
+for ($i = 0; $i < 4; $i++) $root = dirname($root);
+require_once($root . DS . 'wp-config.php');
 require_once(ABSPATH . 'wp-admin' . DS . 'admin-functions.php');
 
 class GalleryAjax extends GalleryPlugin {

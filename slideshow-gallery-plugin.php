@@ -2,19 +2,27 @@
 
 class GalleryPlugin {
 
-	var $version = '1.0.5';
+	var $version = '1.1';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
-	var $debugging = false;
+	
 	var $menus = array();
+	var $sections = array(
+		'gallery'			=>	'gallery',
+		'settings'			=>	'gallery-settings',
+	);
 	
 	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
 	var $models = array('Slide');
+	
+	var $debugging = false;		//set to "true" to turn on debugging
+	var $debug_level = 1;		//set to 2 for PHP and DB errors or 1 for just DB errors
 
 	function register_plugin($name, $base) {
 		$this -> plugin_name = $name;
 		$this -> plugin_base = rtrim(dirname($base), DS);
+		$this -> sections = (object) $this -> sections;
 		
 		$this -> enqueue_scripts();
 		$this -> enqueue_styles();
@@ -32,11 +40,15 @@ class GalleryPlugin {
 			}
 		}
 		
+		global $wpdb;
 		if ($this -> debugging == true) {
-			global $wpdb;
 			$wpdb -> show_errors();
-			error_reporting(E_ALL);
+			error_reporting(E_ALL ^ E_NOTICE);
 			@ini_set('display_errors', 1);
+		} else {
+			$wpdb -> hide_errors();
+			error_reporting(0);
+			@ini_set('display_errors', 0);
 		}
 		
 		return true;
@@ -123,6 +135,7 @@ class GalleryPlugin {
 		$this -> add_option('thumbactive', "#FFFFFF");
 		$this -> add_option('autoslide', "Y");
 		$this -> add_option('autospeed', 10);
+		$this -> add_option('imagesthickbox', "N");
 	}
 	
 	function render_msg($message = '') {
@@ -246,7 +259,7 @@ class GalleryPlugin {
 		wp_enqueue_script('jquery');
 		
 		if (is_admin()) {
-			if (!empty($_GET['page'])) {
+			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {
 				wp_enqueue_script('autosave');
 			
 				if ($_GET['page'] == 'gallery-settings') {
@@ -260,26 +273,34 @@ class GalleryPlugin {
 				if ($_GET['page'] == "gallery" && $_GET['method'] == "order") {
 					wp_enqueue_script('jquery-ui-sortable');
 				}
+				
+				add_thickbox();
 			}
 			
 			wp_enqueue_script($this -> plugin_name . 'admin', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/admin.js', null, '1.0');
 		} else {
 			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/gallery.js', null, '1.0');
+			
+			if ($this -> get_option('imagesthickbox') == "Y") {
+				add_thickbox();
+			}
 		}
 		
 		return true;
 	}
 	
 	function enqueue_styles() {
-		$src = '/' . PLUGINDIR . '/' . $this -> plugin_name . '/css/gallery-css.php?1=1';
-		
-		if ($styles = $this -> get_option('styles')) {
-			foreach ($styles as $skey => $sval) {
-				$src .= "&amp;" . $skey . "=" . urlencode($sval);
+		if (!is_admin()) {
+			$src = '/' . PLUGINDIR . '/' . $this -> plugin_name . '/css/gallery-css.php?1=1';
+			
+			if ($styles = $this -> get_option('styles')) {
+				foreach ($styles as $skey => $sval) {
+					$src .= "&amp;" . $skey . "=" . urlencode($sval);
+				}
 			}
+			
+			wp_enqueue_style($this -> plugin_name, $src, null, '1.0', 'screen');
 		}
-		
-		wp_enqueue_style($this -> plugin_name, $src, null, '1.0', 'screen');
 	
 		return true;
 	}

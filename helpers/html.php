@@ -81,9 +81,8 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function field_value($name = '') {
-		if ($mn = $this -> strip_mn($name)) {
-					
+	function field_value($name = null) {
+		if ($mn = $this -> strip_mn($name)) {					
 			$value = $this -> {$mn[1]} -> data -> {$mn[2]};
 			
 			return $value;
