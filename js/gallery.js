@@ -1,7 +1,7 @@
 var TINY={};
 
-function tid(i){return document.getElementById(i)}
-function tag(e,p){p=p||document; return p.getElementsByTagName(e)}
+function tid(i){ return document.getElementById(i); }
+function tag(e,p){ p=p||document; return p.getElementsByTagName(e); }
 
 TINY.slideshow=function(n){
 	this.infoSpeed=this.imgSpeed=this.speed=10;
@@ -38,6 +38,7 @@ TINY.slideshow.prototype={
 			a.t= tag('h3',h)[0].innerHTML;
 			a.d= tag('p',h)[0].innerHTML;
 			a.l= tag('a',h)[0]? tag('a',h)[0].href:'';
+			a.tg = tag('a',h)[0]? tag('a',h)[0].target:'_self';
 			a.p= tag('span',h)[0].innerHTML;
 			if(this.thumbs){
 				var g = tag('img',h)[0];
@@ -89,7 +90,9 @@ TINY.slideshow.prototype={
 		i.style.filter='alpha(opacity=0)';
 		this.i=i;
 		i.onload=new Function(this.n+'.le('+s+','+c+')');
-		i.src=this.a[s].p;
+		string = this.a[s].p;
+		string = string.replace(/&amp;/g, '&');
+		i.src = string;
 		if(this.thumbs){
 			var a= tag('img',this.p), l=a.length, x=0;
 			for(x;x<l;x++){
@@ -102,8 +105,6 @@ TINY.slideshow.prototype={
 		var w=this.o-parseInt(this.i.offsetWidth);
 		if(w>0){
 			var l=Math.floor(w/2);
-			this.i.style.borderLeft=l+'px solid ' + this.letterbox;
-			this.i.style.borderRight=(w-l)+'px solid ' + this.letterbox
 		}
 		TINY.alpha.set(this.i,100,this.imgSpeed);
 		var n=new Function(this.n+'.nf('+s+')');
@@ -111,18 +112,15 @@ TINY.slideshow.prototype={
 		if(!c){
 			this.at=setTimeout(new Function(this.n+'.mv(1,0)'),this.speed*1000)
 		}
-		if(this.a[s].l != ""){
-			//this.q.onclick = new Function('window.location="' + this.a[s].l + '"');
-			//this.q.onclick = new Function('tb_show("test", "' + this.a[s].l + '", "' + this.a[s].l + '")');
-			
+		if(this.a[s].l != ""){			
 			var baseURL = this.a[s].l;
 			var urlString = /\.jpg$|\.jpeg$|\.png$|\.gif$|\.bmp$/;
 	   		var urlType = baseURL.toLowerCase().match(urlString);
 
-			if (this.imagesthickbox == "true" && (urlType == '.jpg' || urlType == '.jpeg' || urlType == '.png' || urlType == '.gif' || urlType == '.bmp')) {
-				this.q.onclick = new Function('tb_show("' + this.a[s].t + '", "' + this.a[s].l + '", "slideshow")');
+			if (this.imagesthickbox == "true" && (urlType == '.jpg' || urlType == '.jpeg' || urlType == '.png' || urlType == '.gif' || urlType == '.bmp')) {			
+				this.q.onclick = new Function('jQuery.colorbox({href:"' + this.a[s].l + '",title:"' + this.a[s].t + '"})');
 			} else {
-				this.q.onclick = new Function('window.location="' + this.a[s].l + '"');
+				this.q.onclick = new Function('window.open("' + this.a[s].l + '","' + this.a[s].tg + '")');
 			}
 			
 			this.q.onmouseover = new Function('this.className="' + this.linkclass + '"');
@@ -153,20 +151,9 @@ TINY.slideshow.prototype={
 TINY.scroll=function(){
 	return{
 		init:function(e,d,s){
-			e=typeof e=='object'?e: tid(e); var p=e.style.left||TINY.style.val(e,'left'); e.style.left=p;
-			
-			/**
-			 * Issue #1: Bugfix for newer versions of firefox and possibly other browsers.
-			 * The issue here was, that the thumbnail bar didn't stop scrolling to the left if the 
-			 * summed up width of thumbs was smaller than the width of the bar. Fixed this by calculating the 
-			 * absolute sum of the offsets. Secondly I've added the constraint that there is no scrolling at
-			 * all if there are not enough thumbnails in the bar. Might be nice to hide the arrows at the sides
-			 * then, but I couldn't figure out how to achive this in a finite amount of time ;)
-			 */
-			
+			e=typeof e=='object'?e: tid(e); var p=e.style.left||TINY.style.val(e,'left'); e.style.left=p;			
 			var l = (d==1) ? Math.abs(parseInt(e.offsetWidth)-parseInt(e.parentNode.offsetWidth)) : 0;
 			
-			// constraint for scrolling
 			if ((e.childNodes.length+1)*e.firstChild.width > e.parentNode.offsetWidth) {
 				e.si=setInterval(function(){
 					TINY.scroll.mv(e,l,d,s)},20);

@@ -20,3 +20,9 @@ jQuery(document).ready(function(){
 		});
 	});
 });
+
+function jqCheckAll(checker, formid, name) {					
+	jQuery('input:checkbox[name="' + name + '[]"]').each(function() {
+		jQuery(this).attr("checked", checker.checked);
+	});
+}

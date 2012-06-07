@@ -18,6 +18,7 @@ class GallerySlide extends GalleryDbHelper {
 		'type'				=>	"ENUM('file','url') NOT NULL DEFAULT 'file'",
 		'image_url'			=>	"VARCHAR(200) NOT NULL DEFAULT ''",
 		'uselink'			=>	"ENUM('Y','N') NOT NULL DEFAULT 'N'",
+		'linktarget'		=>	"ENUM('self','blank') NOT NULL DEFAULT 'self'",
 		'link'				=>	"VARCHAR(200) NOT NULL DEFAULT ''",
 		'order'				=>	"INT(11) NOT NULL DEFAULT '0'",
 		'created'			=>	"DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'",
@@ -28,11 +29,29 @@ class GallerySlide extends GalleryDbHelper {
 	function GallerySlide($data = array()) {
 		global $wpdb;
 		$this -> table = $wpdb -> prefix . strtolower($this -> pre) . "_" . $this -> controller;
-		$this -> check_table($this -> model);
+		if (is_admin()) { $this -> check_table($this -> model); }
 	
 		if (!empty($data)) {
 			foreach ($data as $dkey => $dval) {
 				$this -> {$dkey} = $dval;
+				
+				switch ($dkey) {
+					case 'id'					:
+						$this -> galleries = array();
+						$this -> gallery = array();
+						
+						$galleryslidesquery = "SELECT * FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `slide_id` = '" . $dval . "'";
+						if ($galleryslides = $wpdb -> get_results($galleryslidesquery)) {
+							foreach ($galleryslides as $galleryslide) {
+								$this -> galleries[] = $galleryslide -> gallery_id;
+								$this -> gallery[$galleryslide -> gallery_id] = $wpdb -> get_row("SELECT * FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleries` WHERE `id` = '" . $galleryslide -> gallery_id . "'");
+							}
+						}
+						break;
+					case 'image'				:
+						$this -> image_path = 'wp-content/uploads/slideshow-gallery/' . $dval;
+						break;
+				}
 			}
 		}
 		
@@ -41,6 +60,7 @@ class GallerySlide extends GalleryDbHelper {
 	
 	function defaults() {
 		$defaults = array(
+			'galleries'			=>	false,
 			'order'				=>	0,
 			'created'			=>	GalleryHtmlHelper::gen_date(),
 			'modified'			=>	GalleryHtmlHelper::gen_date(),
@@ -54,11 +74,7 @@ class GallerySlide extends GalleryDbHelper {
 	
 		if (!empty($data)) {
 			$data = (empty($data[$this -> model])) ? $data : $data[$this -> model];
-			
-			foreach ($data as $dkey => $dval) {
-				$this -> data -> {$dkey} = stripslashes($dval);
-			}
-			
+			$data = stripslashes_deep($data);			
 			extract($data, EXTR_SKIP);
 			
 			if (empty($title)) { $this -> errors['title'] = __('Please fill in a title', $this -> plugin_name); }
@@ -81,18 +97,6 @@ class GallerySlide extends GalleryDbHelper {
 						elseif (!move_uploaded_file($_FILES['image_file']['tmp_name'], $imagefull)) { $this -> errors['image_file'] = __('Image could not be moved from TMP to "wp-content/uploads/", please check permissions', $this -> plugin_name); }
 						else {
 							$this -> data -> image = $imagename;
-							
-							$name = GalleryHtmlHelper::strip_ext($imagename, 'filename');
-							$ext = GalleryHtmlHelper::strip_ext($imagename, 'ext');
-							$thumbfull = $imagepath . $name . '-thumb.' . $ext;
-							$smallfull = $imagepath . $name . '-small.' . $ext;
-							
-							image_resize($imagefull, $width = null, $height = 75, $crop = false, $append = 'thumb', $dest = null, $quality = 100);
-							image_resize($imagefull, $width = 50, $height = 50, $crop = true, $append = 'small', $dest = null, $quality = 100);
-							
-							@chmod($imagefull, 0777);
-							@chmod($thumbfull, 0777);
-							@chmod($smallfull, 0777);
 						}
 					} else {					
 						switch ($_FILES['image_file']['error']) {
@@ -127,18 +131,6 @@ class GallerySlide extends GalleryDbHelper {
 							$fh = @fopen($filefull, "w");
 							@fwrite($fh, $image);
 							@fclose($fh);
-							
-							$name = GalleryHtmlHelper::strip_ext($filename, 'filename');
-							$ext = GalleryHtmlHelper::strip_ext($filename, 'ext');
-							$thumbfull = $filepath . $name . '-thumb.' . $ext;
-							$smallfull = $filepath . $name . '-small.' . $ext;
-							
-							image_resize($filefull, $width = null, $height = 75, $crop = false, $append = 'thumb', $dest = null, $quality = 100);
-							image_resize($filefull, $width = 50, $height = 50, $crop = true, $append = 'small', $dest = null, $quality = 100);
-							
-							@chmod($filefull, 0777);
-							@chmod($thumbfull, 0777);
-							@chmod($smallfull, 0777);
 						}
 					}
 				}

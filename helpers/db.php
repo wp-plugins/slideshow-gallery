@@ -90,8 +90,15 @@ class GalleryDbHelper extends GalleryPlugin {
 		}
 		
 		$order = (empty($order)) ? array('id', "DESC") : $order;
-		list($ofield, $odir) = $order;
-		$query .= " ORDER BY `" . $ofield . "` " . $odir . "";
+		
+		if ($order == "random") {
+			$query .= " ORDER BY RAND()";
+		} else {
+			if (!is_array($order)) { $order = array('id', "DESC"); }
+			list($ofield, $odir) = $order;
+			$query .= " ORDER BY `" . $ofield . "` " . $odir . "";
+		}
+			
 		$query .= (empty($limit)) ? '' : " LIMIT " . $limit . "";
 		
 		if ($records = $wpdb -> get_results($query)) {
@@ -115,12 +122,13 @@ class GalleryDbHelper extends GalleryPlugin {
 	
 	function save($data = null, $validate = true) {
 		global $wpdb;
+		$this -> errors = false;
 		
 		$defaults = (method_exists($this, 'defaults')) ? $this -> defaults() : false;
 		$data = (empty($data[$this -> model])) ? $data : $data[$this -> model];
 		
 		$r = wp_parse_args($data, $defaults);
-		$this -> data = GalleryHtmlHelper::array_to_object($r);
+		$this -> data = (object) $r;
 		
 		if ($validate == true) {
 			if (method_exists($this, 'validate')) {
@@ -143,13 +151,28 @@ class GalleryDbHelper extends GalleryPlugin {
 					break;
 			}
 			
-			//the MySQL query
 			$query = (empty($this -> data -> id)) ? $this -> insert_query($this -> model) : $this -> update_query($this -> model);			
-			//echo $query;
-			//return false;
 			
 			if ($wpdb -> query($query)) {
-				$this -> insertid = $insertid = (empty($this -> data -> id)) ? $wpdb -> insert_id : $this -> data -> id;				
+				$this -> insertid = $insertid = (empty($this -> data -> id)) ? $wpdb -> insert_id : $this -> data -> id;
+				
+				switch ($this -> model) {
+					case 'Slide'				:					
+					
+						$slide_id = $this -> insertid;
+						$deletequery = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `slide_id` = '" . $slide_id . "'";
+						$wpdb -> query($deletequery);
+						
+						if (!empty($this -> data -> galleries)) {						
+							foreach ($this -> data -> galleries as $gallery_id) {
+								$date = date("Y-m-d H:i:s", time());
+								$galleryslidequery = "INSERT INTO `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` (`id`, `slide_id`, `gallery_id`, `created`, `modified`) VALUES ('', '" . $slide_id . "', '" . $gallery_id . "', '" . $date . "', '" . $date . "');";
+								$wpdb -> query($galleryslidequery);
+							}
+						}
+						break;
+				}
+								
 				return true;
 			}
 		}
@@ -188,14 +211,20 @@ class GalleryDbHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function delete($record_id = '') {
+	function delete($record_id = null) {
 		global $wpdb;
 		
 		if (!empty($record_id) && $record = $this -> find(array('id' => $record_id))) {
 			$query = "DELETE FROM `" . $this -> table . "` WHERE `id` = '" . $record_id . "' LIMIT 1";
 			
 			if ($wpdb -> query($query)) {
-				//do nothing...				
+				switch ($this -> model) {
+					case 'Gallery'			:
+						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `gallery_id` = '" . $record_id . "'";
+						$wpdb -> query($query);
+						break;
+				}
+							
 				return true;
 			}
 		}
@@ -203,7 +232,7 @@ class GalleryDbHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function insert_query($model = '') {	
+	function insert_query($model = null) {	
 		if (!empty($model)) {
 			global $wpdb;
 			
@@ -249,7 +278,7 @@ class GalleryDbHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function update_query($model = '') {	
+	function update_query($model = null) {	
 		if (!empty($model)) {
 			global $wpdb;
 			
