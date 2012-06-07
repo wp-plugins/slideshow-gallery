@@ -24,21 +24,21 @@ You can use any of the following parameters with both the hardcoding and shortco
 
 * `resizeimages` [ true | false ] = Set to 'true' to resize images to fit the slideshow dimensions.
 * `orderby` [ random ] = Set to 'random' to randomly order the slides. Leave this shortcode parameter to order by the order set on the slides.
-* `width` [ <width> | auto ] = Width of the slideshow in pixels. Don't specify 'px' part, just the numeric value for the height.
-* `height` [ <height> ] (default: setting) = Height of the slideshow in pixels. Don't specify the 'px' part, just the numeric value for the height.
+* `width` [ width | auto ] = Width of the slideshow in pixels. Don't specify 'px' part, just the numeric value for the height.
+* `height` [ height ] (default: setting) = Height of the slideshow in pixels. Don't specify the 'px' part, just the numeric value for the height.
 * `auto` [ true | false ] (default: setting) = Set this to 'true' to automatically slide the slides in the slideshow.
-* `autospeed` [ <speed> ] (default: setting) = Speed of the auto sliding. 10 is normal. Lower number is faster. Between 5 and 15 is recommended.
-* `fadespeed` [ <speed> ] (default: setting) = Speed of the fading of images. 10 is normal. Lower number is faster. Between 1 and 20 is recommended.
+* `autospeed` [ speed ] (default: setting) = Speed of the auto sliding. 10 is normal. Lower number is faster. Between 5 and 15 is recommended.
+* `fadespeed` [ speed ] (default: setting) = Speed of the fading of images. 10 is normal. Lower number is faster. Between 1 and 20 is recommended.
 * `shownav` [ true | false ] (default: setting) = Set to 'true' to show the next/previous image navigation buttons.
-* `navopacity` [ <opacity> ] (default: setting) = The opacity of the next/previous buttons. Between 0 and 100 with 0 being transparent and 100 being fully opaque.
-* `navhoveropacity` [ <opacity> ] (default: setting) = The opacity of the next/previous buttons on hovering. Between 0 and 100 with 0 being transparent and 100 being fully opaque.
+* `navopacity` [ opacity ] (default: setting) = The opacity of the next/previous buttons. Between 0 and 100 with 0 being transparent and 100 being fully opaque.
+* `navhoveropacity` [ opacity ] (default: setting) = The opacity of the next/previous buttons on hovering. Between 0 and 100 with 0 being transparent and 100 being fully opaque.
 * `showinfo` [ true | false ] (default: setting) = Set to 'true' to show the information bar for each slide.
-* `infospeed` [ <speed> ] (default: setting) = Speed at which the information bar will slide up. Between 5 and 15 is recommended.
+* `infospeed` [ speed ] (default: setting) = Speed at which the information bar will slide up. Between 5 and 15 is recommended.
 * `showthumbs` [ true | false ] (default: setting) = Set to 'true' to show the thumbnails for the slides.
 * `thumbsposition` [ top | bottom ] (default: setting) = Set to "top" to show above the slideshow.
-* `thumbsborder` [ <hexidecimal color> ] (default: setting) = Hex color of the active thumb border. For example #333333.
-* `thumbsspeed` [ <speed> ] (default: setting) = Speed of the thumbnail bar scrolling. Lower is slower. Between 1 and 20 is recommended.
-* `thumbsspacing` [ <spacing> ] (default: setting) = An integer value in pixels to space the thumbnails apart. Don’t include the 'px' part, just the number. Between 0 and 10 is recommended.
+* `thumbsborder` [ hexidecimal color ] (default: setting) = Hex color of the active thumb border. For example #333333.
+* `thumbsspeed` [ speed> ] (default: setting) = Speed of the thumbnail bar scrolling. Lower is slower. Between 1 and 20 is recommended.
+* `thumbsspacing` [ spacing ] (default: setting) = An integer value in pixels to space the thumbnails apart. Don’t include the 'px' part, just the number. Between 0 and 10 is recommended.
 
 == Installation ==
 
