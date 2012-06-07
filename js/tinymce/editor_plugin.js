@@ -12,8 +12,8 @@
 			ed.addCommand('mcegallery', function() {			
 				ed.windowManager.open({
 					file : url + '/dialog.php',
-					width : 320,
-					height : 230,
+					width : 400,
+					height : 250,
 					inline : 1
 				}, {
 					plugin_url : url // Plugin absolute URL
@@ -25,14 +25,7 @@
 				title : 'gallery.desc',
 				cmd : 'mcegallery',
 				image : url + '/gallery.png'
-			});
-
-			// Add a node change handler, selects the button in the UI when a image is selected
-			/*ed.onNodeChange.add(function(ed, cm, n) {
-				cm.setActive('Checkout', n.nodeName == 'IMG');
-			});*/
-			
-			
+			});			
 		},		
 		createControl : function(n, cm) {
 			return null;

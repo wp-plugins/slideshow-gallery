@@ -2,49 +2,40 @@
 
 class GalleryPlugin {
 
-	var $version = '1.1.1';
+	var $version = '1.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
 	
 	var $menus = array();
 	var $sections = array(
-		'gallery'			=>	'gallery',
-		'settings'			=>	'gallery-settings',
+		'slides'			=>	'slideshow-slides',
+		'galleries'			=>	'slideshow-galleries',
+		'settings'			=>	'slideshow-settings',
 	);
 	
 	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
-	var $models = array('Slide');
+	var $models = array('Slide', 'Gallery', 'GallerySlides');
 	
 	var $debugging = false;		//set to "true" to turn on debugging
-	var $debug_level = 1;		//set to 2 for PHP and DB errors or 1 for just DB errors
+	var $debug_level = 2;		//set to 2 for PHP and DB errors or 1 for just DB errors
 
 	function register_plugin($name, $base) {
 		$this -> plugin_name = $name;
 		$this -> plugin_base = rtrim(dirname($base), DS);
 		$this -> sections = (object) $this -> sections;
 		
-		$this -> enqueue_scripts();
-		$this -> enqueue_styles();
-		
 		$this -> initialize_classes();
 		$this -> initialize_options();
-		
-		if (function_exists('load_plugin_textdomain')) {
-			$currentlocale = get_locale();
-			if(!empty($currentlocale)) {
-				$moFile = dirname(__FILE__) . DS . "languages" . DS . $this -> plugin_name . "-" . $currentlocale . ".mo";				
-				if(@file_exists($moFile) && is_readable($moFile)) {
-					load_textdomain($this -> plugin_name, $moFile);
-				}
-			}
-		}
 		
 		global $wpdb;
 		if ($this -> debugging == true) {
 			$wpdb -> show_errors();
-			error_reporting(E_ALL ^ E_NOTICE);
-			@ini_set('display_errors', 1);
+			
+			if ($this -> debug_level == 2) {
+				error_reporting(E_ALL ^ E_NOTICE);
+				@ini_set('display_errors', 1);
+			}
 		} else {
 			$wpdb -> hide_errors();
 			error_reporting(0);
@@ -70,7 +61,7 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function initialize_classes() {
+	function initialize_classes() {	
 		if (!empty($this -> helpers)) {
 			foreach ($this -> helpers as $helper) {
 				$hfile = dirname(__FILE__) . DS . 'helpers' . DS . strtolower($helper) . '.php';
@@ -109,6 +100,8 @@ class GalleryPlugin {
 	}
 	
 	function initialize_options() {
+		if (!is_admin()) { return; }
+	
 		$styles = array(
 			'width'				=>	"450",
 			'height'			=>	"250",
@@ -123,11 +116,14 @@ class GalleryPlugin {
 		
 		//General Settings
 		$this -> add_option('fadespeed', 10);
+		$this -> add_option('shownav', "Y");
 		$this -> add_option('navopacity', 25);
 		$this -> add_option('navhover', 70);
 		$this -> add_option('information', "Y");
 		$this -> add_option('infospeed', 10);
 		$this -> add_option('thumbnails', "N");
+		$this -> add_option('thumbwidth', "100");
+		$this -> add_option('thumbheight', "75");
 		$this -> add_option('thumbposition', "bottom");
 		$this -> add_option('thumbopacity', 70);
 		$this -> add_option('thumbscrollspeed', 5);
@@ -138,15 +134,15 @@ class GalleryPlugin {
 		$this -> add_option('imagesthickbox', "N");
 	}
 	
-	function render_msg($message = '') {
+	function render_msg($message = null) {
 		$this -> render('msg-top', array('message' => $message), true, 'admin');
 	}
 	
-	function render_err($message = '') {
+	function render_err($message = null) {
 		$this -> render('err-top', array('message' => $message), true, 'admin');
 	}
 	
-	function redirect($location = '', $msgtype = '', $message = '') {
+	function redirect($location = null, $msgtype = null, $message = null) {
 		$url = $location;
 		
 		if ($msgtype == "message") {
@@ -204,7 +200,7 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function vendor($name = '', $folder = '') {
+	function vendor($name = null, $folder = null) {
 		if (!empty($name)) {
 			$filename = 'class.' . strtolower($name) . '.php';
 			$filepath = rtrim(dirname(__FILE__), DS) . DS . 'vendors' . DS . $folder . '';
@@ -255,14 +251,16 @@ class GalleryPlugin {
 		return false;
 	}
 	
+	function print_scripts() {
+		$this -> enqueue_scripts();
+	}
+	
 	function enqueue_scripts() {	
 		wp_enqueue_script('jquery');
 		
 		if (is_admin()) {
-			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {
-				wp_enqueue_script('autosave');
-			
-				if ($_GET['page'] == 'gallery-settings') {
+			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {			
+				if ($_GET['page'] == 'slideshow-settings') {
 					wp_enqueue_script('common');
 					wp_enqueue_script('wp-lists');
 					wp_enqueue_script('postbox');
@@ -270,37 +268,55 @@ class GalleryPlugin {
 					wp_enqueue_script('settings-editor', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/settings-editor.js', array('jquery'), '1.0');
 				}
 				
-				if ($_GET['page'] == "gallery" && $_GET['method'] == "order") {
+				if ($_GET['page'] == "slideshow-slides" && $_GET['method'] == "order") {
 					wp_enqueue_script('jquery-ui-sortable');
 				}
-				
-				add_thickbox();
 			}
 			
+			wp_enqueue_script('colorbox', WP_PLUGIN_URL . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
 			wp_enqueue_script($this -> plugin_name . 'admin', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/admin.js', null, '1.0');
 		} else {
 			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/gallery.js', null, '1.0');
 			
 			if ($this -> get_option('imagesthickbox') == "Y") {
-				add_thickbox();
+				wp_enqueue_script('colorbox', WP_PLUGIN_URL . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
 			}
 		}
 		
 		return true;
 	}
 	
-	function enqueue_styles() {
-		if (!is_admin()) {
-			$src = '/' . PLUGINDIR . '/' . $this -> plugin_name . '/css/gallery-css.php?1=1';
+	function get_css_url($attr = null) {
+		$css_url = WP_PLUGIN_URL . '/' . $this -> plugin_name . '/css/gallery-css.php?';
+		
+		$default_attr = $this -> get_option('styles');
+		$styles = wp_parse_args($attr, $default_attr);
+		
+		if (!empty($styles)) {	
+			$s = 1;
 			
-			if ($styles = $this -> get_option('styles')) {
-				foreach ($styles as $skey => $sval) {
-					$src .= "&amp;" . $skey . "=" . urlencode($sval);
-				}
+			foreach ($styles as $skey => $sval) {
+				$css_url .= $skey . '=' . urlencode($sval);
+				if ($s < count($styles)) { $css_url .= '&'; }
+				$s++;
 			}
-			
-			wp_enqueue_style($this -> plugin_name, $src, null, '1.0', 'screen');
 		}
+		
+		return $css_url;
+	}
+	
+	function print_styles() {
+		$this -> enqueue_styles();
+	}
+	
+	function enqueue_styles() {
+		if (is_admin()) {
+			$src = WP_PLUGIN_URL . '/' . $this -> plugin_name . '/css/admin.css';			
+			wp_enqueue_style($this -> plugin_name, $src, null, "1.0", "all");
+		}
+		
+		$colorbox_src = WP_PLUGIN_URL . '/' . $this -> plugin_name . '/css/colorbox.css';
+		wp_enqueue_style('colorbox', $colorbox_src, null, "1.3.19", "all");
 	
 		return true;
 	}
@@ -321,7 +337,7 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function update_option($name = '', $value = '') {
+	function update_option($name = null, $value = null) {
 		if (update_option($this -> pre . $name, $value)) {
 			return true;
 		}
@@ -329,7 +345,7 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function get_option($name = '', $stripslashes = true) {
+	function get_option($name = null, $stripslashes = true) {
 		if ($option = get_option($this -> pre . $name)) {
 			if (@unserialize($option) !== false) {
 				return unserialize($option);
@@ -424,7 +440,7 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function delete_field($table = '', $field = '') {
+	function delete_field($table = null, $field = null) {
 		global $wpdb;
 		
 		if (!empty($table)) {
@@ -440,7 +456,7 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function change_field($table = '', $field = '', $newfield = '', $attributes = "TEXT NOT NULL") {
+	function change_field($table = null, $field = null, $newfield = null, $attributes = "TEXT NOT NULL") {
 		global $wpdb;
 		
 		if (!empty($table)) {		
@@ -466,7 +482,7 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function add_field($table = '', $field = '', $attributes = "TEXT NOT NULL") {
+	function add_field($table = null, $field = null, $attributes = "TEXT NOT NULL") {
 		global $wpdb;
 	
 		if (!empty($table)) {
@@ -488,8 +504,11 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function render($file = '', $params = array(), $output = true, $folder = 'admin') {	
+	function render($file = null, $params = array(), $output = true, $folder = 'admin') {	
 		if (!empty($file)) {
+			$this -> plugin_name = 'slideshow-gallery';
+			$this -> plugin_base = rtrim(dirname(__FILE__), DS);
+		
 			$filename = $file . '.php';
 			$filepath = $this -> plugin_base() . DS . 'views' . DS . $folder . DS;
 			$filefull = $filepath . $filename;
