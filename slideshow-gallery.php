@@ -47,15 +47,18 @@ if (!class_exists('Gallery')) {
 		}
 		
 		function wp_head() {
-			?>
-	        
-	        <script type="text/javascript">		
-			jQuery(document).ready(function() {
-				jQuery('.colorbox').colorbox({maxWidth:'100%', maxHeight:'100%'});
-			});
-			</script>
-	        
-	        <?php	
+			if ($this -> get_option('imagesthickbox') == "Y") {
+		
+				?>
+		        
+		        <script type="text/javascript">		
+				jQuery(document).ready(function() {
+					jQuery('.colorbox').colorbox({maxWidth:'100%', maxHeight:'100%'});
+				});
+				</script>
+		        
+		        <?php
+		    }
 		}
 		
 		function admin_menu() {
