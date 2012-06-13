@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 2.9
 Tested up to: 3.3.2
-Stable tag: 1.2
+Stable tag: 1.2.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -79,6 +79,11 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.2.1 = 
+* FIX: Thumbnails On/Off setting doesn't work
+* IMPROVE: TimThumb absolute URLs to prevent permission problems
+* FIX: Colorbox script should only load with this featured turned on
 
 = 1.2 =
 * ADD: 'About Us' box in the Configuration section
