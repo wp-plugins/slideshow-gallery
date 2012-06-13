@@ -2,6 +2,7 @@
 
 $rand = 's' . rand(1,99) . 'w';
 $wrapperid = "slideshow-wrapper-" . $rand;
+$slides = stripslashes_deep($slides);
 
 ?>
 
@@ -13,8 +14,9 @@ $wrapperid = "slideshow-wrapper-" . $rand;
 					<h3><?php echo $slide -> post_title; ?></h3>
 					<?php $full_image_href = wp_get_attachment_image_src($slide -> ID, 'full', false); ?>
 					<?php $full_image_path = get_attached_file($slide -> ID); ?>
+					<?php $full_image_url = wp_get_attachment_url($slide -> ID); ?>
 					<?php if ($options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
-						<span><?php echo $this -> Html -> timthumb_image_src($full_image_path, $options['width'], $options['height'], 100); ?></span>
+						<span><?php echo $this -> Html -> timthumb_image_src($full_image_href[0], $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo $full_image_href[0]; ?></span>
 					<?php endif; ?>
@@ -22,9 +24,9 @@ $wrapperid = "slideshow-wrapper-" . $rand;
 					<?php $thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false); ?>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if (!empty($slide -> guid)) : ?>
-							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr($slide -> post_title); ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($full_image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
+							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr($slide -> post_title); ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($full_image_href[0], $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
 						<?php else : ?>
-							<img src="<?php echo $this -> Html -> timthumb_image_src($full_image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" />
+							<img src="<?php echo $this -> Html -> timthumb_image_src($full_image_href[0], $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" />
 						<?php endif; ?>
 					<?php else : ?>
 						<a href="<?php echo $slide -> guid; ?>" title="<?php echo $slide -> post_title; ?>"></a>
