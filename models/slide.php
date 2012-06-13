@@ -33,7 +33,7 @@ class GallerySlide extends GalleryDbHelper {
 	
 		if (!empty($data)) {
 			foreach ($data as $dkey => $dval) {
-				$this -> {$dkey} = $dval;
+				$this -> {$dkey} = stripslashes_deep($dval);
 				
 				switch ($dkey) {
 					case 'id'					:
@@ -78,7 +78,7 @@ class GallerySlide extends GalleryDbHelper {
 			extract($data, EXTR_SKIP);
 			
 			if (empty($title)) { $this -> errors['title'] = __('Please fill in a title', $this -> plugin_name); }
-			if (empty($description)) { $this -> errors['description'] = __('Please fill in a description', $this -> plugin_name); }
+			//if (empty($description)) { $this -> errors['description'] = __('Please fill in a description', $this -> plugin_name); }
 			if (empty($type)) { $this -> errors['type'] = __('Please select an image type', $this -> plugin_name); }
 			elseif ($type == "file") {
 				if (!empty($image_oldfile) && empty($_FILES['image_file']['name'])) {
@@ -87,6 +87,7 @@ class GallerySlide extends GalleryDbHelper {
 					$imagefull = $imagepath . $imagename;
 					
 					$this -> data -> image = $imagename;
+					$this -> data -> image_path = 'wp-content/uploads/slideshow-gallery/' . $imagename;
 				} else {					
 					if ($_FILES['image_file']['error'] <= 0) {
 						$imagename = $_FILES['image_file']['name'];
@@ -97,6 +98,7 @@ class GallerySlide extends GalleryDbHelper {
 						elseif (!move_uploaded_file($_FILES['image_file']['tmp_name'], $imagefull)) { $this -> errors['image_file'] = __('Image could not be moved from TMP to "wp-content/uploads/", please check permissions', $this -> plugin_name); }
 						else {
 							$this -> data -> image = $imagename;
+							$this -> data -> image_path = 'wp-content/uploads/slideshow-gallery/' . $imagename;
 						}
 					} else {					
 						switch ($_FILES['image_file']['error']) {

@@ -15,7 +15,7 @@ ul.slideshow span { display:none; }
 #<?php echo $styles['wrapperid']; ?> #information<?php echo $styles['wrapperrand']; ?> h3 { color:<?php echo $styles['infocolor']; ?>; padding:4px 8px 3px; margin:0 !important; font-size:16px; font-weight:bold; }
 #<?php echo $styles['wrapperid']; ?> #information<?php echo $styles['wrapperrand']; ?> p { color:<?php echo $styles['infocolor']; ?>; padding:0 8px 8px; margin:0 !important; font-size: 14px; font-weight:normal; }
 #<?php echo $styles['wrapperid']; ?> #image<?php echo $styles['wrapperrand']; ?> { width:<?php echo ($styles['width'] != "auto") ? ((int) $styles['width'] - 4) . 'px' : 'auto'; ?>; no-repeat; }
-#<?php echo $styles['wrapperid']; ?> #image<?php echo $styles['wrapperrand']; ?> img { position:absolute; left:0; border:none; width:100%; height:auto; }
+#<?php echo $styles['wrapperid']; ?> #image<?php echo $styles['wrapperrand']; ?> img { position:absolute; left:0; border:none; height:auto; }
 #<?php echo $styles['wrapperid']; ?> .imgnav { position:absolute; width:25%; height:<?php echo ((int) $styles['height'] + 8); ?>px; cursor:pointer; z-index:150; }
 #<?php echo $styles['wrapperid']; ?> #imgprev<?php echo $styles['wrapperrand']; ?> { left:0; background:url('../images/left.gif') left center no-repeat; }
 #<?php echo $styles['wrapperid']; ?> #imgnext<?php echo $styles['wrapperrand']; ?> { right:0; background:url('../images/right.gif') right center no-repeat; }

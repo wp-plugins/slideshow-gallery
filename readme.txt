@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 2.9
 Tested up to: 3.3.2
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -79,6 +79,16 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.2.2 =
+* FIX: Slides paging numbers didn't show up
+* REMOVE: 'Description' not mandatory/required for each slide.
+* FIX: Slashes caused by single/double quotes in titles/descriptions
+* ADD: Hardcode for each gallery in 'Manage Galleries' section
+* ADD: Shortcode in the 'Manage Galleries' section for each gallery
+* ADD: Gallery ID to the 'Manage Galleries' section
+* FIX: the 100% width issue on the 'img' tag if resizeimages = false
+* IMPROVE: Change cache directory to "wp-content/uploads/slideshow-gallery/cache" for TimThumb
 
 = 1.2.1 = 
 * FIX: Thumbnails On/Off setting doesn't work

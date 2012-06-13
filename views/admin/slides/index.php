@@ -13,5 +13,5 @@
 		</form>
 	<?php endif; ?>
 	
-	<?php $this -> render('slides' . DS . 'loop', array('slides' => $slides), true, 'admin'); ?>
+	<?php $this -> render('slides' . DS . 'loop', array('slides' => $slides, 'paginate' => $paginate), true, 'admin'); ?>
 </div>

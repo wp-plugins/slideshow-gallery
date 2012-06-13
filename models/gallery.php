@@ -25,7 +25,7 @@ class GalleryGallery extends GalleryDbHelper {
 	
 		if (!empty($data)) {
 			foreach ($data as $dkey => $dval) {
-				$this -> {$dkey} = $dval;
+				$this -> {$dkey} = stripslashes_deep($dval);
 				
 				switch ($dkey) {
 					case 'id'			:

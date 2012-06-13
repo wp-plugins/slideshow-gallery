@@ -2,6 +2,7 @@
 
 $rand = 's' . rand(1,99) . 'w';
 $wrapperid = "slideshow-wrapper-" . $rand;
+$slides = stripslashes_deep($slides);
 
 ?>
 

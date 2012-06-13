@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.2.1';
+	var $version = '1.2.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -221,13 +221,23 @@ class GalleryPlugin {
 	
 	function check_uploaddir() {
 		$uploaddir = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+		$cachedir = $uploaddir . 'cache' . DS;
 		
 		if (!file_exists($uploaddir)) {
 			if (@mkdir($uploaddir, 0777)) {
 				@chmod($uploaddir, 0777);
 				return true;
 			} else {
-				$message = __('Uploads folder named "' . $this -> plugin_name . '" cannot be created inside "wp-content/uploads"', $this -> plugin_name);
+				$message = sprintf(__('Uploads folder named "%s" cannot be created inside "%s"', $this -> plugin_name), $this -> plugin_name, "wp-content/uploads/");
+				$this -> render_msg($message);
+			}
+		}
+		
+		if (!file_exists($cachedir)) {
+			if (@mkdir($cachedir, 0777)) {
+				@chmod($cachedir, 0777);
+			} else {
+				$message = sprintf(__('Slideshow cache folder "%s" for resizing images cannot be created inside "%s"', $this -> plugin_name), 'cache', 'wp-content/uploads/' . $this -> plugin_name . '/');
 				$this -> render_msg($message);
 			}
 		}
