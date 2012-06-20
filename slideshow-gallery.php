@@ -5,7 +5,7 @@ Plugin Name: Slideshow Gallery
 Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
-Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (class_exists('Gallery')) { $Gallery = new Gallery(); $Gallery -> slideshow($output = true, $post_id = null); } ?&gt;</code> and specify the required <code>$post_id</code> parameter accordingly.
+Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
 Version: 1.2.2
 */
 
@@ -105,31 +105,16 @@ if (!class_exists('Gallery')) {
 		}
 		
 		function slideshow($output = true, $post_id = null, $exclude = null) {		
-			global $wpdb;
+			$params['post_id'] = $post_id;
+			$params['exclude'] = $exclude;
+		
+			$content = $this -> embed($params, false);
 			
-			if (!empty($post_id) && $post = get_post($post_id)) {
-				if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=menu_order ASC, ID ASC")) {
-					if (!empty($exclude)) {
-						$exclude = array_map('trim', explode(',', $exclude));
-						
-						$a = 0;
-						foreach ($attachments as $id => $attachment) {
-							
-							$a++;
-							if (in_array($a, $exclude)) {
-								unset($attachments[$id]);
-							}
-						}
-					}
-				
-					$content = $this -> render('gallery', array('slides' => $attachments, 'frompost' => true), false, 'default');
-				}
+			if ($output == true) {
+				echo $content;
 			} else {
-				$slides = $this -> Slide -> find_all(null, null, array('order', "ASC"));
-				$content = $this -> render('gallery', array('slides' => $slides, 'frompost' => false), false, 'default');
+				return $content;
 			}
-			
-			if ($output) { echo $content; } else { return $content; }
 		}
 		
 		function embed($atts = array(), $content = null) {
