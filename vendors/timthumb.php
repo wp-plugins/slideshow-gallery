@@ -12,10 +12,6 @@
  * 
  * $Rev$
  */
- 
- 
-error_reporting(0);
-@ini_set('display_errors', 0);
 
 /*
  * --- TimThumb CONFIGURATION ---
@@ -24,25 +20,24 @@ error_reporting(0);
  * loaded by timthumb. This will save you having to re-edit these variables
  * everytime you download a new version
 */
-define ('VERSION', '2.8.9');																		// Version of this script 
+define ('VERSION', '2.8.10');																		// Version of this script 
 //Load a config file if it exists. Otherwise, use the values below
 if( file_exists(dirname(__FILE__) . '/timthumb-config.php'))	require_once('timthumb-config.php');
 if(! defined('DEBUG_ON') )					define ('DEBUG_ON', false);								// Enable debug logging to web server error log (STDERR)
 if(! defined('DEBUG_LEVEL') )				define ('DEBUG_LEVEL', 1);								// Debug level 1 is less noisy and 3 is the most noisy
-if(! defined('MEMORY_LIMIT') )				define ('MEMORY_LIMIT', '128M');						// Set PHP memory limit
+if(! defined('MEMORY_LIMIT') )				define ('MEMORY_LIMIT', '30M');							// Set PHP memory limit
 if(! defined('BLOCK_EXTERNAL_LEECHERS') ) 	define ('BLOCK_EXTERNAL_LEECHERS', false);				// If the image or webshot is being loaded on an external site, display a red "No Hotlinking" gif.
 
 //Image fetching and caching
-if(! defined('ALLOW_EXTERNAL') )			define ('ALLOW_EXTERNAL', true);						// Allow image fetching from external websites. Will check against ALLOWED_SITES if ALLOW_ALL_EXTERNAL_SITES is false
-if(! defined('ALLOW_ALL_EXTERNAL_SITES') ) 	define ('ALLOW_ALL_EXTERNAL_SITES', true);				// Less secure. 
-if(! defined('FETCH_LOCAL_URLS') )          define ('FETCH_LOCAL_URLS', true);                      // If true, URL sources will always be fetched over HTTP, even if they have the same hostname as this script
+if(! defined('ALLOW_EXTERNAL') )			define ('ALLOW_EXTERNAL', TRUE);						// Allow image fetching from external websites. Will check against ALLOWED_SITES if ALLOW_ALL_EXTERNAL_SITES is false
+if(! defined('ALLOW_ALL_EXTERNAL_SITES') ) 	define ('ALLOW_ALL_EXTERNAL_SITES', false);				// Less secure. 
 if(! defined('FILE_CACHE_ENABLED') ) 		define ('FILE_CACHE_ENABLED', TRUE);					// Should we store resized/modified images on disk to speed things up?
 if(! defined('FILE_CACHE_TIME_BETWEEN_CLEANS'))	define ('FILE_CACHE_TIME_BETWEEN_CLEANS', 86400);	// How often the cache is cleaned 
 
 if(! defined('FILE_CACHE_MAX_FILE_AGE') ) 	define ('FILE_CACHE_MAX_FILE_AGE', 86400);				// How old does a file have to be to be deleted from the cache
 if(! defined('FILE_CACHE_SUFFIX') ) 		define ('FILE_CACHE_SUFFIX', '.timthumb.txt');			// What to put at the end of all files in the cache directory so we can identify them
 if(! defined('FILE_CACHE_PREFIX') ) 		define ('FILE_CACHE_PREFIX', 'timthumb');				// What to put at the beg of all files in the cache directory so we can identify them
-if(! defined('FILE_CACHE_DIRECTORY') ) 		define ('FILE_CACHE_DIRECTORY', '../../../uploads/slideshow-gallery/cache/');				// Directory where images are cached. Left blank it will use the system temporary directory (which is better for security)
+if(! defined('FILE_CACHE_DIRECTORY') ) 		define ('FILE_CACHE_DIRECTORY', '../../../uploads/slideshow-gallery/cache');				// Directory where images are cached. Left blank it will use the system temporary directory (which is better for security)
 if(! defined('MAX_FILE_SIZE') )				define ('MAX_FILE_SIZE', 10485760);						// 10 Megs is 10485760. This is the max internal or external file size that we'll process.  
 if(! defined('CURL_TIMEOUT') )				define ('CURL_TIMEOUT', 20);							// Timeout duration for Curl. This only applies if you have Curl installed and aren't using PHP's default URL fetching mechanism.
 if(! defined('WAIT_BETWEEN_FETCH_ERRORS') )	define ('WAIT_BETWEEN_FETCH_ERRORS', 3600);				//Time to wait between errors fetching remote file
@@ -138,7 +133,6 @@ if(! isset($ALLOWED_SITES)){
 		'imgur.com',
 		'imageshack.us',
 		'tinypic.com',
-		
 	);
 }
 // -------------------------------------------------------------
@@ -171,9 +165,9 @@ class timthumb {
 	protected static $curlFH = false;
 	public static function start(){
 		$tim = new timthumb();
-		$tim -> handleErrors();
-		$tim -> securityChecks();
-		if($tim -> tryBrowserCache()){
+		$tim->handleErrors();
+		$tim->securityChecks();
+		if($tim->tryBrowserCache()){
 			exit(0);
 		}
 		$tim->handleErrors();
@@ -189,8 +183,8 @@ class timthumb {
 		global $ALLOWED_SITES;
 		$this->startTime = microtime(true);
 		date_default_timezone_set('UTC');
-		$this -> debug(1, "Starting new request from " . $this->getIP() . " to " . $_SERVER['REQUEST_URI']);
-		$this -> calcDocRoot($this -> param('src'));
+		$this->debug(1, "Starting new request from " . $this->getIP() . " to " . $_SERVER['REQUEST_URI']);
+		$this->calcDocRoot();
 		//On windows systems I'm assuming fileinode returns an empty string or a number that doesn't change. Check this.
 		$this->salt = @filemtime(__FILE__) . '-' . @fileinode(__FILE__);
 		$this->debug(3, "Salt is: " . $this->salt);
@@ -212,12 +206,13 @@ class timthumb {
 		//Clean the cache before we do anything because we don't want the first visitor after FILE_CACHE_TIME_BETWEEN_CLEANS expires to get a stale image. 
 		$this->cleanCache();
 		
-		$this -> myHost = preg_replace('/^www\./i', '', $_SERVER['HTTP_HOST']);
-		$this -> src = $this -> param('src');
-		$this -> url = parse_url($this -> src);
+		$this->myHost = preg_replace('/^www\./i', '', $_SERVER['HTTP_HOST']);
+		$this->src = $this->param('src');
+		$this->url = parse_url($this->src);
+		$this->src = preg_replace('/https?:\/\/(?:www\.)?' . $this->myHost . '/i', '', $this->src);
 		
-		if(strlen($this -> src) <= 3){
-			$this -> error("No image specified");
+		if(strlen($this->src) <= 3){
+			$this->error("No image specified");
 			return false;
 		}
 		if(BLOCK_EXTERNAL_LEECHERS && array_key_exists('HTTP_REFERER', $_SERVER) && (! preg_match('/^https?:\/\/(?:www\.)?' . $this->myHost . '(?:$|\/)/i', $_SERVER['HTTP_REFERER']))){
@@ -232,9 +227,6 @@ class timthumb {
 			echo $imgData;
 			return false;
 			exit(0);
-		}
-		if(!FETCH_LOCAL_URLS && preg_match('/https?:\/\/(?:www\.)?' . $this->myHost . '(?:$|\/)/i', $this->src)){
-			$this->src = preg_replace('/https?:\/\/(?:www\.)?' . $this->myHost . '/i', '', $this->src);
 		}
 		if(preg_match('/^https?:\/\/[^\/]+/i', $this->src)){
 			$this->debug(2, "Is a request for an external URL: " . $this->src);
@@ -265,22 +257,20 @@ class timthumb {
 		}
 
 		$cachePrefix = ($this->isURL ? '_ext_' : '_int_');
-		if($this -> isURL){
+		if($this->isURL){
 			$arr = explode('&', $_SERVER ['QUERY_STRING']);
 			asort($arr);
 			$this->cachefile = $this->cacheDirectory . '/' . FILE_CACHE_PREFIX . $cachePrefix . md5($this->salt . implode('', $arr) . $this->fileCacheVersion) . FILE_CACHE_SUFFIX;
 		} else {
-			$this -> localImage = $this -> getLocalImagePath($this -> src);
-			
-			if(! $this -> localImage){
-				$this -> debug(1, "Could not find the local image: {$this->localImage}");
-				$this -> error("Could not find the internal image you specified.");
-				$this -> set404();
+			$this->localImage = $this->getLocalImagePath($this->src);
+			if(! $this->localImage){
+				$this->debug(1, "Could not find the local image: {$this->localImage}");
+				$this->error("Could not find the internal image you specified.");
+				$this->set404();
 				return false;
 			}
-			
-			$this -> debug(1, "Local image path is {$this->localImage}");
-			$this -> localImageMTime = @filemtime($this->localImage);
+			$this->debug(1, "Local image path is {$this->localImage}");
+			$this->localImageMTime = @filemtime($this->localImage);
 			//We include the mtime of the local file in case in changes on disk.
 			$this->cachefile = $this->cacheDirectory . '/' . FILE_CACHE_PREFIX . $cachePrefix . md5($this->salt . $this->localImageMTime . $_SERVER ['QUERY_STRING'] . $this->fileCacheVersion) . FILE_CACHE_SUFFIX;
 		}
@@ -538,8 +528,8 @@ class timthumb {
 
 		// set default width and height if neither are set already
 		if ($new_width == 0 && $new_height == 0) {
-		    //$new_width = 100;
-		    //$new_height = 100;
+		    $new_width = 100;
+		    $new_height = 100;
 		}
 
 		// ensure size limits can not be abused
@@ -831,7 +821,6 @@ class timthumb {
 		imagedestroy($image);
 		return true;
 	}
-	
 	protected function calcDocRoot(){
 		$docRoot = @$_SERVER['DOCUMENT_ROOT'];
 		if (defined('LOCAL_FILE_BASE_DIRECTORY')) {
@@ -853,43 +842,41 @@ class timthumb {
 		}
 		if($docRoot && $_SERVER['DOCUMENT_ROOT'] != '/'){ $docRoot = preg_replace('/\/$/', '', $docRoot); }
 		$this->debug(3, "Doc root is: " . $docRoot);
-		$docRoot = rtrim($docRoot, '/') . '/';
 		$this->docRoot = $docRoot;
+
 	}
-	
 	protected function getLocalImagePath($src){
 		$src = ltrim($src, '/'); //strip off the leading '/'
-		
-		if(! $this -> docRoot){
+		if(! $this->docRoot){
 			$this->debug(3, "We have no document root set, so as a last resort, lets check if the image is in the current dir and serve that.");
 			//We don't support serving images outside the current dir if we don't have a doc root for security reasons.
 			$file = preg_replace('/^.*?([^\/\\\\]+)$/', '$1', $src); //strip off any path info and just leave the filename.
 			if(is_file($file)){
-				return $this -> realpath($file);
+				return $this->realpath($file);
 			}
 			return $this->error("Could not find your website document root and the file specified doesn't exist in timthumbs directory. We don't support serving files outside timthumb's directory without a document root for security reasons.");
 		} //Do not go past this point without docRoot set
 
 		//Try src under docRoot
-		if(file_exists ($this -> docRoot . '/' . $src)) {
-			$this->debug(3, "Found file as " . $this -> docRoot . '/' . $src);
-			$real = $this -> realpath($this->docRoot . '/' . $src);
+		if(file_exists ($this->docRoot . '/' . $src)) {
+			$this->debug(3, "Found file as " . $this->docRoot . '/' . $src);
+			$real = $this->realpath($this->docRoot . '/' . $src);
 			if(stripos($real, $this->docRoot) === 0){
 				return $real;
 			} else {
-				$this -> debug(1, "Security block: The file specified occurs outside the document root.");
+				$this->debug(1, "Security block: The file specified occurs outside the document root.");
 				//allow search to continue
 			}
 		}
 		//Check absolute paths and then verify the real path is under doc root
-		$absolute = $this -> realpath('/' . $src);
+		$absolute = $this->realpath('/' . $src);
 		if($absolute && file_exists($absolute)){ //realpath does file_exists check, so can probably skip the exists check here
 			$this->debug(3, "Found absolute path: $absolute");
 			if(! $this->docRoot){ $this->sanityFail("docRoot not set when checking absolute path."); }
 			if(stripos($absolute, $this->docRoot) === 0){
 				return $absolute;
 			} else {
-				$this -> debug(1, "Security block: The file specified occurs outside the document root.");
+				$this->debug(1, "Security block: The file specified occurs outside the document root.");
 				//and continue search
 			}
 		}
@@ -898,18 +885,18 @@ class timthumb {
 		
 		// account for Windows directory structure
 		if (strstr($_SERVER['SCRIPT_FILENAME'],':')) {
-			$sub_directories = explode('\\', str_replace($this -> docRoot, '', $_SERVER['SCRIPT_FILENAME']));
+			$sub_directories = explode('\\', str_replace($this->docRoot, '', $_SERVER['SCRIPT_FILENAME']));
 		} else {
-			$sub_directories = explode('/', str_replace($this -> docRoot, '', $_SERVER['SCRIPT_FILENAME']));
+			$sub_directories = explode('/', str_replace($this->docRoot, '', $_SERVER['SCRIPT_FILENAME']));
 		}
 
 		foreach ($sub_directories as $sub){
 			$base .= $sub . '/';
-			$this -> debug(3, "Trying file as: " . $base . $src);
+			$this->debug(3, "Trying file as: " . $base . $src);
 			if(file_exists($base . $src)){
 				$this->debug(3, "Found file as: " . $base . $src);
 				$real = $this->realpath($base . $src);
-				if(stripos($real, $this -> realpath($this->docRoot)) === 0){
+				if(stripos($real, $this->realpath($this->docRoot)) === 0){
 					return $real;
 				} else {
 					$this->debug(1, "Security block: The file specified occurs outside the document root.");
@@ -917,7 +904,6 @@ class timthumb {
 				}
 			}
 		}
-		
 		return false;
 	}
 	protected function realpath($path){
@@ -1086,8 +1072,8 @@ class timthumb {
 	}
 	protected function securityChecks(){
 	}
-	protected function param($property, $default = '') {
-		if (isset($_GET[$property])) {
+	protected function param($property, $default = ''){
+		if (isset ($_GET[$property])) {
 			return $_GET[$property];
 		} else {
 			return $default;
@@ -1250,7 +1236,7 @@ class timthumb {
 
 	}
 	protected function set404(){
-		$this -> is404 = true;
+		$this->is404 = true;
 	}
 	protected function is404(){
 		return $this->is404;

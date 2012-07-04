@@ -2,9 +2,9 @@
 Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
-Requires at least: 2.9
-Tested up to: 3.3.2
-Stable tag: 1.2.2
+Requires at least: 3.1
+Tested up to: 3.4.1
+Stable tag: 1.2.2.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -79,6 +79,9 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.2.2.1 =
+* IMPROVE: Upgrade of TimThumb from 2.8.9 to 2.8.10 to fix broken images.
 
 = 1.2.2 =
 * FIX: Slides paging numbers didn't show up
