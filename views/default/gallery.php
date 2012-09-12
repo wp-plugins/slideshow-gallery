@@ -26,7 +26,7 @@ $slides = stripslashes_deep($slides);
 						<?php if (!empty($slide -> guid)) : ?>
 							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr($slide -> post_title); ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($full_image_href[0], $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
 						<?php else : ?>
-							<img src="<?php echo $this -> Html -> timthumb_image_src($full_image_href[0], $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" />
+							<a><img src="<?php echo $this -> Html -> timthumb_image_src($full_image_href[0], $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
 						<a href="<?php echo $slide -> guid; ?>" title="<?php echo $slide -> post_title; ?>"></a>
@@ -48,7 +48,7 @@ $slides = stripslashes_deep($slides);
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
 							<a href="<?php echo $slide -> link; ?>" title="<?php echo esc_attr($slide -> title); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
 						<?php else : ?>
-							<img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" />
+							<a><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
@@ -136,7 +136,6 @@ $slides = stripslashes_deep($slides);
 			slideshow.spacing = <?php echo $options['thumbsspacing']; ?>;
 			slideshow.active = "<?php echo $options['thumbsborder']; ?>";
 			slideshow.imagesthickbox = "<?php echo $options['imagesoverlay']; ?>";
-			console.log(slideshow.imagesthickbox);
 			jQuery("#spinner").remove();
 			slideshow.init("slideshow","image","<?php echo $navb; ?>","<?php echo $navf; ?>","imglink");
 			tid('<?php echo $wrapperid; ?>').style.visibility = 'visible';
