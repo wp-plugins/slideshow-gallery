@@ -2,7 +2,11 @@
 		<form onsubmit="if (!confirm('<?php _e('Are you sure you wish to execute this action on the selected slides?', $this -> plugin_name); ?>')) { return false; }" action="<?php echo $this -> url; ?>&amp;method=mass" method="post">
 			<div class="tablenav">
 				<div class="alignleft actions">
-					<a href="<?php echo $this -> url; ?>&amp;method=order" title="<?php _e('Order all your slides', $this -> plugin_name); ?>" class="button"><?php _e('Order Slides', $this -> plugin_name); ?></a>
+					<?php if (!empty($_GET['page']) && $_GET['page'] == $this -> sections -> galleries) : ?>
+						<a href="?page=<?php echo $this -> sections -> slides; ?>&amp;method=order&amp;gallery_id=<?php echo $gallery -> id; ?>" class="button"><?php _e('Order Slides', $this -> plugin_name); ?></a>
+					<?php else : ?>
+						<a href="<?php echo $this -> url; ?>&amp;method=order" title="<?php _e('Order all your slides', $this -> plugin_name); ?>" class="button"><?php _e('Order Slides', $this -> plugin_name); ?></a>
+					<?php endif; ?>
 				
 					<select name="action" class="action">
 						<option value=""><?php _e('- Bulk Actions -', $this -> plugin_name); ?></option>
@@ -45,7 +49,7 @@
 							<td><?php echo $slide -> id; ?></td>
 							<td style="width:75px;">
 								<?php $image = $slide -> image; ?>
-								<a href="<?php echo $this -> Html -> image_url($image); ?>" title="<?php echo $slide -> title; ?>" class="colorbox" rel="slides"><img class="slideshow" src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, 60, 60, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+								<a href="<?php echo $this -> Html -> image_url($image); ?>" title="<?php echo $slide -> title; ?>" class="colorbox" rel="slides"><img class="slideshow" src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, 40, 40, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
 							</td>
 							<td>
                             	<a class="row-title" href="<?php echo $this -> url; ?>&amp;method=save&amp;id=<?php echo $slide -> id; ?>" title=""><?php echo $slide -> title; ?></a>

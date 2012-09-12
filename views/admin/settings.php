@@ -26,7 +26,6 @@ wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
 					<?php do_meta_boxes($this -> menus['slideshow-settings'], 'normal', $post); ?>
 				</div>
 			</div>
-			<br class="clear" />
 		</div>
 	</form>
 </div>

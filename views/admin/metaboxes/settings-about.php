@@ -1,6 +1,9 @@
 <div class="submitbox">
 	<div id="minor-publishing">
 		<div id="misc-publishing-actions">
+			<div class="misc-pub-section">
+				<a href="http://wordpress.org/extend/plugins/slideshow-gallery/" target="_blank">Vote/rate on WordPress.org, please!</a>
+			</div>
         	<div class="misc-pub-section">
         		<a href="http://docs.tribulant.com/wordpress-slideshow-gallery/1758" target="_blank">Online Documentation</a>
         	</div>

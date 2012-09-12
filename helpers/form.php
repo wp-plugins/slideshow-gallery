@@ -32,8 +32,6 @@ class GalleryFormHelper extends GalleryPlugin {
 		
 		$r = wp_parse_args($args, $defaults);
 		extract($r, EXTR_SKIP);
-		
-		$this -> debug($this);
 		echo $this -> Html -> field_value($name);
 		
 		ob_start();
