@@ -15,7 +15,7 @@ class GalleryAjax extends GalleryPlugin {
 		$this -> register_plugin('slideshow-gallery', __FILE__);
 	
 		if (!empty($cmd)) {		
-			if (in_array($cmd, $this -> safecommands) || current_user_can('edit_plugins')) {			
+			if (in_array($cmd, $this -> safecommands) || current_user_can('gallery_slides')) {			
 				if (method_exists($this, $cmd)) {
 					$this -> $cmd();
 				}
@@ -26,10 +26,14 @@ class GalleryAjax extends GalleryPlugin {
 	function slides_order() {
 		if (!empty($_REQUEST['item'])) {
 			foreach ($_REQUEST['item'] as $order => $slide_id) {
-				$this -> Slide -> save_field('order', $order, array('id' => $slide_id));
+				if (empty($_REQUEST['gallery_id'])) {
+					$this -> Slide -> save_field('order', ($order + 1), array('id' => $slide_id));
+				} else {
+					$this -> GallerySlides -> save_field('order', ($order + 1), array('slide_id' => $slide_id, 'gallery_id' => $_REQUEST['gallery_id']));
+				}
 			}
 			
-			?><br/><div style="color:red;"><?php _e('Slides have been ordered', $this -> plugin_name); ?></div><?php
+			_e('Slides have been ordered', $this -> plugin_name);
 		}
 	}
 }

@@ -1,13 +1,13 @@
 <?php 
 
-$rand = 's' . rand(1,99) . 'w';
-$wrapperid = "slideshow-wrapper-" . $rand;
+$wrapperid = "slideshow-wrapper";
 $slides = stripslashes_deep($slides);
 
 ?>
 
 <?php if (!empty($slides)) : ?>
 	<ul id="slideshow" class="slideshow" style="display:none;">
+		<!-- From a WordPress post/page -->
 		<?php if ($frompost) : ?>
 			<?php foreach ($slides as $slide) : ?>
 				<li>
@@ -33,6 +33,7 @@ $slides = stripslashes_deep($slides);
 					<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
+		<!-- From all slides or gallery slides -->
 		<?php else : ?>
 			<?php foreach ($slides as $slide) : ?>		
 				<li>
@@ -50,7 +51,13 @@ $slides = stripslashes_deep($slides);
 							<img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" />
 						<?php endif; ?>
 					<?php else : ?>
-						<a href="<?php echo $slide -> link; ?>" title="<?php echo $slide -> title; ?>"></a>
+						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
+							<a href="<?php echo $slide -> link; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo $slide -> title; ?>"></a>
+						<?php elseif ($options['imagesoverlay'] == "true") : ?>
+							<a href="<?php echo site_url('/') . $slide -> image_path; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo $slide -> title; ?>"></a>
+						<?php else : ?>
+							<a></a>
+						<?php endif; ?>
 					<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
@@ -59,30 +66,30 @@ $slides = stripslashes_deep($slides);
 	
 	<div id="<?php echo $wrapperid; ?>">
 		<?php if ($options['showthumbs'] == "true" && $options['thumbsposition'] == "top") : ?>
-			<div id="thumbnails<?php echo $rand; ?>" class="thumbstop">
-				<div id="slideleft<?php echo $rand; ?>" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
-				<div id="slidearea<?php echo $rand; ?>">
-					<div id="slider<?php echo $rand; ?>"></div>
+			<div id="thumbnails" class="thumbstop">
+				<div id="slideleft" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
+				<div id="slidearea">
+					<div id="slider"></div>
 				</div>
-				<div id="slideright<?php echo $rand; ?>" title="<?php _e('Slide Right', $this -> plugin_name); ?>"></div>
+				<div id="slideright" title="<?php _e('Slide Right', $this -> plugin_name); ?>"></div>
 				<br style="clear:both; visibility:hidden; height:1px;" />
 			</div>
 		<?php endif; ?>
 	
-		<div id="fullsize<?php echo $rand; ?>">
+		<div id="fullsize">
 			<?php $navb = false; $navf = false; ?>
 			<?php if ($options['shownav'] == "true" && count($slides) > 1) : ?>
-				<?php $navb = "imgprev" . $rand; ?>
-				<div id="imgprev<?php echo $rand; ?>" class="imgnav" title="<?php _e('Previous Image', $this -> plugin_name); ?>"></div>
+				<?php $navb = "imgprev"; ?>
+				<div id="imgprev" class="imgnav" title="<?php _e('Previous Image', $this -> plugin_name); ?>"></div>
 			<?php endif; ?>
-			<div id="imglink<?php echo $rand; ?>" class="imglink"><!-- link --></div>
+			<div id="imglink" class="imglink"><!-- link --></div>
 			<?php if ($options['shownav'] == "true" && count($slides) > 1) : ?>
-				<?php $navf = "imgnext" . $rand; ?>
-				<div id="imgnext<?php echo $rand; ?>" class="imgnav" title="<?php _e('Next Image', $this -> plugin_name); ?>"></div>
+				<?php $navf = "imgnext"; ?>
+				<div id="imgnext" class="imgnav" title="<?php _e('Next Image', $this -> plugin_name); ?>"></div>
 			<?php endif; ?>
-			<div id="image<?php echo $rand; ?>"></div>
+			<div id="image"></div>
 			<?php if ($options['showinfo'] == "true") : ?>
-				<div id="information<?php echo $rand; ?>">
+				<div id="information">
 					<h3></h3>
 					<p></p>
 				</div>
@@ -90,12 +97,12 @@ $slides = stripslashes_deep($slides);
 		</div>
 		
 		<?php if ($options['showthumbs'] == "true" && $options['thumbsposition'] == "bottom") : ?>
-			<div id="thumbnails<?php echo $rand; ?>" class="thumbsbot">
-				<div id="slideleft<?php echo $rand; ?>" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
-				<div id="slidearea<?php echo $rand; ?>">
-					<div id="slider<?php echo $rand; ?>"></div>
+			<div id="thumbnails" class="thumbsbot">
+				<div id="slideleft" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
+				<div id="slidearea">
+					<div id="slider"></div>
 				</div>
-				<div id="slideright<?php echo $rand; ?>" title="<?php _e('Slide Right', $this -> plugin_name); ?>"></div>
+				<div id="slideright" title="<?php _e('Slide Right', $this -> plugin_name); ?>"></div>
 				<br style="clear:both; visibility:hidden; height:1px;" />
 			</div>
 		<?php endif; ?>
@@ -106,9 +113,8 @@ $slides = stripslashes_deep($slides);
 	tid('slideshow').style.display = "none";
 	tid('<?php echo $wrapperid; ?>').style.display = 'block';
 	tid('<?php echo $wrapperid; ?>').style.visibility = 'hidden';
-	// append the spinner
-	jQuery("#fullsize<?php echo $rand; ?>").append('<div id="spinner<?php echo $rand; ?>"><img src="<?php echo $this -> url(); ?>/images/spinner.gif"></div>');
-	tid('spinner<?php echo $rand; ?>').style.visibility = 'visible';
+	jQuery("#fullsize").append('<div id="spinner"><img src="<?php echo $this -> url(); ?>/images/spinner.gif"></div>');
+	tid('spinner').style.visibility = 'visible';
 
 	var slideshow = new TINY.slideshow("slideshow");
 	jQuery(document).ready(function() {
@@ -120,18 +126,19 @@ $slides = stripslashes_deep($slides);
 			slideshow.navHover = <?php echo $options['navhoveropacity']; ?>;
 			slideshow.letterbox = "#000000";
 			slideshow.linkclass = "linkhover";
-			slideshow.info = "<?php echo ($options['showinfo'] == "true") ? 'information' . $rand : ''; ?>";
+			slideshow.info = "<?php echo ($options['showinfo'] == "true") ? 'information' : ''; ?>";
 			slideshow.infoSpeed = <?php echo $options['infospeed']; ?>;
-			slideshow.thumbs = "<?php echo ($options['showthumbs'] == "true") ? 'slider' . $rand : ''; ?>";
+			slideshow.thumbs = "<?php echo ($options['showthumbs'] == "true") ? 'slider' : ''; ?>";
 			slideshow.thumbOpacity = <?php echo $this -> get_option('thumbopacity'); ?>;
-			slideshow.left = "slideleft<?php echo $rand; ?>";
-			slideshow.right = "slideright<?php echo $rand; ?>";
+			slideshow.left = "slideleft";
+			slideshow.right = "slideright";
 			slideshow.scrollSpeed = <?php echo $options['thumbsspeed']; ?>;
 			slideshow.spacing = <?php echo $options['thumbsspacing']; ?>;
 			slideshow.active = "<?php echo $options['thumbsborder']; ?>";
-			slideshow.imagesthickbox = "<?php echo ($this -> get_option('imagesthickbox') == "Y") ? 'true' : 'false'; ?>";
-			jQuery("#spinner<?php echo $rand; ?>").remove();
-			slideshow.init("slideshow","image<?php echo $rand; ?>","<?php echo $navb; ?>","<?php echo $navf; ?>","imglink<?php echo $rand; ?>");
+			slideshow.imagesthickbox = "<?php echo $options['imagesoverlay']; ?>";
+			console.log(slideshow.imagesthickbox);
+			jQuery("#spinner").remove();
+			slideshow.init("slideshow","image","<?php echo $navb; ?>","<?php echo $navf; ?>","imglink");
 			tid('<?php echo $wrapperid; ?>').style.visibility = 'visible';
 		}
 	});
@@ -139,7 +146,6 @@ $slides = stripslashes_deep($slides);
 	
 	<?php
 	
-	$cssattr['wrapperrand'] = $rand;
 	$cssattr['wrapperid'] = $wrapperid;
 	$cssattr['resizeimages'] = (($options['resizeimages'] == "true") ? "Y" : "N");
 	$cssattr['width'] = $options['width'];
@@ -155,8 +161,10 @@ $slides = stripslashes_deep($slides);
 	
 	<!--[if IE 6]>
 	<style type="text/css">
-	.imglink, #imglink<?php echo $rand; ?> { display: none !important; }
+	.imglink, #imglink { display: none !important; }
 	.linkhover { display: none !important; }
 	</style>
 	<![endif]-->
+<?php else : ?>
+	<?php _e('No slides are available.', $this -> plugin_name); ?>
 <?php endif; ?>

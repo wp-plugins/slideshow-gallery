@@ -2,6 +2,26 @@
 
 class GalleryHtmlHelper extends GalleryPlugin {
 
+	function section_name($section = null) {
+		if (!empty($section)) {
+			switch ($section) {
+				case 'slides'			:
+					$name = __('Manage Slides', $this -> plugin_name);
+					break;
+				case 'galleries'		:
+					$name = __('Manage Galleries', $this -> plugin_name);
+					break;
+				case 'settings'			:
+					$name = __('Configuration', $this -> plugin_name);
+					break;
+			}
+			
+			return $name;
+		}
+		
+		return false;
+	}
+
 	function link($name = '', $href = '/', $args = array()) {
 		$defaults = array(
 			'title'			=>	(empty($args['title'])) ? $title : $args['title'],
@@ -63,12 +83,12 @@ class GalleryHtmlHelper extends GalleryPlugin {
 	}
 	
 	function timthumb_url() {
-		return rtrim(get_bloginfo('wpurl'), '/') . '/wp-content/plugins/slideshow-gallery/vendors/timthumb.php';
+		return site_url() . '/wp-content/plugins/slideshow-gallery/vendors/timthumb.php';
 	}
 	
 	function image_url($filename = null) {
 		if (!empty($filename)) {
-			return rtrim(get_option('siteurl'), '/') . '/wp-content/uploads/slideshow-gallery/' . $filename;
+			return site_url() . '/wp-content/uploads/slideshow-gallery/' . $filename;
 		}
 		
 		return false;

@@ -166,7 +166,7 @@ class GalleryDbHelper extends GalleryPlugin {
 						if (!empty($this -> data -> galleries)) {						
 							foreach ($this -> data -> galleries as $gallery_id) {
 								$date = date("Y-m-d H:i:s", time());
-								$galleryslidequery = "INSERT INTO `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` (`id`, `slide_id`, `gallery_id`, `created`, `modified`) VALUES ('', '" . $slide_id . "', '" . $gallery_id . "', '" . $date . "', '" . $date . "');";
+								$galleryslidequery = "INSERT INTO `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` (`slide_id`, `gallery_id`, `created`, `modified`) VALUES ('" . $slide_id . "', '" . $gallery_id . "', '" . $date . "', '" . $date . "');";
 								$wpdb -> query($galleryslidequery);
 							}
 						}

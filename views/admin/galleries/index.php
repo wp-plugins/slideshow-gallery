@@ -56,6 +56,7 @@
                                 	<span class="view"><?php echo $this -> Html -> link(__('View', $this -> plugin_name), "?page=" . $this -> sections -> galleries . "&amp;method=view&amp;id=" . $gallery -> id); ?> |</span>
                                 	<span class="edit"><?php echo $this -> Html -> link(__('Edit', $this -> plugin_name), "?page=" . $this -> sections -> galleries . "&amp;method=save&amp;id=" . $gallery -> id); ?> |</span>
                                 	<span class="edit"><?php echo $this -> Html -> link(__('Hardcode', $this -> plugin_name), '?page=' . $this -> sections -> galleries . "&amp;method=hardcode&amp;id=" . $gallery -> id); ?> |</span>
+                                	<span class="edit"><?php echo $this -> Html -> link(__('Order Slides', $this -> plugin_name), '?page=' . $this -> sections -> slides . '&amp;method=order&amp;gallery_id=' . $gallery -> id); ?> |</span>
                                     <span class="delete"><?php echo $this -> Html -> link(__('Delete', $this -> plugin_name), "?page=" . $this -> sections -> galleries . "&amp;method=delete&amp;id=" . $gallery -> id, array('class' => "submitdelete", 'onclick' => "if (!confirm('" . __('Are you sure you want to permanently remove this slide?', $this -> plugin_name) . "')) { return false; }")); ?></span>
                                 </div>
                             </td>
