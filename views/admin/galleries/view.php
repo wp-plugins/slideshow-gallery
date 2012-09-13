@@ -15,5 +15,5 @@
 		</div>
 	</div>
 	
-	<?php $this -> render('slides' . DS . 'loop', array('slides' => $slides, 'paginate' => $paginate), true, 'admin'); ?>
+	<?php $this -> render('slides' . DS . 'loop', array('gallery' => $gallery, 'slides' => $slides, 'paginate' => $paginate), true, 'admin'); ?>
 </div>

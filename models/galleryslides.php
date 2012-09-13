@@ -14,6 +14,7 @@ class GalleryGallerySlides extends GalleryDbHelper {
 		'id'				=>	"INT(11) NOT NULL AUTO_INCREMENT",
 		'gallery_id'		=>	"INT(11) NOT NULL DEFAULT '0'",
 		'slide_id'			=>	"INT(11) NOT NULL DEFAULT '0'",
+		'order'				=>	"INT(11) NOT NULL DEFAULT '0'",
 		'created'			=>	"DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'",
 		'modified'			=>	"DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'",
 		'key'				=>	"PRIMARY KEY (`id`)",
@@ -64,8 +65,7 @@ class GalleryGallerySlides extends GalleryDbHelper {
 			
 			if (empty($this -> errors)) {
 				if ($galleryslide = $this -> find(array('gallery_id' => $gallery_id, 'slide_id' => $slide_id))) {
-					$this -> debug($galleryslide);
-					exit();
+					$this -> data -> id = $galleryslide -> id;
 				}
 			}
 		} else {

@@ -166,7 +166,7 @@ class GalleryDbHelper extends GalleryPlugin {
 						if (!empty($this -> data -> galleries)) {						
 							foreach ($this -> data -> galleries as $gallery_id) {
 								$date = date("Y-m-d H:i:s", time());
-								$galleryslidequery = "INSERT INTO `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` (`id`, `slide_id`, `gallery_id`, `created`, `modified`) VALUES ('', '" . $slide_id . "', '" . $gallery_id . "', '" . $date . "', '" . $date . "');";
+								$galleryslidequery = "INSERT INTO `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` (`slide_id`, `gallery_id`, `created`, `modified`) VALUES ('" . $slide_id . "', '" . $gallery_id . "', '" . $date . "', '" . $date . "');";
 								$wpdb -> query($galleryslidequery);
 							}
 						}
@@ -291,19 +291,17 @@ class GalleryDbHelper extends GalleryPlugin {
 				unset($this -> fields['created']);
 				
 				foreach (array_keys($this -> fields) as $field) {
-					//if (!empty($this -> data -> {$field}) || $this -> data -> {$field} == "0") {
-						if (is_array($this -> data -> {$field}) || is_object($this -> data -> {$field})) {
-							$value = serialize($this -> data -> {$field});
-						} else {
-							$value = mysql_escape_string($this -> data -> {$field});
-						}
+					if (is_array($this -> data -> {$field}) || is_object($this -> data -> {$field})) {
+						$value = serialize($this -> data -> {$field});
+					} else {
+						$value = mysql_escape_string($this -> data -> {$field});
+					}
+				
+					$query .= "`" . $field . "` = '" . $value . "'";
 					
-						$query .= "`" . $field . "` = '" . $value . "'";
-						
-						if ($c < count($this -> fields)) {
-							$query .= ", ";
-						}
-					//}
+					if ($c < count($this -> fields)) {
+						$query .= ", ";
+					}
 					
 					$c++;
 				}

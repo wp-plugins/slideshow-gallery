@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.2.2';
+	var $version = '1.2.3.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -16,7 +16,6 @@ class GalleryPlugin {
 	
 	var $helpers = array('Db', 'Html', 'Form', 'Metabox');
 	var $models = array('Slide', 'Gallery', 'GallerySlides');
-	
 	var $debugging = false;		//set to "true" to turn on debugging
 	var $debug_level = 2;		//set to 2 for PHP and DB errors or 1 for just DB errors
 
@@ -24,9 +23,7 @@ class GalleryPlugin {
 		$this -> plugin_name = $name;
 		$this -> plugin_base = rtrim(dirname($base), DS);
 		$this -> sections = (object) $this -> sections;
-		
 		$this -> initialize_classes();
-		$this -> initialize_options();
 		
 		global $wpdb;
 		if ($this -> debugging == true) {
@@ -101,6 +98,7 @@ class GalleryPlugin {
 	
 	function initialize_options() {
 		if (!is_admin()) { return; }
+		$this -> init_roles();
 	
 		$styles = array(
 			'width'				=>	"450",
@@ -109,7 +107,7 @@ class GalleryPlugin {
 			'background'		=>	"#000000",
 			'infobackground'	=>	"#000000",
 			'infocolor'			=>	"#FFFFFF",
-			'resizeimages'		=>	"Y",
+			'resizeimages'		=>	"N",
 		);
 		
 		$this -> add_option('styles', $styles);
@@ -132,6 +130,57 @@ class GalleryPlugin {
 		$this -> add_option('autoslide', "Y");
 		$this -> add_option('autospeed', 10);
 		$this -> add_option('imagesthickbox', "N");
+	}
+	
+	function check_roles() {
+		global $wp_roles;
+		$permissions = $this -> get_option('permissions');
+		
+		if ($role = get_role('administrator')) {				
+			if (!empty($this -> sections)) {			
+				foreach ($this -> sections as $section_key => $section_menu) {								
+					if (empty($role -> capabilities['gallery_' . $section_key])) {
+						$role -> add_cap('gallery_' . $section_key);
+						$permissions[$section_key][] = 'administrator';
+					}
+				}
+				
+				$this -> update_option('permissions', $permissions);
+			}
+		}
+		
+		return false;		
+	}
+	
+	function init_roles($sections = null) {
+		global $wp_roles;
+		$sections = $this -> sections;
+		$role =& get_role('administrator');
+
+		if (!empty($role)) {
+			if (!empty($sections)) {			
+				foreach ($sections as $section_key => $section_menu) {
+					$role -> add_cap('gallery_' . $section_key);
+				}
+			}
+		} elseif (empty($role) && !is_multisite()) {			
+			$newrolecapabilities['read'] = 1;
+			add_role('slideshow', __('Slideshow Manager', $this -> plugin_name), $newrolecapabilities);
+			$role = get_role('slideshow');
+			$role -> add_cap('read');
+			$role -> add_cap('gallery_slides');
+			$role -> add_cap('gallery_galleries');
+			$role -> add_cap('gallery_settings');
+		}
+		
+		if (!empty($sections)) {
+			$permissions = array();		
+			foreach ($sections as $section_key => $section_menu) {
+				$permissions[$section_key][] = 'administrator';
+			}
+			
+			$this -> update_option('permissions', $permissions);
+		}
 	}
 	
 	function render_msg($message = null) {
@@ -275,7 +324,7 @@ class GalleryPlugin {
 					wp_enqueue_script('wp-lists');
 					wp_enqueue_script('postbox');
 					
-					wp_enqueue_script('settings-editor', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/settings-editor.js', array('jquery'), '1.0');
+					wp_enqueue_script('settings-editor', plugins_url() . '/' . $this -> plugin_name . '/js/settings-editor.js', array('jquery'), '1.0');
 				}
 				
 				if ($_GET['page'] == "slideshow-slides" && $_GET['method'] == "order") {
@@ -283,21 +332,18 @@ class GalleryPlugin {
 				}
 			}
 			
-			wp_enqueue_script('colorbox', WP_PLUGIN_URL . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
-			wp_enqueue_script($this -> plugin_name . 'admin', '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/admin.js', null, '1.0');
+			wp_enqueue_script('colorbox', plugins_url() . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
+			wp_enqueue_script($this -> plugin_name . 'admin', plugins_url() . '/' . $this -> plugin_name . '/js/admin.js', null, '1.0');
 		} else {
-			wp_enqueue_script($this -> plugin_name, '/' . PLUGINDIR . '/' . $this -> plugin_name . '/js/gallery.js', null, '1.0');
-			
-			if ($this -> get_option('imagesthickbox') == "Y") {
-				wp_enqueue_script('colorbox', WP_PLUGIN_URL . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
-			}
+			wp_enqueue_script($this -> plugin_name, plugins_url() . '/' . $this -> plugin_name . '/js/gallery.js', null, '1.0');
+			wp_enqueue_script('colorbox', plugins_url() . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
 		}
 		
 		return true;
 	}
 	
 	function get_css_url($attr = null) {
-		$css_url = WP_PLUGIN_URL . '/' . $this -> plugin_name . '/css/gallery-css.php?';
+		$css_url = plugins_url() . '/' . $this -> plugin_name . '/css/gallery-css.php?';
 		
 		$default_attr = $this -> get_option('styles');
 		$styles = wp_parse_args($attr, $default_attr);
@@ -336,7 +382,7 @@ class GalleryPlugin {
 	}
 	
 	function url() {
-		return rtrim(get_bloginfo('wpurl'), '/') . '/' . substr(preg_replace("/\\" . DS . "/si", "/", $this -> plugin_base()), strlen(ABSPATH));
+		return site_url() . '/' . substr(preg_replace("/\\" . DS . "/si", "/", $this -> plugin_base()), strlen(ABSPATH));
 	}
 	
 	function add_option($name = '', $value = '') {
@@ -432,15 +478,11 @@ class GalleryPlugin {
 		global $wpdb;
 	
 		if (!empty($table)) {
-			$fullname = $table;
-		
-			if (($tablefields = mysql_list_fields(DB_NAME, $fullname, $wpdb -> dbh)) !== false) { 
-				$columns = mysql_num_fields($tablefields);
-				
-				$field_array = array();
-				for ($i = 0; $i < $columns; $i++) {
-					$fieldname = mysql_field_name($tablefields, $i);
-					$field_array[] = $fieldname;
+			$fullname = $table;			
+			$field_array = array();
+			if ($fields = $wpdb -> get_results("SHOW COLUMNS FROM " . $fullname)) {
+				foreach ($fields as $field) {
+					$field_array[] = $field -> Field;
 				}
 				
 				return $field_array;

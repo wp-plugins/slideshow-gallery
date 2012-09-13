@@ -2,27 +2,44 @@
 Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
-Requires at least: 2.9
-Tested up to: 3.3.2
-Stable tag: 1.2.2
+Requires at least: 3.1
+Tested up to: 3.4.2
+Stable tag: 1.2.3.2
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
 == Description ==
 
-Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website.
+Feature content in beatiful and fast JavaScript powered slideshow gallery showcases on your WordPress website.
 
-You can easily display multiple galleries throughout your WordPress website displaying your custom added slides, slide galleries or showing slides from WordPress posts.
+You can easily display multiple galleries throughout your WordPress website displaying your custom added slides, slide galleries or showing slides from WordPress posts/pages.
 
-The slideshow is flexible and all aspects can easily be configured.
+The slideshow is flexible, all aspects can easily be configured and embedding/hardcoding the slideshow gallery is a breeze. 
 
-Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert `[slideshow]` into its content with an optional `gallery_id` parameter to show slides from a specific gallery `[slideshow gallery_id="7"]` or an optional `post_id` parameter to display the gallery images uploaded to that post/page `[slideshow post_id="123"]`. You can also use an `exclude` parameter to exclude certain images (attachments/slides) by their IDs in the gallery (comma separated) from the slideshow like this `[slideshow post_id="123" exclude="3,7,9"]`. 
+Here are several ways to display a slideshow: 
+
+= Shortcode for all slides =
+
+To embed a slideshow with all slides under **Slideshow > Manage Slides** in the plugin, simply insert `[slideshow]` into the content of a post/page.
+
+= Shortcode for a gallery's slides =
+
+To embed a slideshow with slides from a specific gallery under **Slideshow > Manage Galleries** in the plugin, simply insert `[slideshow gallery_id="X"]` (where X is the ID value of the gallery) into the content of a post/page.
+
+= Shortcode for the images of a WordPress post/page =
+
+To embed a slideshow with the images uploaded to a WordPress post/page through it's media gallery, simply insert `[slideshow post_id="X"]` (where X is the ID value of the post). Whether you want to display the images from a post or a page, the parameter remains `post_id`.
+
+= Hardcode into any plugin/theme with PHP =
 
 To hardcode into any PHP file of your WordPress theme, simply use `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>`.
+
+= Parameters for shortcode/hardcode to customize each slideshow =
 
 You can use any of the following parameters with both the hardcoding and shortcode to customize each slideshow gallery:
 
 * `resizeimages` [ true | false ] = Set to 'true' to resize images to fit the slideshow dimensions.
+* `imagesoverlay` [ true | false ] (default: setting) = Set to 'true' to display links of slides that are images in a Colorbox overlay on the page.
 * `orderby` [ random ] = Set to 'random' to randomly order the slides. Leave this shortcode parameter to order by the order set on the slides.
 * `width` [ width | auto ] = Width of the slideshow in pixels. Don't specify 'px' part, just the numeric value for the height.
 * `height` [ height ] (default: setting) = Height of the slideshow in pixels. Don't specify the 'px' part, just the numeric value for the height.
@@ -47,9 +64,9 @@ Installing the WordPress slideshow gallery plugin is very easy. Simply follow th
 1. Extract the package to obtain the `slideshow-gallery` folder
 1. Upload the `slideshow-gallery` folder to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Configure the settings according to your needs through the 'Slideshow' > 'Configuration' menu
+1. Configure the settings according to your needs through the **Slideshow > Configuration** menu
 1. Add and manage your slides in the 'Slideshow' section
-1. Put `[slideshow post_id="X" exclude=""]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow gallery_id="X"]` to display the slides of a specific gallery by ID or use `[slideshow]` to embed a slideshow with your custom added slides or `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>` into your WordPress theme using PHP code.
+1. Put `[slideshow post_id="X"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow gallery_id="X"]` to display the slides of a specific gallery by ID or use `[slideshow]` to embed a slideshow with your custom added slides under **Slideshow > Manage Slides** or `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>` into your WordPress theme using PHP code.
 
 == Frequently Asked Questions ==
 
@@ -79,6 +96,24 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.2.3.2 =
+* ADD: List/grid switching for ordering of slides
+* ADD: Permission/role settings for sections
+* ADD: 'imagesoverlay' parameter to turn On/Off the Colorbox overlay per slideshow
+* ADD: "Resize Images" setting TimThumb test case for debugging
+* ADD: Order slides per gallery
+* ADD: Order slides randomly
+* IMPROVE: Change WP_PLUGIN_DIR to plugins_url() for styles/scripts
+* IMPROVE: Change mysql_list_fields() to a compatible function
+* IMPROVE: Remove previous image to prevent overlapping
+* IMPROVE: Max width/height for Colorbox overlay for images
+* FIX: Null ID value on insert of slide
+* FIX: Validation errors
+* FIX: Slide current/new window problem
+
+= 1.2.2.1 =
+* IMPROVE: Upgrade of TimThumb from 2.8.9 to 2.8.10 to fix broken images.
 
 = 1.2.2 =
 * FIX: Slides paging numbers didn't show up
@@ -116,7 +151,6 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 * IMPROVE: Change 1=1 for the CSS
 * FIX: Code showing in the RSS feed.
 * ADD: Shortcode parameters
-* ADD: Multiple slideshows per post/page
 * ADD: Setting to turn off the next/previous navigation
 * IMPROVE: "Previous Image" and "Next Image" in language file
 * FIX: Not all thumbnails load the first time

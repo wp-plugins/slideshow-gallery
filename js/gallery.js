@@ -38,7 +38,7 @@ TINY.slideshow.prototype={
 			a.t= tag('h3',h)[0].innerHTML;
 			a.d= tag('p',h)[0].innerHTML;
 			a.l= tag('a',h)[0]? tag('a',h)[0].href:'';
-			a.tg = tag('a',h)[0]? tag('a',h)[0].target:'_self';
+			a.tg = tag('a',h)[0] != '' ? tag('a',h)[0].target:'_self';
 			a.p= tag('span',h)[0].innerHTML;
 			if(this.thumbs){
 				var g = tag('img',h)[0];
@@ -118,7 +118,7 @@ TINY.slideshow.prototype={
 	   		var urlType = baseURL.toLowerCase().match(urlString);
 
 			if (this.imagesthickbox == "true" && (urlType == '.jpg' || urlType == '.jpeg' || urlType == '.png' || urlType == '.gif' || urlType == '.bmp')) {			
-				this.q.onclick = new Function('jQuery.colorbox({href:"' + this.a[s].l + '",title:"' + this.a[s].t + '"})');
+				this.q.onclick = new Function('jQuery.colorbox({href:"' + this.a[s].l + '",maxWidth:"90%",maxHeight:"90%",title:"' + this.a[s].t + '"})');
 			} else {
 				this.q.onclick = new Function('window.open("' + this.a[s].l + '","' + this.a[s].tg + '")');
 			}
@@ -131,7 +131,7 @@ TINY.slideshow.prototype={
 			this.q.style.cursor='default';
 		}
 		var m= tag('img',this.f);
-		if(m.length > 2){
+		if(m.length >= 2){
 			this.f.removeChild(m[0])
 		}
 	},
