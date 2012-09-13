@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 3.4.2
-Stable tag: 1.2.3.1
+Stable tag: 1.2.3.2
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -97,7 +97,7 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 
 == Changelog ==
 
-= 1.2.3 =
+= 1.2.3.2 =
 * ADD: List/grid switching for ordering of slides
 * ADD: Permission/role settings for sections
 * ADD: 'imagesoverlay' parameter to turn On/Off the Colorbox overlay per slideshow

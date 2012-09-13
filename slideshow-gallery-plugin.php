@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.2.3.1';
+	var $version = '1.2.3.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -484,6 +484,8 @@ class GalleryPlugin {
 				foreach ($fields as $field) {
 					$field_array[] = $field -> Field;
 				}
+				
+				return $field_array;
 			}
 		}
 		

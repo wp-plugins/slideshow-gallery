@@ -291,19 +291,17 @@ class GalleryDbHelper extends GalleryPlugin {
 				unset($this -> fields['created']);
 				
 				foreach (array_keys($this -> fields) as $field) {
-					//if (!empty($this -> data -> {$field}) || $this -> data -> {$field} == "0") {
-						if (is_array($this -> data -> {$field}) || is_object($this -> data -> {$field})) {
-							$value = serialize($this -> data -> {$field});
-						} else {
-							$value = mysql_escape_string($this -> data -> {$field});
-						}
+					if (is_array($this -> data -> {$field}) || is_object($this -> data -> {$field})) {
+						$value = serialize($this -> data -> {$field});
+					} else {
+						$value = mysql_escape_string($this -> data -> {$field});
+					}
+				
+					$query .= "`" . $field . "` = '" . $value . "'";
 					
-						$query .= "`" . $field . "` = '" . $value . "'";
-						
-						if ($c < count($this -> fields)) {
-							$query .= ", ";
-						}
-					//}
+					if ($c < count($this -> fields)) {
+						$query .= ", ";
+					}
 					
 					$c++;
 				}
