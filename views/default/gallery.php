@@ -15,7 +15,7 @@ $slides = stripslashes_deep($slides);
 					<?php $full_image_href = wp_get_attachment_image_src($slide -> ID, 'full', false); ?>
 					<?php $full_image_path = get_attached_file($slide -> ID); ?>
 					<?php $full_image_url = wp_get_attachment_url($slide -> ID); ?>
-					<?php if ($options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
+					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
 						<span><?php echo $this -> Html -> timthumb_image_src($full_image_href[0], $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo $full_image_href[0]; ?></span>
@@ -38,7 +38,7 @@ $slides = stripslashes_deep($slides);
 			<?php foreach ($slides as $slide) : ?>		
 				<li>
 					<h3><?php echo $slide -> title; ?></h3>
-					<?php if ($options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
+					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
 						<span><?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo $this -> Html -> image_url($slide -> image); ?></span>
@@ -155,7 +155,7 @@ $slides = stripslashes_deep($slides);
 	?>
 	
 	<style type="text/css">
-	@import url('<?php echo $this -> get_css_url($cssattr); ?>');
+	@import url('<?php echo $this -> get_css_url($cssattr, $options['layout']); ?>');
 	</style>
 	
 	<!--[if IE 6]>

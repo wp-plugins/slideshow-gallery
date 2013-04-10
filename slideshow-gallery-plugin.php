@@ -101,8 +101,11 @@ class GalleryPlugin {
 		$this -> init_roles();
 	
 		$styles = array(
+			'layout'			=>	"responsive",
 			'width'				=>	"450",
 			'height'			=>	"250",
+			'resheight'			=>	"30",
+			'resheighttype' 	=>  "per",
 			'border'			=>	"1px solid #CCCCCC",
 			'background'		=>	"#000000",
 			'infobackground'	=>	"#000000",
@@ -111,8 +114,6 @@ class GalleryPlugin {
 		);
 		
 		$this -> add_option('styles', $styles);
-		
-		//General Settings
 		$this -> add_option('fadespeed', 10);
 		$this -> add_option('shownav', "Y");
 		$this -> add_option('navopacity', 25);
@@ -318,7 +319,10 @@ class GalleryPlugin {
 		wp_enqueue_script('jquery');
 		
 		if (is_admin()) {
-			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {			
+			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {
+			
+				wp_enqueue_script('jquery-ui-tooltip', plugins_url() . '/' . $this -> plugin_name . '/js/jquery-ui-tooltip.js', array('jquery'));
+						
 				if ($_GET['page'] == 'slideshow-settings') {
 					wp_enqueue_script('common');
 					wp_enqueue_script('wp-lists');
@@ -342,8 +346,9 @@ class GalleryPlugin {
 		return true;
 	}
 	
-	function get_css_url($attr = null) {
-		$css_url = plugins_url() . '/' . $this -> plugin_name . '/css/gallery-css.php?';
+	function get_css_url($attr = null, $layout = null) {
+		$file = (empty($layout)) ? 'css' : 'css-responsive';
+		$css_url = plugins_url() . '/' . $this -> plugin_name . '/views/default/' . $file . '.php?';
 		
 		$default_attr = $this -> get_option('styles');
 		$styles = wp_parse_args($attr, $default_attr);
@@ -352,6 +357,12 @@ class GalleryPlugin {
 			$s = 1;
 			
 			foreach ($styles as $skey => $sval) {
+				switch ($skey) {
+					case 'resheighttype'		:
+						$sval = ($sval == "per") ? '%' : 'px';
+						break;
+				}
+			
 				$css_url .= $skey . '=' . urlencode($sval);
 				if ($s < count($styles)) { $css_url .= '&'; }
 				$s++;

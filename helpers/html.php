@@ -2,6 +2,23 @@
 
 class GalleryHtmlHelper extends GalleryPlugin {
 
+	function help($help = null) {
+		if (!empty($help)) {
+			ob_start();
+		
+			?>
+			
+			<span class="galleryhelp">
+				<a href="" onclick="return false;" title="<?php echo esc_attr(stripslashes($help)); ?>">?</a>
+			</span>
+			
+			<?php
+			
+			$html = ob_get_clean();
+			return $html;
+		}
+	}
+
 	function section_name($section = null) {
 		if (!empty($section)) {
 			switch ($section) {

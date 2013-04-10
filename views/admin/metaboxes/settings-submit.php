@@ -8,7 +8,7 @@
 	</div>
 	<div id="major-publishing-actions">
 		<div id="publishing-action">
-			<input class="button-primary" type="submit" name="save" value="<?php _e('Save Configuration', $this -> plugin_name); ?>" />
+			<input class="button-primary button button-large" type="submit" name="save" value="<?php _e('Save Configuration', $this -> plugin_name); ?>" />
 		</div>
 		<br class="clear" />
 	</div>

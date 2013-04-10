@@ -3,5 +3,6 @@ var GalleryAjax = "<?php echo $this -> url(); ?>/<?php echo $this -> plugin_name
 
 jQuery(document).ready(function() {
 	jQuery('.colorbox').colorbox({maxWidth:'100%', maxHeight:'100%'});
+	jQuery(".galleryhelp a").tooltip();
 });
 </script>
