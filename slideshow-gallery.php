@@ -37,7 +37,7 @@ if (!class_exists('Gallery')) {
 			$this -> add_filter('mce_buttons');
 			$this -> add_filter('mce_external_plugins');
 			
-			add_shortcode('slideshow', array($this, 'embed'));
+			if (!is_admin()) { add_shortcode('slideshow', array($this, 'embed')); }
 		}
 		
 		function init_textdomain() {		
@@ -124,7 +124,7 @@ if (!class_exists('Gallery')) {
 				'width'					=>	($styles['width']),
 				'height'				=>	($styles['height']),
 				'resheight'				=>	($styles['resheight']),
-				'resheighttype'			=>	(($styles['resheighttype'] == "per") ? '%' : 'px'),
+				'resheighttype'			=>	($styles['resheighttype']),
 				'auto'					=>	(($this -> get_option('autoslide') == "Y") ? "true" : "false"),
 				'autospeed'				=>	($this -> get_option('autospeed')),
 				'fadespeed'				=>	($this -> get_option('fadespeed')),

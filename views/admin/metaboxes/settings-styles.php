@@ -3,8 +3,8 @@
 <table class="form-table">
 	<tbody>
 		<tr>
-			<th><label for=""><?php _e('Layout', $this -> plugin_name); ?></label>
-			<?php echo GalleryHtmlHelper::help(__('help goes here', $this -> plugin_name)); ?></th>
+			<th><label for="layout_responsive"><?php _e('Layout', $this -> plugin_name); ?></label>
+			<?php echo GalleryHtmlHelper::help(__('Choose responsive if you have a responsive theme and you want the slideshow to resize width/height in a responsive manner on different devices.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>layout</code> with value <code>responsive</code> or <code>specific</code> eg. <code>[slideshow layout="specific"]</code>.', $this -> plugin_name)); ?></th>
 			<td>
 				<label><input onclick="jQuery('#layout_specific_div').hide(); jQuery('#layout_responsive_div').show();" <?php echo ($styles['layout'] == "responsive") ? 'checked="checked"' : ''; ?> type="radio" name="styles[layout]" value="responsive" id="layout_responsive" /> <?php _e('Responsive', $this -> plugin_name); ?></label>
 				<label><input onclick="jQuery('#layout_specific_div').show(); jQuery('#layout_responsive_div').hide();" <?php echo (empty($styles['layout']) || $styles['layout'] == "specific") ? 'checked="checked"' : ''; ?> type="radio" name="styles[layout]" value="specific" id="layout_specific" /> <?php _e('Fixed', $this -> plugin_name); ?></label>
@@ -18,13 +18,16 @@
 	<table class="form-table">
 		<tbody>
 			<tr>
-				<th><label for="resheight"><?php _e('Responsive Height', $this -> plugin_name); ?></label></th>
+				<th><label for="resheight"><?php _e('Responsive Height', $this -> plugin_name); ?></label>
+				<?php echo GalleryHtmlHelper::help(__('The responsive height can be either a fixed height in pixel or a percentage height. The percentage height is a percentage of the width of the slideshow.<br/><br/><strong>Override per slideshow:</strong> Using parameters <code>resheight</code> value a value and <code>resheighttype</code> with <code>px</code> for pixels or <code>%</code> for percentage eg. <code>[slideshow resheight="300" resheighttype="px"]</code>.', $this -> plugin_name)); ?></th>
 				<td>
 					<input class="widefat" style="width:45px;" type="text" name="styles[resheight]" value="<?php echo esc_attr(stripslashes($styles['resheight'])); ?>" id="resheight" />
+					<?php /*<input type="hidden" name="styles[resheighttype]" value="pix" /> <?php _e('px', $this -> plugin_name); ?>*/ ?>
 					<select name="styles[resheighttype]">
-						<option <?php echo ($styles['resheighttype'] == "per") ? 'selected="selected"' : ''; ?> value="per"><?php _e('&#37;', $this -> plugin_name); ?></option>
-						<option <?php echo ($styles['resheighttype'] == "pix") ? 'selected="selected"' : ''; ?> value="pix"><?php _e('px', $this -> plugin_name); ?></option>
+						<option <?php echo ($styles['resheighttype'] == "%") ? 'selected="selected"' : ''; ?> value="%"><?php _e('&#37;', $this -> plugin_name); ?></option>
+						<option <?php echo ($styles['resheighttype'] == "px") ? 'selected="selected"' : ''; ?> value="px"><?php _e('px', $this -> plugin_name); ?></option>
 					</select>
+					<span class="howto"><?php _e('Choose a responsive height for your slideshow, either a pixel or percentage height.', $this -> plugin_name); ?></span>
 				</td>
 			</tr>
 		</tbody>

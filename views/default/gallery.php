@@ -141,6 +141,19 @@ $slides = stripslashes_deep($slides);
 			tid('<?php echo $wrapperid; ?>').style.visibility = 'visible';
 		}
 	});
+	
+	<?php if ($options['layout'] == "responsive" && $options['resheighttype'] == "%") : ?>
+		jQuery(window).resize(function() {
+			var width = jQuery('#slideshow-wrapper').width();
+			var resheight = <?php echo $options['resheight']; ?>;
+			var height = Math.round(((resheight / 100) * width));
+			jQuery('#fullsize').height(height);
+		});
+		
+		jQuery(window).load(function() {
+			jQuery(window).trigger('resize');
+		});
+	<?php endif; ?>
 	</script>
 	
 	<?php

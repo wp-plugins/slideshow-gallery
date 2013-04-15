@@ -223,6 +223,9 @@ class GalleryDbHelper extends GalleryPlugin {
 						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `gallery_id` = '" . $record_id . "'";
 						$wpdb -> query($query);
 						break;
+					case 'Slide'			:
+						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `slide_id` = '" . $record_id . "'";
+						break;
 				}
 							
 				return true;

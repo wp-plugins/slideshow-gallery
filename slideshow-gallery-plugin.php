@@ -105,7 +105,7 @@ class GalleryPlugin {
 			'width'				=>	"450",
 			'height'			=>	"250",
 			'resheight'			=>	"30",
-			'resheighttype' 	=>  "per",
+			'resheighttype' 	=>  "%",
 			'border'			=>	"1px solid #CCCCCC",
 			'background'		=>	"#000000",
 			'infobackground'	=>	"#000000",
@@ -347,7 +347,7 @@ class GalleryPlugin {
 	}
 	
 	function get_css_url($attr = null, $layout = null) {
-		$file = (empty($layout)) ? 'css' : 'css-responsive';
+		$file = (empty($layout) || $layout == "specific") ? 'css' : 'css-responsive';
 		$css_url = plugins_url() . '/' . $this -> plugin_name . '/views/default/' . $file . '.php?';
 		
 		$default_attr = $this -> get_option('styles');
@@ -356,13 +356,7 @@ class GalleryPlugin {
 		if (!empty($styles)) {	
 			$s = 1;
 			
-			foreach ($styles as $skey => $sval) {
-				switch ($skey) {
-					case 'resheighttype'		:
-						$sval = ($sval == "per") ? '%' : 'px';
-						break;
-				}
-			
+			foreach ($styles as $skey => $sval) {			
 				$css_url .= $skey . '=' . urlencode($sval);
 				if ($s < count($styles)) { $css_url .= '&'; }
 				$s++;

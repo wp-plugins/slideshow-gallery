@@ -1,7 +1,8 @@
 <table class="form-table">
 	<tbody>
 		<tr>
-			<th><label for="autoslideY"><?php _e('Auto Slide', $this -> plugin_name); ?></label></th>
+			<th><label for="autoslideY"><?php _e('Auto Slide', $this -> plugin_name); ?></label>
+			<?php echo GalleryHtmlHelper::help(__('Turn this on so that the slideshow can automatically slide through the slides. As soon as the user starts navigating using the previous/next navigation the auto slide will no longer continue.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>auto</code> with value <code>true</code> or <code>false</code> eg. <code>[slideshow auto="false"]</code>.', $this -> plugin_name)); ?></th>
 			<td>
 				<label><input onclick="jQuery('#autoslide_div').show();" <?php echo ($this -> get_option('autoslide') == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="autoslide" value="Y" id="autoslideY" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 				<label><input onclick="jQuery('#autoslide_div').hide();" <?php echo ($this -> get_option('autoslide') == "N") ? 'checked="checked"' : ''; ?> type="radio" name="autoslide" value="N" id="autoslideN" /> <?php _e('No', $this -> plugin_name); ?></label>
