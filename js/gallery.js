@@ -66,7 +66,7 @@ TINY.slideshow.prototype={
 			b.onclick=new Function(this.n+'.mv(-1,1)');
 			f.onclick=new Function(this.n+'.mv(1,1)');
 		}
-		this.auto?this.is(0,0):this.is(0,1)
+		this.auto?this.is(0,0):this.is(0,1);
 	},
 	mv:function(d,c){
 		var t=this.c+d;
@@ -109,7 +109,7 @@ TINY.slideshow.prototype={
 		TINY.alpha.set(this.i,100,this.imgSpeed);
 		var n=new Function(this.n+'.nf('+s+')');
 		this.lt=setTimeout(n,this.imgSpeed*100);
-		if(!c){
+		if(!c || this.alwaysauto == true){
 			this.at=setTimeout(new Function(this.n+'.mv(1,0)'),this.speed*1000)
 		}
 		if(this.a[s].l != ""){			

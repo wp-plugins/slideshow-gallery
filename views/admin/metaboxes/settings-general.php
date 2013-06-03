@@ -2,7 +2,7 @@
 	<tbody>
 		<tr>
 			<th><label for="autoslideY"><?php _e('Auto Slide', $this -> plugin_name); ?></label>
-			<?php echo GalleryHtmlHelper::help(__('Turn this on so that the slideshow can automatically slide through the slides. As soon as the user starts navigating using the previous/next navigation the auto slide will no longer continue.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>auto</code> with value <code>true</code> or <code>false</code> eg. <code>[slideshow auto="false"]</code>.', $this -> plugin_name)); ?></th>
+			<?php echo GalleryHtmlHelper::help(__('Turn this on so that the slideshow can automatically slide through the slides.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>auto</code> with value <code>true</code> or <code>false</code> eg. <code>[slideshow auto="false"]</code>.', $this -> plugin_name)); ?></th>
 			<td>
 				<label><input onclick="jQuery('#autoslide_div').show();" <?php echo ($this -> get_option('autoslide') == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="autoslide" value="Y" id="autoslideY" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 				<label><input onclick="jQuery('#autoslide_div').hide();" <?php echo ($this -> get_option('autoslide') == "N") ? 'checked="checked"' : ''; ?> type="radio" name="autoslide" value="N" id="autoslideN" /> <?php _e('No', $this -> plugin_name); ?></label>
@@ -15,6 +15,13 @@
 <div id="autoslide_div" style="display:<?php echo ($this -> get_option('autoslide') == "Y") ? 'block' : 'none'; ?>;">
 	<table class="form-table">
 		<tbody>
+			<tr>
+				<th><label for="alwaysauto_true"><?php _e('Always Auto', $this -> plugin_name); ?></label></th>
+				<td>
+					<label><input <?php echo ($this -> get_option('alwaysauto') == "true") ? 'checked="checked"' : ''; ?> type="radio" name="alwaysauto" value="true" id="alwaysauto_true" /> <?php _e('Yes', $this -> plugin_name); ?></label>
+					<label><input <?php echo ($this -> get_option('alwaysauto') == "false") ? 'checked="checked"' : ''; ?> type="radio" name="alwaysauto" value="false" id="alwaysauto_false" /> <?php _e('No', $this -> plugin_name); ?></label>
+				</td>
+			</tr>
 			<tr>
 				<th><label for="autospeed"><?php _e('Auto Speed', $this -> plugin_name); ?></label></th>
 				<td>

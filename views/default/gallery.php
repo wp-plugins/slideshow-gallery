@@ -121,6 +121,7 @@ $slides = stripslashes_deep($slides);
 		window.onload = function() {
 			<?php if (empty($options['auto']) || (!empty($options['auto']) && $options['auto'] == "true")) : ?>slideshow.auto = true;<?php else : ?>slideshow.auto = false;<?php endif; ?>
 			slideshow.speed = <?php echo $options['autospeed']; ?>;
+			slideshow.alwaysauto = <?php echo $options['alwaysauto']; ?>;
 			slideshow.imgSpeed = <?php echo $options['fadespeed']; ?>;
 			slideshow.navOpacity = <?php echo $options['navopacity']; ?>;
 			slideshow.navHover = <?php echo $options['navhoveropacity']; ?>;
@@ -140,6 +141,8 @@ $slides = stripslashes_deep($slides);
 			slideshow.init("slideshow","image","<?php echo $navb; ?>","<?php echo $navf; ?>","imglink");
 			tid('<?php echo $wrapperid; ?>').style.visibility = 'visible';
 		}
+		
+		jQuery(window).trigger('resize');
 	});
 	
 	<?php if ($options['layout'] == "responsive" && $options['resheighttype'] == "%") : ?>
@@ -148,10 +151,6 @@ $slides = stripslashes_deep($slides);
 			var resheight = <?php echo $options['resheight']; ?>;
 			var height = Math.round(((resheight / 100) * width));
 			jQuery('#fullsize').height(height);
-		});
-		
-		jQuery(window).load(function() {
-			jQuery(window).trigger('resize');
 		});
 	<?php endif; ?>
 	</script>

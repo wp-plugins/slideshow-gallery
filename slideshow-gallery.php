@@ -127,6 +127,7 @@ if (!class_exists('Gallery')) {
 				'resheighttype'			=>	($styles['resheighttype']),
 				'auto'					=>	(($this -> get_option('autoslide') == "Y") ? "true" : "false"),
 				'autospeed'				=>	($this -> get_option('autospeed')),
+				'alwaysauto'			=>	($this -> get_option('alwaysauto')),
 				'fadespeed'				=>	($this -> get_option('fadespeed')),
 				'shownav'				=>	(($this -> get_option('shownav') == "Y") ? "true" : "false"),
 				'navopacity'			=>	($this -> get_option('navopacity')),

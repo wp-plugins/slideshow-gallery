@@ -130,6 +130,7 @@ class GalleryPlugin {
 		$this -> add_option('thumbactive', "#FFFFFF");
 		$this -> add_option('autoslide', "Y");
 		$this -> add_option('autospeed', 10);
+		$this -> add_option('alwaysauto', "true");
 		$this -> add_option('imagesthickbox', "N");
 	}
 	
