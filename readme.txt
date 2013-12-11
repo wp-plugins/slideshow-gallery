@@ -3,7 +3,7 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 3.4.2
+Tested up to: 3.7
 Stable tag: 1.2.3.2
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
