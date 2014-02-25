@@ -1,8 +1,4 @@
 <div class="wrap">
-	<div class="icon32">
-		<img src="<?php echo $this -> url(); ?>/images/icon-32.png" />
-	</div>
-
 	<h2><?php _e('Order Slides', $this -> plugin_name); ?><?php echo (!empty($gallery)) ? ': ' . $gallery -> title : ''; ?></h2>
 	
 	<div style="float:none;" class="subsubsub">
@@ -12,15 +8,12 @@
 	<?php if (!empty($slides)) : ?>
 		<div id="slidemessage" class="updated fade" style="display:none; width:31%;"><!-- message will go here --></div>
 		<div class="gallery_slides_list">
-			<span class="gallery_slides_convert_list"><a href="#" id="gallery_convert_list"><?php _e('List', $this -> plugin_name); ?></a></span>
-			<span class="gallery_slides_convert_grid"><a href="#" id="gallery_convert_grid"><?php _e('Grid', $this -> plugin_name); ?></a></span>
+			<span class="gallery_slides_convert_list"><a href="#" id="gallery_convert_list"></a></span>
+			<span class="gallery_slides_convert_grid"><a href="#" id="gallery_convert_grid"></a></span>
 			<br class="clear" />
 			<ul id="slidelist">
 				<?php foreach ($slides as $slide) : ?>
 					<li class="gallerylineitem" id="item_<?php echo $slide -> id; ?>">
-						<?php /*<span style="float:left; margin:5px 10px 0 5px;"><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, 60, 60, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></span>
-						<h4><?php echo $slide -> title; ?></h4>
-						<hr class="clear" style="clear:both; visibility:hidden; height:1px; display:block;" />*/ ?>
 						<span class="gallery_slide_image" style="display:none;"><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, 89, 89, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></span>
 						<span class="gallery_slide_title"><?php echo __($slide -> title); ?></span>
 					</li>

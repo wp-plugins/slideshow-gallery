@@ -1,8 +1,4 @@
 <div class="wrap <?php echo $this -> pre; ?>">
-	<div class="icon32">
-		<img src="<?php echo $this -> url(); ?>/images/icon-galleries-32.png" />
-	</div>
-
 	<h2><?php echo sprintf(__('View Gallery: %s', $this -> plugin_name), $gallery -> title); ?></h2>
 	
 	<div style="float:none;" class="subsubsub"><?php echo $this -> Html -> link(__('&larr; All Galleries', $this -> plugin_name), $this -> url, array('title' => __('All Galleries', $this -> plugin_name))); ?></div>
