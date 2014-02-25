@@ -3,8 +3,8 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 3.7
-Stable tag: 1.2.3.2
+Tested up to: 3.8.1
+Stable tag: 1.3
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -15,6 +15,8 @@ Feature content in beatiful and fast JavaScript powered slideshow gallery showca
 You can easily display multiple galleries throughout your WordPress website displaying your custom added slides, slide galleries or showing slides from WordPress posts/pages.
 
 The slideshow is flexible, all aspects can easily be configured and embedding/hardcoding the slideshow gallery is a breeze. 
+
+See the <a href="http://tribulant.net/slideshowgallery/">online demonstration</a>.
 
 Here are several ways to display a slideshow: 
 
