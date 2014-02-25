@@ -148,6 +148,7 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 * FIX: Turning off autoslide setting doesn't stop autoslide 
 * FIX: Javascript error due to tooltip() call 
 * FIX: Width/height of slideshow is less than the settings
+* FIX: Issues with some of the setting sliders
 
 = 1.2.3.2 =
 * ADD: List/grid switching for ordering of slides
