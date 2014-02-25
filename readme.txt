@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 3.8.1
-Stable tag: 1.3
+Stable tag: 1.3.0.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -118,6 +118,11 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 
 == Changelog ==
 
+= 1.3.0.1 =
+
+* FIX: Issue with turning off navigation images
+* FIX: Issue with new slider settings if empty or set to zero (0)
+
 = 1.3 =
 
 * ADD: Show latest/featured products from Shopping Cart plugin
@@ -148,7 +153,6 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 * FIX: Turning off autoslide setting doesn't stop autoslide 
 * FIX: Javascript error due to tooltip() call 
 * FIX: Width/height of slideshow is less than the settings
-* FIX: Issues with some of the setting sliders
 
 = 1.2.3.2 =
 * ADD: List/grid switching for ordering of slides
