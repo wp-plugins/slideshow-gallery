@@ -1,4 +1,11 @@
-<?php $styles = $this -> get_option('styles'); ?>
+<!-- Styles Settings -->
+
+<?php 
+
+$styles = $this -> get_option('styles'); 
+$timthumb_align = $this -> get_option('timthumb_align');
+
+?>
 
 <table class="form-table">
 	<tbody>
@@ -38,7 +45,8 @@
 	<table class="form-table">
 		<tbody>
 			<tr>
-				<th><label for="styles.resizeimages"><?php _e('Resize Images', $this -> plugin_name); ?></label></th>
+				<th><label for="styles.resizeimages"><?php _e('Resize Images', $this -> plugin_name); ?></label>
+				<?php echo GalleryHtmlHelper::help(__('Should images be automatically resized? If you specify No, the images will be used in the slideshow as you originally upload them. If you specify Yes, the images will be cropped/resized to fit the slideshow better which is the recommended setting.', $this -> plugin_name)); ?></th>
 				<td>
 					<label><input onclick="jQuery('#resizeimagesYdiv').show();" <?php echo (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="styles[resizeimages]" value="Y" id="styles.resizeimages_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 					<label><input onclick="jQuery('#resizeimagesYdiv').hide();" <?php echo ($styles['resizeimages'] == "N") ? 'checked="checked"' : ''; ?> type="radio" name="styles[resizeimages]" value="N" id="styles.resizeimages_N" /> <?php _e('No', $this -> plugin_name); ?></label>
@@ -51,24 +59,57 @@
 						</p>
 						<?php
 						
-						$img = 'wp-content/plugins/' . $this -> plugin_name . '/screenshot-1.png';
-						$src = site_url() . '/wp-content/plugins/slideshow-gallery/vendors/timthumb.php?src=' . $img . '&w=50&h=50&q=100&a=t';
+						//$img = 'wp-content/plugins/' . $this -> plugin_name . '/screenshot-1.png';
+						$img = $this -> plugin_base() . DS . 'screenshot-1.png';
+						$align = (empty($timthumb_align)) ? "c" : $timthumb_align;
+						$src = plugins_url() . '/' . $this -> plugin_name . '/vendors/timthumb.php?src=' . $img . '&w=50&h=50&q=100&a=' . $align;
 						echo '<p><a target="_blank" href="' . $src . '">' . $src . '</a> <small>(' . __('click to open to test TimThumb', $this -> plugin_name) . ')</small></p>';
-						echo '<p><img src="' . $src . '" /></p>';
+						echo '<p><img class="slideshow_dropshadow" src="' . $src . '" /></p>';
 						
 						?>
 					</div>
 				</td>
 			</tr>
+		</tbody>
+	</table>
+	
+	<div id="resizeimages_div" style="display:<?php echo (!empty($styles['resizeimages']) && $styles['resizeimages'] == "Y") ? 'block' : 'none'; ?>;">
+		<table class="form-table">
+			<tbody>
+				<tr>
+					<th><label for="timthumb_align"><?php _e('Crop Alignment', $this -> plugin_name); ?></label>
+					<?php echo GalleryHtmlHelper::help(__('With this setting you can choose the location from which the image will be cropped/resized. For example if you prefer to have the top parts of images shown instead of being cut off, you can change this setting to "Top".', $this -> plugin_name)); ?></th>
+					<td>
+						<?php
+						
+						$alignments = array('c' => __('Center', $this -> plugin_name), 't' => __('Top', $this -> plugin_name), 'l' => __('Left', $this -> plugin_name), 'r' => __('Right', $this -> plugin_name), 'b' => __('Bottom', $this -> plugin_name), 'tl' => __('Top Left', $this -> plugin_name), 'tr' => __('Top Right', $this -> plugin_name), 'bl' => __('Bottom Left', $this -> plugin_name), 'br' => __('Bottom Right', $this -> plugin_name));
+						
+						?>
+						<select name="timthumb_align" id="timthumb_align">
+							<?php foreach ($alignments as $akey => $aval) : ?>
+								<option <?php echo (!empty($timthumb_align) && $timthumb_align == $akey) ? 'selected="selected"' : ''; ?> value="<?php echo $akey; ?>"><?php echo $aval; ?></option>
+							<?php endforeach; ?>
+						</select>
+						<span class="howto"><?php _e('Choose the image crop/resize location which is used as the starting point.', $this -> plugin_name); ?></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<table class="form-table">
+		<tbody>
 			<tr>
-				<th><label for="styles.width"><?php _e('Gallery Width', $this -> plugin_name); ?></label></th>
+				<th><label for="styles.width"><?php _e('Gallery Width', $this -> plugin_name); ?></label>
+				<?php echo GalleryHtmlHelper::help(__('The width of the slideshow in pixels.', $this -> plugin_name)); ?></th>
 				<td>
 					<input style="width:45px;" id="styles.width" type="text" name="styles[width]" value="<?php echo $styles['width']; ?>" /> <?php _e('px', $this -> plugin_name); ?>
 					<span class="howto"><?php _e('Width of the slideshow gallery', $this -> plugin_name); ?></span>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="styles.height"><?php _e('Gallery Height', $this -> plugin_name); ?></label></th>
+				<th><label for="styles.height"><?php _e('Gallery Height', $this -> plugin_name); ?></label>
+				<?php echo GalleryHtmlHelper::help(__('The height of the slideshow in pixels.', $this -> plugin_name)); ?></th>
 				<td>
 					<input style="width:45px;" id="styles.height" type="text" name="styles[height]" value="<?php echo $styles['height']; ?>" /> <?php _e('px', $this -> plugin_name); ?>
 					<span class="howto"><?php _e('Height of the slideshow gallery', $this -> plugin_name); ?></span>
@@ -81,37 +122,182 @@
 <table class="form-table">
 	<tbody>
 		<tr>
-			<th><label for="styles.border"><?php _e('Slideshow Border', $this -> plugin_name); ?></label></th>
+			<th><label for="styles.border"><?php _e('Slideshow Border', $this -> plugin_name); ?></label>
+			<?php echo GalleryHtmlHelper::help(__('This is a CSS style for the border around the entire slideshow. You can use a value such as "1px #FFFFFF solid" to display a 1 pixel, white, solid border or even a value such as "none" for no border at all.', $this -> plugin_name)); ?></th>
 			<td>
 				<input type="text" name="styles[border]" value="<?php echo $styles['border']; ?>" id="styles.border" style="width:145px;" />
 				<span class="howto"><?php echo sprintf(__('Border style/color for the entire slideshow wrapper eg. %s', $this -> plugin_name), "1px #000000 solid"); ?>
 			</td>
 		</tr>
 		<tr>
-			<th><label for="styles.background"><?php _e('Slideshow Background', $this -> plugin_name); ?></label></th>
-			<td>
-				<input type="text" name="styles[background]" value="<?php echo $styles['background']; ?>" id="styles.background" style="width:65px;" />
+			<th><label for="stylesbackground"><?php _e('Slideshow Background', $this -> plugin_name); ?></label>
+			<?php echo GalleryHtmlHelper::help(__('The background which will display behind the entire slideshow. It is behind the slides, thumbnails, etc.', $this -> plugin_name)); ?></th>
+			<td>				
+				<fieldset>
+					<legend class="screen-reader-text"><span><?php _e('Slideshow Background', $this -> plugin_name); ?></span></legend>
+					<div class="wp-picker-container">
+						<a tabindex="0" id="stylesbackgroundbutton" class="wp-color-result" style="background-color:<?php echo $styles['background']; ?>;" title="Select Color"></a>
+						<span class="wp-picker-input-wrap">
+							<input type="text" name="styles[background]" id="stylesbackground" value="<?php echo $styles['background']; ?>" class="wp-color-picker" style="display: none;" />
+						</span>
+					</div>
+				</fieldset>
+				
+				<script type="text/javascript">
+				jQuery(document).ready(function() {
+					jQuery('#stylesbackground').iris({
+						hide: true,
+						change: function(event, ui) {
+							jQuery('#stylesbackgroundbutton').css('background-color', ui.color.toString());
+						}
+					});
+					
+					jQuery('#stylesbackground').click(function(event) {
+						event.stopPropagation();
+					});
+				
+					jQuery('#stylesbackgroundbutton').click(function(event) {							
+						jQuery(this).attr('title', "Current Color");
+						jQuery('#stylesbackground').iris('toggle').toggle();								
+						event.stopPropagation();
+					});
+					
+					jQuery('html').click(function() {
+						jQuery('#stylesbackground').iris('hide').hide();
+						jQuery('#stylesbackgroundbutton').attr('title', "Select Color");
+					});
+				});
+				</script>
+				
 				<span class="howto"><?php echo sprintf(__('Background color (hexidecimal) of the entire slideshow wrapper eg. %s', $this -> plugin_name), "#FFFFFF"); ?></span>
 			</td>
 		</tr>
 		<tr>
-			<th><label for="styles.infobackground"><?php _e('Information Background', $this -> plugin_name); ?></label></th>
+			<th><label for="styles.infobackground"><?php _e('Information Background', $this -> plugin_name); ?></label>
+			<?php echo GalleryHtmlHelper::help(__('The background of the information bar which shows the title and description of each slide. It is automatically half transparent so that it is not obtrusive to the slide image below it though.', $this -> plugin_name)); ?></th>
 			<td>
-				<input type="text" name="styles[infobackground]" value="<?php echo $styles['infobackground']; ?>" id="styles.infobackground" style="width:65px;" />
+				<fieldset>
+					<legend class="screen-reader-text"><span><?php _e('Information Background', $this -> plugin_name); ?></span></legend>
+					<div class="wp-picker-container">
+						<a tabindex="0" id="stylesinfobackgroundbutton" class="wp-color-result" style="background-color:<?php echo $styles['infobackground']; ?>;" title="Select Color"></a>
+						<span class="wp-picker-input-wrap">
+							<input type="text" name="styles[infobackground]" id="stylesinfobackground" value="<?php echo $styles['infobackground']; ?>" class="wp-color-picker" style="display: none;" />
+						</span>
+					</div>
+				</fieldset>
+				
+				<script type="text/javascript">
+				jQuery(document).ready(function() {
+					jQuery('#stylesinfobackground').iris({
+						hide: true,
+						change: function(event, ui) {
+							jQuery('#stylesinfobackgroundbutton').css('background-color', ui.color.toString());
+						}
+					});
+					
+					jQuery('#stylesinfobackground').click(function(event) {
+						event.stopPropagation();
+					});
+				
+					jQuery('#stylesinfobackgroundbutton').click(function(event) {							
+						jQuery(this).attr('title', "Current Color");
+						jQuery('#stylesinfobackground').iris('toggle').toggle();								
+						event.stopPropagation();
+					});
+					
+					jQuery('html').click(function() {
+						jQuery('#stylesinfobackground').iris('hide').hide();
+						jQuery('#stylesinfobackgroundbutton').attr('title', "Select Color");
+					});
+				});
+				</script>
+				
 				<span class="howto"><?php echo sprintf(__('Background color (hexidecimal) of the information bar eg. %s', $this -> plugin_name), "#000000"); ?></span>
 			</td>
 		</tr>
 		<tr>
-			<th><label for="styles.infocolor"><?php _e('Information Text Color', $this -> plugin_name); ?></label></th>
+			<th><label for="styles.infocolor"><?php _e('Information Text Color', $this -> plugin_name); ?></label>
+			<?php echo GalleryHtmlHelper::help(__('This is the color of the text of the title and description of each slide which shows in the information bar.', $this -> plugin_name)); ?></th>
 			<td>
-				<input type="text" name="styles[infocolor]" value="<?php echo $styles['infocolor']; ?>" id="styles.infocolor" style="width:65px;" />
+				<fieldset>
+					<legend class="screen-reader-text"><span><?php _e('Information Text Color', $this -> plugin_name); ?></span></legend>
+					<div class="wp-picker-container">
+						<a tabindex="0" id="stylesinfocolorbutton" class="wp-color-result" style="background-color:<?php echo $styles['infocolor']; ?>;" title="Select Color"></a>
+						<span class="wp-picker-input-wrap">
+							<input type="text" name="styles[infocolor]" id="stylesinfocolor" value="<?php echo $styles['infocolor']; ?>" class="wp-color-picker" style="display: none;" />
+						</span>
+					</div>
+				</fieldset>
+				
+				<script type="text/javascript">
+				jQuery(document).ready(function() {
+					jQuery('#stylesinfocolor').iris({
+						hide: true,
+						change: function(event, ui) {
+							jQuery('#stylesinfocolorbutton').css('background-color', ui.color.toString());
+						}
+					});
+					
+					jQuery('#stylesinfocolor').click(function(event) {
+						event.stopPropagation();
+					});
+				
+					jQuery('#stylesinfocolorbutton').click(function(event) {							
+						jQuery(this).attr('title', "Current Color");
+						jQuery('#stylesinfocolor').iris('toggle').toggle();								
+						event.stopPropagation();
+					});
+					
+					jQuery('html').click(function() {
+						jQuery('#stylesinfocolor').iris('hide').hide();
+						jQuery('#stylesinfocolorbutton').attr('title', "Select Color");
+					});
+				});
+				</script>
+				
 				<span class="howto"><?php echo sprintf(__('Text color (hexidecimal) of the information bar content eg. %s', $this -> plugin_name), "#FFFFFF"); ?></span>
 			</td>
 		</tr>
 		<tr>
-			<th><label for="thumbactive"><?php _e('Thumbnail Active Border', $this -> plugin_name); ?></label></th>
+			<th><label for="thumbactive"><?php _e('Thumbnail Active Border', $this -> plugin_name); ?></label>
+			<?php echo GalleryHtmlHelper::help(__('This is the color of the border which displays on the active thumbnail of the slide currently displaying in the slideshow.', $this -> plugin_name)); ?></th>
 			<td>
-				<input style="width:65px;" type="text" name="thumbactive" value="<?php echo $this -> get_option('thumbactive'); ?>" id="thumbactive" />
+				<fieldset>
+					<legend class="screen-reader-text"><span><?php _e('Thumbnail Active Border', $this -> plugin_name); ?></span></legend>
+					<div class="wp-picker-container">
+						<a tabindex="0" id="stylesthumbactivebutton" class="wp-color-result" style="background-color:<?php echo $styles['thumbactive']; ?>;" title="Select Color"></a>
+						<span class="wp-picker-input-wrap">
+							<input type="text" name="styles[thumbactive]" id="stylesthumbactive" value="<?php echo $styles['thumbactive']; ?>" class="wp-color-picker" style="display: none;" />
+						</span>
+					</div>
+				</fieldset>
+				
+				<script type="text/javascript">
+				jQuery(document).ready(function() {
+					jQuery('#stylesthumbactive').iris({
+						hide: true,
+						change: function(event, ui) {
+							jQuery('#stylesthumbactivebutton').css('background-color', ui.color.toString());
+						}
+					});
+					
+					jQuery('#stylesthumbactive').click(function(event) {
+						event.stopPropagation();
+					});
+				
+					jQuery('#stylesthumbactivebutton').click(function(event) {							
+						jQuery(this).attr('title', "Current Color");
+						jQuery('#stylesthumbactive').iris('toggle').toggle();								
+						event.stopPropagation();
+					});
+					
+					jQuery('html').click(function() {
+						jQuery('#stylesthumbactive').iris('hide').hide();
+						jQuery('#stylesthumbactivebutton').attr('title', "Select Color");
+					});
+				});
+				</script>
+				
 				<span class="howto"><?php echo sprintf(__('Border color (hexidecimal) for the active image thumbnail eg. %s', $this -> plugin_name), "#FFFFFF"); ?></span>
 			</td>
 		</tr>

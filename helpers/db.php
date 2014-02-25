@@ -217,14 +217,17 @@ class GalleryDbHelper extends GalleryPlugin {
 		if (!empty($record_id) && $record = $this -> find(array('id' => $record_id))) {
 			$query = "DELETE FROM `" . $this -> table . "` WHERE `id` = '" . $record_id . "' LIMIT 1";
 			
-			if ($wpdb -> query($query)) {
+			if ($wpdb -> query($query)) {			
 				switch ($this -> model) {
 					case 'Gallery'			:
 						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `gallery_id` = '" . $record_id . "'";
 						$wpdb -> query($query);
 						break;
 					case 'Slide'			:
+						$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $record -> image;
+						@unlink($imagepath);
 						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `slide_id` = '" . $record_id . "'";
+						$wpdb -> query($query);
 						break;
 				}
 							

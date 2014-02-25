@@ -53,7 +53,7 @@ TINY.slideshow.prototype={
 				g.style.filter='alpha(opacity='+this.thumbOpacity+')';
 				g.onmouseover=new Function('TINY.alpha.set(this,100,5)');
 				g.onmouseout=new Function('TINY.alpha.set(this,'+this.thumbOpacity+',5)');
-				g.onclick=new Function(this.n+'.pr('+i+',1)')
+				g.onclick=new Function(this.n+'.pr('+i+',1)');
 			}
 		}
 		if(b&&f){
@@ -109,7 +109,7 @@ TINY.slideshow.prototype={
 		TINY.alpha.set(this.i,100,this.imgSpeed);
 		var n=new Function(this.n+'.nf('+s+')');
 		this.lt=setTimeout(n,this.imgSpeed*100);
-		if(!c || this.alwaysauto == true){
+		if(!c || (this.auto == true && this.alwaysauto == true)) {
 			this.at=setTimeout(new Function(this.n+'.mv(1,0)'),this.speed*1000)
 		}
 		if(this.a[s].l != ""){			
