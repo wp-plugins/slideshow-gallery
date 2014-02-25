@@ -2,6 +2,7 @@
 
 $wrapperid = "slideshow-wrapper" . $unique;
 if (!$products) $slides = stripslashes_deep($slides);
+$thumbopacity = $this -> get_option('thumbopacity');
 
 ?>
 
@@ -144,14 +145,14 @@ if (!$products) $slides = stripslashes_deep($slides);
 		slideshow<?php echo $unique; ?>.speed = <?php echo $options['autospeed']; ?>;
 		slideshow<?php echo $unique; ?>.alwaysauto = <?php echo $options['alwaysauto']; ?>;
 		slideshow<?php echo $unique; ?>.imgSpeed = <?php echo $options['fadespeed']; ?>;
-		slideshow<?php echo $unique; ?>.navOpacity = <?php echo $options['navopacity']; ?>;
-		slideshow<?php echo $unique; ?>.navHover = <?php echo $options['navhoveropacity']; ?>;
+		slideshow<?php echo $unique; ?>.navOpacity = <?php echo (empty($options['navopacity'])) ? 0 : $options['navopacity']; ?>;
+		slideshow<?php echo $unique; ?>.navHover = <?php echo (empty($options['navhoveropacity'])) ? 0 : $options['navhoveropacity']; ?>;
 		slideshow<?php echo $unique; ?>.letterbox = "#000000";
 		slideshow<?php echo $unique; ?>.linkclass = "linkhover";
 		slideshow<?php echo $unique; ?>.info = "<?php echo ($options['showinfo'] == "true") ? 'information' . $unique : ''; ?>";
 		slideshow<?php echo $unique; ?>.infoSpeed = <?php echo $options['infospeed']; ?>;
 		slideshow<?php echo $unique; ?>.thumbs = "<?php echo ($options['showthumbs'] == "true") ? 'slider' . $unique : ''; ?>";
-		slideshow<?php echo $unique; ?>.thumbOpacity = <?php echo $this -> get_option('thumbopacity'); ?>;
+		slideshow<?php echo $unique; ?>.thumbOpacity = <?php echo (empty($thumbopacity)) ? 0 : $thumbopacity; ?>;
 		slideshow<?php echo $unique; ?>.left = "slideleft<?php echo $unique; ?>";
 		slideshow<?php echo $unique; ?>.right = "slideright<?php echo $unique; ?>";
 		slideshow<?php echo $unique; ?>.scrollSpeed = <?php echo $options['thumbsspeed']; ?>;
@@ -159,7 +160,7 @@ if (!$products) $slides = stripslashes_deep($slides);
 		slideshow<?php echo $unique; ?>.active = "<?php echo $options['thumbsborder']; ?>";
 		slideshow<?php echo $unique; ?>.imagesthickbox = "<?php echo $options['imagesoverlay']; ?>";
 		jQuery("#spinner<?php echo $unique; ?>").remove();
-		slideshow<?php echo $unique; ?>.init("slideshow<?php echo $unique; ?>","image<?php echo $unique; ?>","<?php echo $navb . $unique; ?>","<?php echo $navf . $unique; ?>","imglink<?php echo $unique; ?>");
+		slideshow<?php echo $unique; ?>.init("slideshow<?php echo $unique; ?>","image<?php echo $unique; ?>","<?php echo (!empty($options['shownav']) && $options['shownav'] == "true") ? $navb . $unique : ''; ?>","<?php echo (!empty($options['shownav']) && $options['shownav'] == "true") ? $navf . $unique : ''; ?>","imglink<?php echo $unique; ?>");
 		tid('<?php echo $wrapperid; ?>').style.visibility = 'visible';
 		jQuery(window).trigger('resize');
 	});

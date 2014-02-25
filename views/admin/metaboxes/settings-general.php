@@ -44,13 +44,13 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 				<td>
 					<input type="hidden" style="width:45px;" name="autospeed" value="<?php echo $autospeed; ?>" id="autospeed" />
 					<div id="autospeed_slider"></div>
-					<span class="slider-value" id="autospeed_slider_value"><?php echo $autospeed; ?></span>
+					<span class="slider-value" id="autospeed_slider_value"><?php echo (empty($autospeed)) ? 0 : $autospeed; ?></span>
 					<script type="text/javascript">
 					jQuery(document).ready(function() {
 						jQuery('#autospeed_slider').slider({
 							min: 1, 
 							max: 20,
-							value: <?php echo $autospeed; ?>,
+							value: <?php echo (empty($autospeed)) ? 0 : $autospeed; ?>,
 							slide: function(event, ui) {
 								jQuery('#autospeed').val(ui.value);
 								jQuery('#autospeed_slider_value').text(ui.value);
@@ -73,13 +73,13 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 			<td>
 				<input style="width:45px;" type="hidden" name="fadespeed" value="<?php echo $fadespeed; ?>" id="fadespeed" />
 				<div id="fadespeed_slider"></div>
-				<span class="slider-value" id="fadespeed_slider_value"><?php echo $fadespeed; ?></span>
+				<span class="slider-value" id="fadespeed_slider_value"><?php echo (empty($fadespeed)) ? 0 : $fadespeed; ?></span>
 				<script type="text/javascript">
 				jQuery(document).ready(function() {
 					jQuery('#fadespeed_slider').slider({
 						min: 1, 
 						max: 20,
-						value: <?php echo $fadespeed; ?>,
+						value: <?php echo (empty($fadespeed)) ? 0 : $fadespeed; ?>,
 						slide: function(event, ui) {
 							jQuery('#fadespeed').val(ui.value);
 							jQuery('#fadespeed_slider_value').text(ui.value);
@@ -111,13 +111,13 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 				<td>
 					<input type="hidden" name="navopacity" value="<?php echo $navopacity; ?>" id="navopacity" style="width:45px;" />
 					<div id="navopacity_slider"></div>
-					<span class="slider-value" id="navopacity_slider_value"><?php echo $navopacity; ?></span>
+					<span class="slider-value" id="navopacity_slider_value"><?php echo (empty($navopacity)) ? 0 : $navopacity; ?></span>
 					<script type="text/javascript">
 					jQuery(document).ready(function() {
 						jQuery('#navopacity_slider').slider({
 							min: 0, 
 							max: 100,
-							value: <?php echo $navopacity; ?>,
+							value: <?php echo (empty($navopacity)) ? 0 : $navopacity; ?>,
 							slide: function(event, ui) {
 								jQuery('#navopacity').val(ui.value);
 								jQuery('#navopacity_slider_value').text(ui.value);
@@ -135,13 +135,13 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 				<td>
 					<input type="hidden" name="navhover" value="<?php echo $navhover; ?>" id="navhover" style="width:45px;" />
 					<div id="navhover_slider"></div>
-					<span class="slider-value" id="navhover_slider_value"><?php echo $navhover; ?></span>
+					<span class="slider-value" id="navhover_slider_value"><?php echo (empty($navhover)) ? 0 : $navhover; ?></span>
 					<script type="text/javascript">
 					jQuery(document).ready(function() {
 						jQuery('#navhover_slider').slider({
 							min: 0, 
 							max: 100,
-							value: <?php echo $navhover; ?>,
+							value: <?php echo (empty($navhover)) ? 0 : $navhover; ?>,
 							slide: function(event, ui) {
 								jQuery('#navhover').val(ui.value);
 								jQuery('#navhover_slider_value').text(ui.value);
@@ -179,13 +179,13 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 				<td>
 					<input type="hidden" style="width:45px;" name="infospeed" value="<?php echo $infospeed; ?>" id="infospeed" />
 					<div id="infospeed_slider"></div>
-					<span class="slider-value" id="infospeed_slider_value"><?php echo $infospeed; ?></span>
+					<span class="slider-value" id="infospeed_slider_value"><?php echo (empty($infospeed)) ? 0 : $infospeed; ?></span>
 					<script type="text/javascript">
 					jQuery(document).ready(function() {
 						jQuery('#infospeed_slider').slider({
 							min: 1, 
 							max: 20,
-							value: <?php echo $infospeed; ?>,
+							value: <?php echo (empty($infospeed)) ? 0 : $infospeed; ?>,
 							slide: function(event, ui) {
 								jQuery('#infospeed').val(ui.value);
 								jQuery('#infospeed_slider_value').text(ui.value);
@@ -244,13 +244,13 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 				<td>
 					<input style="width:45px;" type="hidden" name="thumbopacity" value="<?php echo $thumbopacity; ?>" id="thumbopacity" />
 					<div id="thumbopacity_slider"></div>
-					<span class="slider-value" id="thumbopacity_slider_value"><?php echo $thumbopacity; ?></span>
+					<span class="slider-value" id="thumbopacity_slider_value"><?php echo (empty($thumbopacity)) ? 0 : $thumbopacity; ?></span>
 					<script type="text/javascript">
 					jQuery(document).ready(function() {
 						jQuery('#thumbopacity_slider').slider({
 							min: 0, 
 							max: 100,
-							value: <?php echo $thumbopacity; ?>,
+							value: <?php echo (empty($thumbopacity)) ? 0 : $thumbopacity; ?>,
 							slide: function(event, ui) {
 								jQuery('#thumbopacity').val(ui.value);
 								jQuery('#thumbopacity_slider_value').text(ui.value);
@@ -267,13 +267,13 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 				<td>
 					<input type="hidden" class="widefat" style="width:45px;" name="thumbscrollspeed" value="<?php echo $thumbscrollspeed; ?>" id="thumbscrollspeed" />
 					<div id="thumbscrollspeed_slider"></div>
-					<span class="slider-value" id="thumbscrollspeed_slider_value"><?php echo $thumbscrollspeed; ?></span>
+					<span class="slider-value" id="thumbscrollspeed_slider_value"><?php echo (empty($thumbscrollspeed)) ? 0 : $thumbscrollspeed; ?></span>
 					<script type="text/javascript">
 					jQuery(document).ready(function() {
 						jQuery('#thumbscrollspeed_slider').slider({
 							min: 1, 
 							max: 20,
-							value: <?php echo $thumbscrollspeed; ?>,
+							value: <?php echo (empty($thumbscrollspeed)) ? 0 : $thumbscrollspeed; ?>,
 							slide: function(event, ui) {
 								jQuery('#thumbscrollspeed').val(ui.value);
 								jQuery('#thumbscrollspeed_slider_value').text(ui.value);
