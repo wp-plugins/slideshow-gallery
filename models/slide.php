@@ -49,7 +49,12 @@ class GallerySlide extends GalleryDbHelper {
 						}
 						break;
 					case 'image'				:
-						$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $dval;
+						$imagespath = $this -> get_option('imagespath');
+						if (empty($imagespath)) {
+							$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $dval;
+						} else {
+							$this -> image_path = rtrim($imagespath, DS) . DS . $dval;
+						}
 						break;
 				}
 			}

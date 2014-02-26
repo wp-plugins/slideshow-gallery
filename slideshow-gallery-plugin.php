@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.3.0.1';
+	var $version = '1.3.1';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -117,6 +117,7 @@ class GalleryPlugin {
 			'resizeimages'		=>	"N",
 		);
 		
+		$this -> add_option('imagespath', $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS);
 		$this -> add_option('styles', $styles);
 		$this -> add_option('timthumb_align', "c");
 		$this -> add_option('fadespeed', 10);

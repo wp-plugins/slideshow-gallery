@@ -45,9 +45,14 @@ class GalleryDbHelper extends GalleryPlugin {
 			}
 		}
 		
-		$order = (empty($order)) ? array('id', "DESC") : $order;
-		list($ofield, $odir) = $order;
-		$query .= " ORDER BY `" . $ofield . "` " . $odir . "";
+		if (!empty($order) && $order == "RAND") {
+			$query .= " ORDER BY RAND()";	
+		} else {
+			$order = (empty($order)) ? array('id', "DESC") : $order;
+			list($ofield, $odir) = $order;
+			$query .= " ORDER BY `" . $ofield . "` " . $odir . "";
+		}
+			
 		$query .= " LIMIT 1";
 		
 		if ($record = $wpdb -> get_row($query)) {		

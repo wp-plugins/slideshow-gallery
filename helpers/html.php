@@ -125,7 +125,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 	
 	function image_url($filename = null) {
 		if (!empty($filename)) {
-			return $this -> uploads_url() . '/slideshow-gallery/' . $filename;
+			return GalleryHtmlHelper::uploads_url() . '/slideshow-gallery/' . $filename;
 		}
 		
 		return false;

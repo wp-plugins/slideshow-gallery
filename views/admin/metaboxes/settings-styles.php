@@ -48,26 +48,9 @@ $timthumb_align = $this -> get_option('timthumb_align');
 				<th><label for="styles.resizeimages"><?php _e('Resize Images', $this -> plugin_name); ?></label>
 				<?php echo GalleryHtmlHelper::help(__('Should images be automatically resized? If you specify No, the images will be used in the slideshow as you originally upload them. If you specify Yes, the images will be cropped/resized to fit the slideshow better which is the recommended setting.', $this -> plugin_name)); ?></th>
 				<td>
-					<label><input onclick="jQuery('#resizeimagesYdiv').show();" <?php echo (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="styles[resizeimages]" value="Y" id="styles.resizeimages_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
-					<label><input onclick="jQuery('#resizeimagesYdiv').hide();" <?php echo ($styles['resizeimages'] == "N") ? 'checked="checked"' : ''; ?> type="radio" name="styles[resizeimages]" value="N" id="styles.resizeimages_N" /> <?php _e('No', $this -> plugin_name); ?></label>
+					<label><input <?php echo (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="styles[resizeimages]" value="Y" id="styles.resizeimages_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
+					<label><input <?php echo ($styles['resizeimages'] == "N") ? 'checked="checked"' : ''; ?> type="radio" name="styles[resizeimages]" value="N" id="styles.resizeimages_N" /> <?php _e('No', $this -> plugin_name); ?></label>
 					<span class="howto"><?php _e('Should images be resized proportionally to fit the width of the slideshow area?', $this -> plugin_name); ?></span>
-					
-					<div id="resizeimagesYdiv" style="display:<?php echo ($styles['resizeimages'] == "Y") ? 'block' : 'none'; ?>;">
-						<p>
-							<?php _e('When resize images is turned on, TimThumb will be used to resize/crop images.', $this -> plugin_name); ?><br/>
-							<?php _e('Below is a test image and the URL to the image to ensure that TimThumb works.', $this -> plugin_name); ?><br/>
-						</p>
-						<?php
-						
-						//$img = 'wp-content/plugins/' . $this -> plugin_name . '/screenshot-1.png';
-						$img = $this -> plugin_base() . DS . 'screenshot-1.png';
-						$align = (empty($timthumb_align)) ? "c" : $timthumb_align;
-						$src = plugins_url() . '/' . $this -> plugin_name . '/vendors/timthumb.php?src=' . $img . '&w=50&h=50&q=100&a=' . $align;
-						echo '<p><a target="_blank" href="' . $src . '">' . $src . '</a> <small>(' . __('click to open to test TimThumb', $this -> plugin_name) . ')</small></p>';
-						echo '<p><img class="slideshow_dropshadow" src="' . $src . '" /></p>';
-						
-						?>
-					</div>
 				</td>
 			</tr>
 		</tbody>

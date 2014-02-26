@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.3.0.1
+Version: 1.3.1
 */
 
 if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
@@ -94,6 +94,13 @@ if (!class_exists('Gallery')) {
 			if (!empty($_GET[$this -> pre . 'message'])) {		
 				$msg_type = (!empty($_GET[$this -> pre . 'updated'])) ? 'msg' : 'err';
 				call_user_method('render_' . $msg_type, $this, $_GET[$this -> pre . 'message']);
+			}
+			
+			if (!empty($_GET['page']) && (empty($_GET['method']) || $_GET['method'] != "imagestester") && in_array($_GET['page'], (array) $this -> sections)) {
+				$dismiss_imagestester = $this -> get_option('dismiss_imagestester');
+				if (empty($dismiss_imagestester)) {
+					$this -> render_msg(sprintf(__('Slideshow images and thumbnails working fine? If not, use the %sImages Tester%s to fix it. Working fine? Then you can %s this message.', $this -> plugin_name), '<a class="button" href="admin.php?page=' . $this -> sections -> settings . '&amp;method=imagestester">', '</a>', '<a class="button" href="admin.php?page=' . $this -> sections -> settings . '&amp;method=dismiss&amp;dismiss=imagestester">' . __('Dismiss', $this -> plugin_name) . '</a>'));
+				}
 			}
 		}
 		
@@ -436,6 +443,42 @@ if (!class_exists('Gallery')) {
 		
 		function admin_settings() {
 			switch ($_GET['method']) {
+				case 'dismiss'			:
+					if (!empty($_GET['dismiss'])) {
+						$this -> update_option('dismiss_' . $_GET['dismiss'], 1);
+					}
+					
+					$this -> redirect($this -> referer);
+					break;
+				case 'imagestester'		:
+				
+					if (!empty($_GET['changepath'])) {
+						$newpath = $_GET['changepath'];
+						
+						switch ($newpath) {
+							case 1				:
+								$path = $this -> Html -> uploads_path() . DS . $this -> plugin_name . DS;
+								break;
+							case 2				:
+								$path = 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+								break;
+							case 3				:
+								$path = $this -> Html -> uploads_url() . DS . $this -> plugin_name . DS;
+								break;
+						}
+						
+						$this -> update_option('imagespath', $path);
+						$this -> render_msg(__('Images path has been updated, please check if the images work now. If not, click "Try Different Path" again in Step 3.', $this -> plugin_name));
+					}
+					
+					$conditions = false;
+					if (!empty($_GET['id'])) {
+						$conditions['id'] = $_GET['id'];
+					}
+					
+					$slide = $this -> Slide -> find($conditions, false, "RAND");
+					$this -> render('settings-images', array('slide' => $slide), true, 'admin');
+					break;
 				case 'reset'			:
 					global $wpdb;
 					$query = "DELETE FROM `" . $wpdb -> prefix . "options` WHERE `option_name` LIKE '" . $this -> pre . "%';";
@@ -497,10 +540,10 @@ if (!class_exists('Gallery')) {
 						$message = __('Configuration has been saved', $this -> plugin_name);
 						$this -> render_msg($message);
 					}	
+					
+					$this -> render('settings', false, true, 'admin');
 					break;
 			}
-					
-			$this -> render('settings', false, true, 'admin');
 		}
 	}
 }

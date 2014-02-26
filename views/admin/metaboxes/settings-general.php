@@ -2,6 +2,7 @@
 
 <?php
 
+$imagespath = $this -> get_option('imagespath');
 $autospeed = $this -> get_option('autospeed');
 $fadespeed = $this -> get_option('fadespeed');
 $navopacity = $this -> get_option('navopacity');
@@ -14,6 +15,14 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 
 <table class="form-table">
 	<tbody>
+		<tr>
+			<th><label for="imagespath"><?php _e('Images Path', $this -> plugin_name); ?></label>
+			<?php echo GalleryHtmlHelper::help(__('This is the relative or absolute path or even absolute URL to the images for slides and thumbnails. By default, it loads an absolute path in order to be accurate but it may not work on all hosting setups. If images are not working, use the "Images Tester" link on the right-hand side of this page to determine the issue and resolve it.', $this -> plugin_name)); ?></th>
+			<td>
+				<input type="text" class="widefat" name="imagespath" value="<?php echo esc_attr(stripslashes($imagespath)); ?>" id="imagespath" />
+				<span class="howto"><?php _e('Path to images where slide and thumbnail images are generated from.', $this -> plugin_name); ?></span>
+			</td>
+		</tr>
 		<tr>
 			<th><label for="autoslideY"><?php _e('Auto Slide', $this -> plugin_name); ?></label>
 			<?php echo GalleryHtmlHelper::help(__('Turn this on so that the slideshow can automatically slide through the slides.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>auto</code> with value <code>true</code> or <code>false</code> eg. <code>[slideshow auto="false"]</code>.', $this -> plugin_name)); ?></th>

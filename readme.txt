@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 3.8.1
-Stable tag: 1.3.0.1
+Stable tag: 1.3.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -107,6 +107,10 @@ You can embed a slideshow and show the images uploaded to a post with the `post_
 
 Yes, you can use the `exclude` parameter to exclude post images by their order in the gallery (comma separated) like this `[slideshow post_id="123" exclude="2,4,8"]`.
 
+= How can I fix slide images or thumbnails not displaying? =
+
+There is an "Images Tester" utility under Slideshow > Configuration on the right-hand side. Use that to determine the problem.
+
 == Screenshots ==
 
 1. Slideshow gallery with thumbnails at the bottom.
@@ -118,8 +122,9 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 
 == Changelog ==
 
-= 1.3.0.1 =
+= 1.3.1 =
 
+* ADD: Images tester utility under Configuration to fix broken images
 * FIX: Issue with turning off navigation images
 * FIX: Issue with new slider settings if empty or set to zero (0)
 
