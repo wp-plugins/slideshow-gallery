@@ -91,20 +91,37 @@ class GallerySlide extends GalleryDbHelper {
 					$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
 					$imagefull = $imagepath . $imagename;
 					
-					$this -> data -> image = $imagename;
-					$this -> data -> image_path = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $imagename;
+					$this -> data -> image = $imagename;					
+					$imagespath = $this -> get_option('imagespath');
+					if (empty($imagespath)) {
+						$this -> data -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;
+					} else {
+						$this -> data -> image_path = rtrim($imagespath, DS) . DS . $imagename;
+					}
 				} else {					
 					if ($_FILES['image_file']['error'] <= 0) {
 						$imagename = $_FILES['image_file']['name'];
 						//$imagepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
-						$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
+						//$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
+						$imagespath = $this -> get_option('imagespath');
+						if (empty($imagespath)) {
+							$imagepath = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS;
+						} else {
+							$imagepath = rtrim($imagespath, DS) . DS;
+						}
 						$imagefull = $imagepath . $imagename;
 						
 						if (!is_uploaded_file($_FILES['image_file']['tmp_name'])) { $this -> errors['image_file'] = __('The image did not upload, please try again', $this -> plugin_name); }
 						elseif (!move_uploaded_file($_FILES['image_file']['tmp_name'], $imagefull)) { $this -> errors['image_file'] = __('Image could not be moved from TMP to "wp-content/uploads/", please check permissions', $this -> plugin_name); }
 						else {
 							$this -> data -> image = $imagename;
-							$this -> data -> image_path = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $imagename;
+							//$this -> data -> image_path = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $imagename;
+							$imagespath = $this -> get_option('imagespath');
+							if (empty($imagespath)) {
+								$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;
+							} else {
+								$this -> image_path = rtrim($imagespath, DS) . DS . $imagename;
+							}
 						}
 					} else {					
 						switch ($_FILES['image_file']['error']) {

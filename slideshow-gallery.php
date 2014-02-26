@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.3.1
+Version: 1.3.1.1
 */
 
 if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
@@ -222,12 +222,19 @@ if (!class_exists('Gallery')) {
 				$this -> GallerySlides -> table . ".gallery_id = '" . $gallery_id . "' " . $orderbystring;
 				
 				if ($slides = $wpdb -> get_results($slidesquery)) {				
+					$imagespath = $this -> get_option('imagespath');
+				
 					foreach ($slides as $skey => $slide) {
-						$slides[$skey] -> image_path = $this -> Html -> uploads_path() . DS . $this -> plugin_name . DS . $slide -> image;
+						//$slides[$skey] -> image_path = $this -> Html -> uploads_path() . DS . $this -> plugin_name . DS . $slide -> image;
+						if (empty($imagespath)) {
+							$slides[$skey] -> image_path = $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS . $slide -> image;
+						} else {
+							$slides[$skey] -> image_path = rtrim($imagespath, DS) . DS . $slide -> image;
+						}
 					}
 				
 					if ($orderby == "random") { shuffle($slides); }
-					$content = $this -> render('gallery', array('slides' => $slides, 'unique' => $gallery_id, 'options' => $s, 'frompost' => false), false, 'default');	
+					$content = $this -> render('gallery', array('slides' => $slides, 'unique' => 'gallery' . $gallery_id, 'options' => $s, 'frompost' => false), false, 'default');	
 				}
 			} elseif (!empty($custom) || empty($post_id)) {
 				$slides = $this -> Slide -> find_all(null, null, $orderby);
