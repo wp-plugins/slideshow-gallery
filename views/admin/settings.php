@@ -8,11 +8,7 @@ wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false);
 
 ?>
 
-<div class="wrap">
-	<div class="icon32">
-		<img src="<?php echo $this -> url(); ?>/images/icon-settings-32.png" />
-	</div>
-
+<div class="wrap slideshow <?php echo $this -> pre; ?>">
 	<h2><?php _e('Configuration Settings', $this -> plugin_name); ?></h2>
 	
 	<form action="<?php echo $this -> url; ?>" name="post" id="post" method="post">

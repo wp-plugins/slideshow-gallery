@@ -3,8 +3,8 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 3.7
-Stable tag: 1.2.3.2
+Tested up to: 3.8.1
+Stable tag: 1.3.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -15,6 +15,8 @@ Feature content in beatiful and fast JavaScript powered slideshow gallery showca
 You can easily display multiple galleries throughout your WordPress website displaying your custom added slides, slide galleries or showing slides from WordPress posts/pages.
 
 The slideshow is flexible, all aspects can easily be configured and embedding/hardcoding the slideshow gallery is a breeze. 
+
+See the <a href="http://tribulant.net/slideshowgallery/">online demonstration</a>.
 
 Here are several ways to display a slideshow: 
 
@@ -30,6 +32,10 @@ To embed a slideshow with slides from a specific gallery under **Slideshow > Man
 
 To embed a slideshow with the images uploaded to a WordPress post/page through it's media gallery, simply insert `[slideshow post_id="X"]` (where X is the ID value of the post). Whether you want to display the images from a post or a page, the parameter remains `post_id`.
 
+= Shortcode for latest/featured products =
+
+In order to display latest or featured products in a slideshow, you need the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin" title="WordPress Shopping Cart">Shopping Cart plugin</a> from Tribulant Software. Once you have this installed and activated, you can easily display recent or featured products. To display recent products use the shortcode `[slideshow products="latest"]` and to display featured products, use `[slideshow products="featured"]`. For both, you can use the `productsnumber` parameter to limit the number of products eg. `[slideshow products="latest" productsnumber="5"]`
+
 = Hardcode into any plugin/theme with PHP =
 
 To hardcode into any PHP file of your WordPress theme, simply use `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>`.
@@ -38,11 +44,26 @@ To hardcode into any PHP file of your WordPress theme, simply use `<?php if (fun
 
 You can use any of the following parameters with both the hardcoding and shortcode to customize each slideshow gallery:
 
+Shortcode Ex 1: `[slideshow layout="responsive" gallery_id="3" auto="true" navopacity="0" showthumbs="true"]`
+Shortcode Ex 2: `[slideshow layout="specific" post_id="379" width="600" height="300" auto="false" showinfo="false"]`
+
+Hardcode Ex 1: `<?php slideshow(true, 3, false, array('layout' => "responsive", 'auto' => "true", 'navopacity' => "0", 'showthumbs' => "true")); ?>`
+Hardcode Ex 2: `<?php slideshow(true, false, 379, array('layout' => "specific", 'width' => "600", 'height' => "300", 'auto' => "false", 'showinfo' => "false")); ?>`
+
+This way you can customize each slideshow you embed or hardcode, despite the settings you saved under **Slideshow > Configuration**.
+
+* `products` [ latest | featured ] = String "latest" or "featured" to display products from the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin">Checkout plugin</a>.
+* `productsnumber` [ productsnumber ] = Numeric/integer to limit the number of products to display.
+* `gallery_id` [ gallery_id ] = Numeric/integer ID of a gallery to display images from.
+* `post_id` [ post_id ] = Numeric/integer ID of a post to take images from it, uploaded through it's "Add Media" button.
+* `layout` [ responsive | specific ] = Set to 'responsive' for mobile/tablet compatible theme and 'specific' for fixed width/height.
 * `resizeimages` [ true | false ] = Set to 'true' to resize images to fit the slideshow dimensions.
 * `imagesoverlay` [ true | false ] (default: setting) = Set to 'true' to display links of slides that are images in a Colorbox overlay on the page.
 * `orderby` [ random ] = Set to 'random' to randomly order the slides. Leave this shortcode parameter to order by the order set on the slides.
-* `width` [ width | auto ] = Width of the slideshow in pixels. Don't specify 'px' part, just the numeric value for the height.
-* `height` [ height ] (default: setting) = Height of the slideshow in pixels. Don't specify the 'px' part, just the numeric value for the height.
+* `width` [ width | auto ] = (only with layout="specific") Width of the slideshow in pixels. Don't specify 'px' part, just the numeric value for the height.
+* `resheight` [ resheight ] = (only with layout="responsive") Numeric/integer value such as "30" to be used with 'resheighttype' below
+* `resheighttype [ resheighttype ] = (only with layout="responsive") "px" (pixels) or "%" (percent) as the value eg. resheighttype="%"
+* `height` [ height ] (only with layout="specific"; default: setting) = Height of the slideshow in pixels. Don't specify the 'px' part, just the numeric value for the height.
 * `auto` [ true | false ] (default: setting) = Set this to 'true' to automatically slide the slides in the slideshow.
 * `autospeed` [ speed ] (default: setting) = Speed of the auto sliding. 10 is normal. Lower number is faster. Between 5 and 15 is recommended.
 * `fadespeed` [ speed ] (default: setting) = Speed of the fading of images. 10 is normal. Lower number is faster. Between 1 and 20 is recommended.
@@ -86,6 +107,10 @@ You can embed a slideshow and show the images uploaded to a post with the `post_
 
 Yes, you can use the `exclude` parameter to exclude post images by their order in the gallery (comma separated) like this `[slideshow post_id="123" exclude="2,4,8"]`.
 
+= How can I fix slide images or thumbnails not displaying? =
+
+There is an "Images Tester" utility under Slideshow > Configuration on the right-hand side. Use that to determine the problem.
+
 == Screenshots ==
 
 1. Slideshow gallery with thumbnails at the bottom.
@@ -96,6 +121,43 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.3.1 =
+
+* ADD: Images tester utility under Configuration to fix broken images
+* FIX: Issue with turning off navigation images
+* FIX: Issue with new slider settings if empty or set to zero (0)
+
+= 1.3 =
+
+* ADD: Show latest/featured products from Shopping Cart plugin
+* ADD: Plugin "Settings" link on the "Plugins" page in WordPress
+* ADD: TimThumb crop position setting 
+* ADD: WordPress multi-site compatibility
+* ADD: Sortable columns in all admin sections 
+* ADD: Help tooltips in admin 
+* ADD: Sliders for speed settings 
+* ADD: Color picker for color settings
+* ADD: Delete image upon deletion of locally created slide 
+* ADD: WordPress 3.8+ design and compatibility
+* ADD: Multiple slideshows on a single page 
+* ADD: Responsive design for mobiles and tablets 
+* ADD: Debugging setting in configuration 
+* IMPROVE: Colorbox upgrade/fix
+* IMPROVE: Use wp_upload_dir() for dynamic paths 
+* IMPROVE: Better thumbnail slider using CSS calc 
+* IMPROVE: Move images to default theme folder 
+* IMPROVE: New TinyMCE icon/button
+* IMPROVE: New dashicons menu icon 
+* IMPROVE: When the nav arrows are turned off, the link click area should be full 
+* IMPROVE: Automatically center align images in the slideshow
+* FIX: Empty/zero thumbs spacing causes JS error
+* FIX: Deleting a slide leaves empty reference in gallery 
+* FIX: Information overlaps arrows when long 
+* FIX: Permissions settings not working
+* FIX: Turning off autoslide setting doesn't stop autoslide 
+* FIX: Javascript error due to tooltip() call 
+* FIX: Width/height of slideshow is less than the settings
 
 = 1.2.3.2 =
 * ADD: List/grid switching for ordering of slides

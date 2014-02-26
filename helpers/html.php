@@ -9,7 +9,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 			?>
 			
 			<span class="galleryhelp">
-				<a href="" onclick="return false;" title="<?php echo esc_attr(stripslashes($help)); ?>">?</a>
+				<a href="" onclick="return false;" title="<?php echo esc_attr(strip_tags(stripslashes($help))); ?>">?</a>
 			</span>
 			
 			<?php
@@ -17,6 +17,22 @@ class GalleryHtmlHelper extends GalleryPlugin {
 			$html = ob_get_clean();
 			return $html;
 		}
+	}
+	
+	function uploads_path() {
+		if ($upload_dir = wp_upload_dir()) {		
+			return str_replace("\\", "/", $upload_dir['basedir']);
+		}
+		
+		return str_replace("\\", "/", WP_CONTENT_DIR . '/uploads');
+	}
+	
+	function uploads_url() {
+		if ($upload_dir = wp_upload_dir()) {
+			return $upload_dir['baseurl'];
+		}
+		
+		return site_url() . '/wp-content/uploads';
 	}
 
 	function section_name($section = null) {
@@ -83,7 +99,9 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		if (!empty($width)) { $tt_image .= '&w=' . $width; };
 		if (!empty($height)) { $tt_image .= '&h=' . $height; };
 		$tt_image .= '&q=' . $quality . '"';
-		$tt_image .= '&a=t';
+		$timthumb_align = $this -> get_option('timthumb_align');
+		$align = (!empty($timthumb_align)) ? $timthumb_align : "c";
+		$tt_image .= '&a=' . $align;
 		if (!empty($class)) { $tt_image .= ' class="' . $class . '"'; };
 		if (!empty($rel)) { $tt_image .= ' rel="' . $rel . '"'; }
 		$tt_image .= ' />';
@@ -95,17 +113,19 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		if (!empty($width)) { $tt_image .= '&w=' . $width; };
 		if (!empty($height)) { $tt_image .= '&h=' . $height; };
 		$tt_image .= '&q=' . $quality;
-		$tt_image .= '&a=t';
+		$timthumb_align = $this -> get_option('timthumb_align');
+		$align = (!empty($timthumb_align)) ? $timthumb_align : "c";
+		$tt_image .= '&a=' . $align;
 		return $tt_image;
 	}
 	
 	function timthumb_url() {
-		return site_url() . '/wp-content/plugins/slideshow-gallery/vendors/timthumb.php';
+		return plugins_url() . '/slideshow-gallery/vendors/timthumb.php';
 	}
 	
 	function image_url($filename = null) {
 		if (!empty($filename)) {
-			return site_url() . '/wp-content/uploads/slideshow-gallery/' . $filename;
+			return GalleryHtmlHelper::uploads_url() . '/slideshow-gallery/' . $filename;
 		}
 		
 		return false;
@@ -153,32 +173,59 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function retainquery($add = '') {
-		$url = $_SERVER['REQUEST_URI'];
+	function queryString($params, $name = null) {
 	
-		if (($urls = @explode("?", $url)) !== false) {				
-			if (!empty($urls[1])) {			
-				if (!empty($add)) {				
-					if (($adds = explode("&", str_replace("&amp;", "&", $add))) !== false) {					
-						foreach ($adds as $qstring) {						
-							if (($qparts = @explode("=", $qstring)) !== false) {							
-								if (!empty($qparts[0])) {								
-									if (preg_match("/\&?" . $qparts[0] . "\=([0-9a-z+]*)/i", $urls[1], $matches)) {
-										$urls[1] = preg_replace("/\&?" . $qparts[0] . "\=([0-9a-z+]*)/i", "", $urls[1]);
-									}									
-								}
-							}
-						}
-					}
+		$ret = "";
+		foreach ($params as $key => $val) {
+			if (is_array($val)) {
+				if ($name == null) {
+					$ret .= GalleryHtmlHelper::queryString($val, $key);
+				} else {
+					$ret .= GalleryHtmlHelper::queryString($val, $name . "[$key]");   
+				}
+			} else {
+				if ($name != null) {
+					$ret .= $name . "[$key]" . "=" . $val . "&";
+				} else {
+					$ret .= $key . "=" . $val . "&";
 				}
 			}
 		}
 		
-		$urls[1] = preg_replace("/\&?" . $this -> pre . "message\=([0-9a-z+]*)/i", "", $urls[1]);
+		return rtrim($ret, "&");   
+	} 
+	
+	function retainquery($add = null, $old_url = null, $endslash = true) {
+		$url = (empty($old_url)) ? $_SERVER['REQUEST_URI'] : rtrim($old_url, '&');
+		$urls = @explode("?", $url);
+		$add = ltrim($add, '&');
+		
+		$url_parts = @parse_url($url);
+		parse_str($url_parts['query'], $path_parts);
+		$add = str_replace("&amp;", "&", $add);
+		parse_str($add, $add_parts);
+		
+		if (empty($path_parts) || !is_array($path_parts)) {
+			$path_parts = array();	
+		}
+			
+		if (!empty($add_parts) && is_array($add_parts)) {
+			foreach ($add_parts as $addkey => $addvalue) {
+				$path_parts[$addkey] = $addvalue;
+			}
+		}
+
+		$querystring = GalleryHtmlHelper::queryString($path_parts);
+		
+		$urls[1] = preg_replace("/[\&|\?]" . $this -> pre . "message\=([0-9a-z-_+]*)/i", "", $urls[1]);
+		$urls[1] = preg_replace("/[\&|\?]page\=/si", "", $urls[1]);
+		
 		$url = $urls[0];
 		$url .= '?';
-		$url .= (empty($urls[1])) ? '' : $urls[1] . '&amp;';
-		$url .= $add;
+		
+		if (!empty($querystring)) {
+			$url .= '&' . $querystring;
+		}
 				
 		return preg_replace("/\?(\&)?/si", "?", $url);
 	}
