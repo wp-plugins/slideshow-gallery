@@ -11,7 +11,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 	<tbody>
 		<tr>
 			<th><label for="layout_responsive"><?php _e('Layout', $this -> plugin_name); ?></label>
-			<?php echo GalleryHtmlHelper::help(__('Choose responsive if you have a responsive theme and you want the slideshow to resize width/height in a responsive manner on different devices.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>layout</code> with value <code>responsive</code> or <code>specific</code> eg. <code>[slideshow layout="specific"]</code>.', $this -> plugin_name)); ?></th>
+			<?php echo $this -> Html -> help(__('Choose responsive if you have a responsive theme and you want the slideshow to resize width/height in a responsive manner on different devices.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>layout</code> with value <code>responsive</code> or <code>specific</code> eg. <code>[slideshow layout="specific"]</code>.', $this -> plugin_name)); ?></th>
 			<td>
 				<label><input onclick="jQuery('#layout_specific_div').hide(); jQuery('#layout_responsive_div').show();" <?php echo ($styles['layout'] == "responsive") ? 'checked="checked"' : ''; ?> type="radio" name="styles[layout]" value="responsive" id="layout_responsive" /> <?php _e('Responsive', $this -> plugin_name); ?></label>
 				<label><input onclick="jQuery('#layout_specific_div').show(); jQuery('#layout_responsive_div').hide();" <?php echo (empty($styles['layout']) || $styles['layout'] == "specific") ? 'checked="checked"' : ''; ?> type="radio" name="styles[layout]" value="specific" id="layout_specific" /> <?php _e('Fixed', $this -> plugin_name); ?></label>
@@ -26,7 +26,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 		<tbody>
 			<tr>
 				<th><label for="resheight"><?php _e('Responsive Height', $this -> plugin_name); ?></label>
-				<?php echo GalleryHtmlHelper::help(__('The responsive height can be either a fixed height in pixel or a percentage height. The percentage height is a percentage of the width of the slideshow.<br/><br/><strong>Override per slideshow:</strong> Using parameters <code>resheight</code> value a value and <code>resheighttype</code> with <code>px</code> for pixels or <code>%</code> for percentage eg. <code>[slideshow resheight="300" resheighttype="px"]</code>.', $this -> plugin_name)); ?></th>
+				<?php echo $this -> Html -> help(__('The responsive height can be either a fixed height in pixel or a percentage height. The percentage height is a percentage of the width of the slideshow.<br/><br/><strong>Override per slideshow:</strong> Using parameters <code>resheight</code> value a value and <code>resheighttype</code> with <code>px</code> for pixels or <code>%</code> for percentage eg. <code>[slideshow resheight="300" resheighttype="px"]</code>.', $this -> plugin_name)); ?></th>
 				<td>
 					<input class="widefat" style="width:45px;" type="text" name="styles[resheight]" value="<?php echo esc_attr(stripslashes($styles['resheight'])); ?>" id="resheight" />
 					<?php /*<input type="hidden" name="styles[resheighttype]" value="pix" /> <?php _e('px', $this -> plugin_name); ?>*/ ?>
@@ -46,7 +46,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 		<tbody>
 			<tr>
 				<th><label for="styles.resizeimages"><?php _e('Resize Images', $this -> plugin_name); ?></label>
-				<?php echo GalleryHtmlHelper::help(__('Should images be automatically resized? If you specify No, the images will be used in the slideshow as you originally upload them. If you specify Yes, the images will be cropped/resized to fit the slideshow better which is the recommended setting.', $this -> plugin_name)); ?></th>
+				<?php echo $this -> Html -> help(__('Should images be automatically resized? If you specify No, the images will be used in the slideshow as you originally upload them. If you specify Yes, the images will be cropped/resized to fit the slideshow better which is the recommended setting.', $this -> plugin_name)); ?></th>
 				<td>
 					<label><input <?php echo (empty($styles['resizeimages']) || $styles['resizeimages'] == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="styles[resizeimages]" value="Y" id="styles.resizeimages_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 					<label><input <?php echo ($styles['resizeimages'] == "N") ? 'checked="checked"' : ''; ?> type="radio" name="styles[resizeimages]" value="N" id="styles.resizeimages_N" /> <?php _e('No', $this -> plugin_name); ?></label>
@@ -61,7 +61,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 			<tbody>
 				<tr>
 					<th><label for="timthumb_align"><?php _e('Crop Alignment', $this -> plugin_name); ?></label>
-					<?php echo GalleryHtmlHelper::help(__('With this setting you can choose the location from which the image will be cropped/resized. For example if you prefer to have the top parts of images shown instead of being cut off, you can change this setting to "Top".', $this -> plugin_name)); ?></th>
+					<?php echo $this -> Html -> help(__('With this setting you can choose the location from which the image will be cropped/resized. For example if you prefer to have the top parts of images shown instead of being cut off, you can change this setting to "Top".', $this -> plugin_name)); ?></th>
 					<td>
 						<?php
 						
@@ -84,7 +84,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 		<tbody>
 			<tr>
 				<th><label for="styles.width"><?php _e('Gallery Width', $this -> plugin_name); ?></label>
-				<?php echo GalleryHtmlHelper::help(__('The width of the slideshow in pixels.', $this -> plugin_name)); ?></th>
+				<?php echo $this -> Html -> help(__('The width of the slideshow in pixels.', $this -> plugin_name)); ?></th>
 				<td>
 					<input style="width:45px;" id="styles.width" type="text" name="styles[width]" value="<?php echo $styles['width']; ?>" /> <?php _e('px', $this -> plugin_name); ?>
 					<span class="howto"><?php _e('Width of the slideshow gallery', $this -> plugin_name); ?></span>
@@ -92,7 +92,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 			</tr>
 			<tr>
 				<th><label for="styles.height"><?php _e('Gallery Height', $this -> plugin_name); ?></label>
-				<?php echo GalleryHtmlHelper::help(__('The height of the slideshow in pixels.', $this -> plugin_name)); ?></th>
+				<?php echo $this -> Html -> help(__('The height of the slideshow in pixels.', $this -> plugin_name)); ?></th>
 				<td>
 					<input style="width:45px;" id="styles.height" type="text" name="styles[height]" value="<?php echo $styles['height']; ?>" /> <?php _e('px', $this -> plugin_name); ?>
 					<span class="howto"><?php _e('Height of the slideshow gallery', $this -> plugin_name); ?></span>
@@ -106,7 +106,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 	<tbody>
 		<tr>
 			<th><label for="styles.border"><?php _e('Slideshow Border', $this -> plugin_name); ?></label>
-			<?php echo GalleryHtmlHelper::help(__('This is a CSS style for the border around the entire slideshow. You can use a value such as "1px #FFFFFF solid" to display a 1 pixel, white, solid border or even a value such as "none" for no border at all.', $this -> plugin_name)); ?></th>
+			<?php echo $this -> Html -> help(__('This is a CSS style for the border around the entire slideshow. You can use a value such as "1px #FFFFFF solid" to display a 1 pixel, white, solid border or even a value such as "none" for no border at all.', $this -> plugin_name)); ?></th>
 			<td>
 				<input type="text" name="styles[border]" value="<?php echo $styles['border']; ?>" id="styles.border" style="width:145px;" />
 				<span class="howto"><?php echo sprintf(__('Border style/color for the entire slideshow wrapper eg. %s', $this -> plugin_name), "1px #000000 solid"); ?>
@@ -114,7 +114,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 		</tr>
 		<tr>
 			<th><label for="stylesbackground"><?php _e('Slideshow Background', $this -> plugin_name); ?></label>
-			<?php echo GalleryHtmlHelper::help(__('The background which will display behind the entire slideshow. It is behind the slides, thumbnails, etc.', $this -> plugin_name)); ?></th>
+			<?php echo $this -> Html -> help(__('The background which will display behind the entire slideshow. It is behind the slides, thumbnails, etc.', $this -> plugin_name)); ?></th>
 			<td>				
 				<fieldset>
 					<legend class="screen-reader-text"><span><?php _e('Slideshow Background', $this -> plugin_name); ?></span></legend>
@@ -157,7 +157,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 		</tr>
 		<tr>
 			<th><label for="styles.infobackground"><?php _e('Information Background', $this -> plugin_name); ?></label>
-			<?php echo GalleryHtmlHelper::help(__('The background of the information bar which shows the title and description of each slide. It is automatically half transparent so that it is not obtrusive to the slide image below it though.', $this -> plugin_name)); ?></th>
+			<?php echo $this -> Html -> help(__('The background of the information bar which shows the title and description of each slide. It is automatically half transparent so that it is not obtrusive to the slide image below it though.', $this -> plugin_name)); ?></th>
 			<td>
 				<fieldset>
 					<legend class="screen-reader-text"><span><?php _e('Information Background', $this -> plugin_name); ?></span></legend>
@@ -200,7 +200,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 		</tr>
 		<tr>
 			<th><label for="styles.infocolor"><?php _e('Information Text Color', $this -> plugin_name); ?></label>
-			<?php echo GalleryHtmlHelper::help(__('This is the color of the text of the title and description of each slide which shows in the information bar.', $this -> plugin_name)); ?></th>
+			<?php echo $this -> Html -> help(__('This is the color of the text of the title and description of each slide which shows in the information bar.', $this -> plugin_name)); ?></th>
 			<td>
 				<fieldset>
 					<legend class="screen-reader-text"><span><?php _e('Information Text Color', $this -> plugin_name); ?></span></legend>
@@ -243,7 +243,7 @@ $timthumb_align = $this -> get_option('timthumb_align');
 		</tr>
 		<tr>
 			<th><label for="thumbactive"><?php _e('Thumbnail Active Border', $this -> plugin_name); ?></label>
-			<?php echo GalleryHtmlHelper::help(__('This is the color of the border which displays on the active thumbnail of the slide currently displaying in the slideshow.', $this -> plugin_name)); ?></th>
+			<?php echo $this -> Html -> help(__('This is the color of the border which displays on the active thumbnail of the slide currently displaying in the slideshow.', $this -> plugin_name)); ?></th>
 			<td>
 				<fieldset>
 					<legend class="screen-reader-text"><span><?php _e('Thumbnail Active Border', $this -> plugin_name); ?></span></legend>

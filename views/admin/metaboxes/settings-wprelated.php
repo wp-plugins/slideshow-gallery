@@ -26,7 +26,7 @@ $permissions = $this -> get_option('permissions');
 			<?php if (!empty($this -> sections)) : ?>
 				<?php foreach ($this -> sections as $section_key => $section_name) : ?>
 					<tr class="<?php echo $class = (empty($class)) ? 'arow' : ''; ?>">
-						<th style="white-space:nowrap; text-align:right;"><?php echo GalleryHtmlHelper::section_name($section_key); ?></th>
+						<th style="white-space:nowrap; text-align:right;"><?php echo $this -> Html -> section_name($section_key); ?></th>
 						<?php foreach ($wp_roles -> role_names as $role_key => $role_name) : ?>
 							<td style="text-align:center;">
 								<input <?php echo ($role_key == "administrator") ? 'checked="checked" disabled="disabled"' : ''; ?> <?php echo (!empty($permissions[$role_key]) && in_array($section_key, $permissions[$role_key])) ? 'checked="checked"' : ''; ?> type="checkbox" name="permissions[<?php echo $role_key; ?>][]" value="<?php echo $section_key; ?>" id="" />

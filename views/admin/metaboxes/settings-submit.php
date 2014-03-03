@@ -14,7 +14,7 @@ $debugging = get_option('tridebugging');
 			</div>
 			<div class="misc-pub-section">
 				<a href="<?php echo $this -> url; ?>&amp;method=imagestester"><?php _e('Images Tester', $this -> plugin_name); ?></a>
-				<?php echo GalleryHtmlHelper::help(__('Slide or thumbnail images not working? Use the images tester to fix the problem', $this -> plugin_name)); ?>
+				<?php echo $this -> Html -> help(__('Slide or thumbnail images not working? Use the images tester to fix the problem', $this -> plugin_name)); ?>
 			</div>
 			<div class="misc-pub-section misc-pub-section-last">
 				<label><input <?php echo (!empty($debugging) && $debugging == 1) ? 'checked="checked"' : ''; ?> type="checkbox" name="debugging" value="1" id="debugging" /> <?php _e('Turn on debugging', $this -> plugin_name); ?></label>

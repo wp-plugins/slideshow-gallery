@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.3.1.1';
+	var $version = '1.3.1.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -138,6 +138,8 @@ class GalleryPlugin {
 		$this -> add_option('autospeed', 10);
 		$this -> add_option('alwaysauto', "true");
 		$this -> add_option('imagesthickbox', "N");
+		
+		return;
 	}
 	
 	function check_roles() {
@@ -620,6 +622,8 @@ class GalleryPlugin {
 						${$pkey} = $pval;
 					}
 				}
+				
+				$this -> initialize_classes();
 			
 				if ($output == false) {
 					ob_start();
