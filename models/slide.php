@@ -101,14 +101,7 @@ class GallerySlide extends GalleryDbHelper {
 				} else {					
 					if ($_FILES['image_file']['error'] <= 0) {
 						$imagename = $_FILES['image_file']['name'];
-						//$imagepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
-						//$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
-						$imagespath = $this -> get_option('imagespath');
-						if (empty($imagespath)) {
-							$imagepath = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS;
-						} else {
-							$imagepath = rtrim($imagespath, DS) . DS;
-						}
+						$imagepath = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS;
 						$imagefull = $imagepath . $imagename;
 						
 						if (!is_uploaded_file($_FILES['image_file']['tmp_name'])) { $this -> errors['image_file'] = __('The image did not upload, please try again', $this -> plugin_name); }

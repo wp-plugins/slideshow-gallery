@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 3.8.1
-Stable tag: 1.3.1.2
+Stable tag: 1.3.1.3
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -121,6 +121,10 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.3.1.3 =
+* FIX: Image could not be moved from TMP error in some cases
+* FIX: PHP Strict, Notice and Warning messages
 
 = 1.3.1.2 =
 * FIX: Not all configuration settings loading

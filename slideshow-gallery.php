@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.3.1.2
+Version: 1.3.1.3
 */
 
 if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
@@ -469,7 +469,12 @@ if (!class_exists('Gallery')) {
 								$path = $this -> Html -> uploads_path() . DS . $this -> plugin_name . DS;
 								break;
 							case 2				:
-								$path = 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+								if (is_multisite()) {
+									global $blog_id;
+									$path = 'wp-content' . DS . 'uploads' . DS . 'sites' . DS . $blog_id . DS . $this -> plugin_name . DS;
+								} else {
+									$path = 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+								}
 								break;
 							case 3				:
 								$path = $this -> Html -> uploads_url() . DS . $this -> plugin_name . DS;

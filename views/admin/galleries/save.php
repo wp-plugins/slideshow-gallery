@@ -8,7 +8,7 @@
 			<tbody>
 				<tr>
 					<th><label for="Gallery_title"><?php _e('Title', $this -> plugin_name); ?></label>
-					<?php echo GalleryHtmlHelper::help(__('Give this gallery a title/name for your own reference.', $this -> plugin_name)); ?></th>
+					<?php echo $this -> Html -> help(__('Give this gallery a title/name for your own reference.', $this -> plugin_name)); ?></th>
 					<td>
 						<input type="text" class="widefat" name="Gallery[title]" value="<?php echo esc_attr(stripslashes($this -> Gallery -> data -> title)); ?>" id="Gallery_title" />
 						<span class="howto"><?php _e('Title of this gallery for identification purposes.', $this -> plugin_name); ?></span>

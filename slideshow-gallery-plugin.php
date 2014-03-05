@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.3.1.2';
+	var $version = '1.3.1.3';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -33,7 +33,7 @@ class GalleryPlugin {
 			$wpdb -> show_errors();
 			
 			if ($this -> debug_level == 2) {
-				error_reporting(E_ALL ^ E_NOTICE);
+				error_reporting(E_ALL & ~(E_STRICT|E_NOTICE));
 				@ini_set('display_errors', 1);
 			}
 		} else {
@@ -291,7 +291,6 @@ class GalleryPlugin {
 	}
 	
 	function check_uploaddir() {
-		//$uploaddir = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
 		$uploaddir = $this -> Html -> uploads_path() . DS . $this -> plugin_name . DS;
 		$cachedir = $uploaddir . 'cache' . DS;
 		

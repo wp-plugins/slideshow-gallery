@@ -9,7 +9,7 @@
 			<tbody>
 				<tr>
 					<th><label for="Slide.title"><?php _e('Title', $this -> plugin_name); ?></label>
-					<?php echo GalleryHtmlHelper::help(__('This title is for your reference in management and it will also be used to display the title of the slide in the information bar if you have that turned on.', $this -> plugin_name)); ?></th>
+					<?php echo $this -> Html -> help(__('This title is for your reference in management and it will also be used to display the title of the slide in the information bar if you have that turned on.', $this -> plugin_name)); ?></th>
 					<td>
 						<input class="widefat" type="text" name="Slide[title]" value="<?php echo esc_attr($this -> Slide -> data -> title); ?>" id="Slide.title" />
                         <span class="howto"><?php _e('Title/name of your slide as it will be displayed to your users.', $this -> plugin_name); ?></span>
@@ -18,7 +18,7 @@
 				</tr>
 				<tr>
 					<th><label for="Slide.description"><?php _e('Description', $this -> plugin_name); ?></label>
-					<?php echo GalleryHtmlHelper::help(__('The description is specifically used for the information bar if you have that turned on.', $this -> plugin_name)); ?></th>
+					<?php echo $this -> Html -> help(__('The description is specifically used for the information bar if you have that turned on.', $this -> plugin_name)); ?></th>
 					<td>
 						<textarea class="widefat" rows="5" cols="100%" name="Slide[description]"><?php echo esc_attr($this -> Slide -> data -> description); ?></textarea>
                         <span class="howto"><?php _e('Description of your slide as it will be displayed to your users below the title.', $this -> plugin_name); ?></span>
@@ -27,7 +27,7 @@
 				</tr>
 				<tr>
 					<th><label for="checkboxall"><?php _e('Galleries', $this -> plugin_name); ?></label>
-					<?php echo GalleryHtmlHelper::help(__('You can organize/assign a slide to multiple galleries as needed. It is easy to display a slideshow with the slides of a specific gallery then.', $this -> plugin_name)); ?></th>
+					<?php echo $this -> Html -> help(__('You can organize/assign a slide to multiple galleries as needed. It is easy to display a slideshow with the slides of a specific gallery then.', $this -> plugin_name)); ?></th>
 					<td>
 						<?php if ($galleries = $this -> Gallery -> select()) : ?>
 							<label style="font-weight:bold"><input onclick="jqCheckAll(this,'','Slide[galleries]');" type="checkbox" name="checkboxall" value="checkboxall" id="checkboxall" /> <?php _e('Select All', $this -> plugin_name); ?></label><br/>
@@ -42,7 +42,7 @@
 				</tr>
                 <tr>
                 	<th><label for="Slide.type.file"><?php _e('Image Type', $this -> plugin_name); ?></label>
-                	<?php echo GalleryHtmlHelper::help(__('Do you want to specify a URL to your image or upload the image file manually? Specifying a URL will still copy the image file remotely from the location to your server so uploading is recommended to prevent any restrictions or errors.', $this -> plugin_name)); ?></th>
+                	<?php echo $this -> Html -> help(__('Do you want to specify a URL to your image or upload the image file manually? Specifying a URL will still copy the image file remotely from the location to your server so uploading is recommended to prevent any restrictions or errors.', $this -> plugin_name)); ?></th>
                     <td>
                     	<label><input onclick="jQuery('#typediv_file').show(); jQuery('#typediv_url').hide();" <?php echo (empty($this -> Slide -> data -> type) || $this -> Slide -> data -> type == "file") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="file" id="Slide.type.file" /> <?php _e('Upload File (recommended)', $this -> plugin_name); ?></label>
                         <label><input onclick="jQuery('#typediv_url').show(); jQuery('#typediv_file').hide();" <?php echo ($this -> Slide -> data -> type == "url") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="url" id="Slide.type.url" /> <?php _e('Specify URL', $this -> plugin_name); ?></label>
@@ -58,7 +58,7 @@
             	<tbody>
                 	<tr>
                     	<th><label for="Slide.image_file"><?php _e('Choose Image', $this -> plugin_name); ?></label>
-                    	<?php echo GalleryHtmlHelper::help(__('Simply choose an image file from your computer to upload for this slide. Only .jpg, .png and .gif are supported and in rare cases .bmp but please try and prevent using .bmp files.', $this -> plugin_name)); ?></th>
+                    	<?php echo $this -> Html -> help(__('Simply choose an image file from your computer to upload for this slide. Only .jpg, .png and .gif are supported and in rare cases .bmp but please try and prevent using .bmp files.', $this -> plugin_name)); ?></th>
                         <td>
                         	<input type="file" name="image_file" value="" id="Slide.image_file" />
                             <span class="howto"><?php _e('Choose your image file from your computer. JPG, PNG, GIF are supported.', $this -> plugin_name); ?></span>
@@ -90,7 +90,7 @@
                 <tbody>
                     <tr>
                         <th><label for="Slide.image_url"><?php _e('Image URL', $this -> plugin_name); ?></label>
-                        <?php echo GalleryHtmlHelper::help(__('Specify an absolute URL to an image file to use for this slide. The image will be copied from the location to your server.', $this -> plugin_name)); ?></th>
+                        <?php echo $this -> Html -> help(__('Specify an absolute URL to an image file to use for this slide. The image will be copied from the location to your server.', $this -> plugin_name)); ?></th>
                         <td>
                             <input class="widefat" type="text" name="Slide[image_url]" value="<?php echo esc_attr($this -> Slide -> data -> image_url); ?>" id="Slide.image_url" />
                             <span class="howto"><?php _e('Local or remote image location eg. http://domain.com/path/to/image.jpg', $this -> plugin_name); ?></span>
@@ -105,7 +105,7 @@
         	<tbody>
 				<tr>
 					<th><label for="Slide_uselink_N"><?php _e('Use Link', $this -> plugin_name); ?></label>
-					<?php echo GalleryHtmlHelper::help(__('Turn this on to specify a link/URL for this slide to link to when it is clicked.', $this -> plugin_name)); ?></th>
+					<?php echo $this -> Html -> help(__('Turn this on to specify a link/URL for this slide to link to when it is clicked.', $this -> plugin_name)); ?></th>
 					<td>
 						<label><input onclick="jQuery('#Slide_uselink_div').show();" <?php echo ($this -> Slide -> data -> uselink == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[uselink]" value="Y" id="Slide_uselink_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 						<label><input onclick="jQuery('#Slide_uselink_div').hide();" <?php echo (empty($this -> Slide -> data -> uselink) || $this -> Slide -> data -> uselink == "N") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[uselink]" value="N" id="Slide_uselink_N" /> <?php _e('No', $this -> plugin_name); ?></label>
@@ -120,7 +120,7 @@
 				<tbody>
 					<tr>
 						<th><label for="Slide.link"><?php _e('Link To', $this -> plugin_name); ?></label>
-						<?php echo GalleryHtmlHelper::help(__('The absolute URL to take the user to when the slide is clicked.', $this -> plugin_name)); ?></th>
+						<?php echo $this -> Html -> help(__('The absolute URL to take the user to when the slide is clicked.', $this -> plugin_name)); ?></th>
 						<td>
                         	<input class="widefat" type="text" name="Slide[link]" value="<?php echo esc_attr($this -> Slide -> data -> link); ?>" id="Slide.link" />
                             <span class="howto"><?php _e('Link/URL to go to when a user clicks the slide eg. http://www.domain.com/mypage/', $this -> plugin_name); ?></span>
@@ -128,7 +128,7 @@
 					</tr>
 					<tr>
 						<th><label for="Slide_linktarget_self"><?php _e('Link Target', $this -> plugin_name); ?></label>
-						<?php echo GalleryHtmlHelper::help(__('Depending on the purpose of specifying this link, you may want it to open in the same window or in a new window.', $this -> plugin_name)); ?></th>
+						<?php echo $this -> Html -> help(__('Depending on the purpose of specifying this link, you may want it to open in the same window or in a new window.', $this -> plugin_name)); ?></th>
 						<td>
 							<label><input <?php echo (empty($this -> Slide -> data -> linktarget) || (!empty($this -> Slide -> data -> linktarget) && $this -> Slide -> data -> linktarget == "self")) ? 'checked="checked"' : ''; ?> type="radio" name="Slide[linktarget]" value="self" id="Slide_linktarget_self" /> <?php _e('Current Window', $this -> plugin_name); ?></label>
 							<label><input <?php echo (!empty($this -> Slide -> data -> linktarget) && $this -> Slide -> data -> linktarget == "blank") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[linktarget]" value="blank" id="Slide_linktarget_blank" /> <?php _e('New/Blank Window', $this -> plugin_name); ?></label>
