@@ -8,9 +8,10 @@ th.sorted.asc .sorting-indicator,th.desc:hover span.sorting-indicator{ display:b
 th.sorted.desc .sorting-indicator,th.asc:hover span.sorting-indicator{ display:block; visibility:visible; background-position:-7px 0}
 
 #adminmenu .toplevel_page_slideshow-slides div.wp-menu-image:before,
-span.mce_gallery:before {
+.mce-i-gallery:before {
     font-family: 'slideshow_dashicons' !important;
 	content: '\f233';
+	font-size: 20px;
 }
 
 @font-face {
@@ -62,7 +63,7 @@ a.colorbox img.slideshow {
 	-moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
-.galleryhelp {
+/*.galleryhelp {
 	display: inline-block;
     margin: 2px 0 0 5px;
     vertical-align: top;
@@ -81,6 +82,26 @@ a.colorbox img.slideshow {
 	font-weight: bold;
 	font-size: 10px;
     line-height: 15px;
+}*/
+
+.galleryhelp a,
+.galleryhelp a:hover, 
+.galleryhelp a:active {
+	text-decoration: none;
+	color: #333;
+}
+
+.galleryhelp a:before {
+	font-family: 'slideshow_dashicons' !important;
+	content: '\f223';
+	font-weight: 400;
+	font-size: 20px;
+	vertical-align: top;
+	text-decoration: none;
+	line-height: 100%;
+	height: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 .ui-tooltip {

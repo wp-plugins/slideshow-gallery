@@ -45,7 +45,7 @@ $checkout_active = is_plugin_active('wp-checkout' . DS . 'wp-checkout.php');
 		if (slideshow_type == "post") {
 			var post_id = jQuery('#post_id').val();
 			if (post_id == "") { alert('<?php _e('Please fill in a post ID.', $Gallery -> plugin_name); ?>'); return false; }
-			var tag = '[slideshow post_id="' + post_id + '"';
+			var tag = '[tribulant_slideshow post_id="' + post_id + '"';
 		
 			if (exclude != "" && exclude != "undefined" && exclude != undefined) {
 				tag += ' exclude="' + exclude + '"';
@@ -53,23 +53,23 @@ $checkout_active = is_plugin_active('wp-checkout' . DS . 'wp-checkout.php');
 			
 			tag += ']';
 		} else if (slideshow_type == "custom") {
-			var tag = '[slideshow';
+			var tag = '[tribulant_slideshow';
 			if (exclude != "" && exclude != "undefined" && exclude != undefined) { tag += ' exclude="' + exclude + '"'; }
 			tag += ']';
 		} else if (slideshow_type == "gallery") {
 			var gallery_id = jQuery('#gallery_id').val();
 			if (gallery_id == "") { alert('<?php _e('Please select a gallery.', $Gallery -> plugin_name); ?>'); return false; }
-			var tag = '[slideshow gallery_id="' + gallery_id + '"';
+			var tag = '[tribulant_slideshow gallery_id="' + gallery_id + '"';
 			if (exclude != "" && exclude != "undefined" && exclude != undefined) { tag += ' exclude="' + exclude + '"'; }
 			tag += ']';
 		} else if (slideshow_type == "products") {
 			var slideshow_products = jQuery('#slideshow_products').val();
 			var slideshow_productsnumber = jQuery('#slideshow_productsnumber').val();
-			var tag = '[slideshow products="' + slideshow_products + '" productsnumber="' + slideshow_productsnumber + '"]';
+			var tag = '[tribulant_slideshow products="' + slideshow_products + '" productsnumber="' + slideshow_productsnumber + '"]';
 		}
 		
 		if(window.tinyMCE) {
-			window.tinyMCE.execInstanceCommand('content', 'mceInsertContent', false, tag);
+			window.tinyMCE.execCommand('mceInsertContent', false, tag);
 			tinyMCEPopup.editor.execCommand('mceRepaint');
 			tinyMCEPopup.close();
 		}

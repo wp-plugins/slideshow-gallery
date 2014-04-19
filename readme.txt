@@ -3,8 +3,8 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 3.8.1
-Stable tag: 1.3.1.3
+Tested up to: 3.9
+Stable tag: 1.4
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -22,19 +22,19 @@ Here are several ways to display a slideshow:
 
 = Shortcode for all slides =
 
-To embed a slideshow with all slides under **Slideshow > Manage Slides** in the plugin, simply insert `[slideshow]` into the content of a post/page.
+To embed a slideshow with all slides under **Slideshow > Manage Slides** in the plugin, simply insert `[tribulant_slideshow]` into the content of a post/page.
 
 = Shortcode for a gallery's slides =
 
-To embed a slideshow with slides from a specific gallery under **Slideshow > Manage Galleries** in the plugin, simply insert `[slideshow gallery_id="X"]` (where X is the ID value of the gallery) into the content of a post/page.
+To embed a slideshow with slides from a specific gallery under **Slideshow > Manage Galleries** in the plugin, simply insert `[tribulant_slideshow gallery_id="X"]` (where X is the ID value of the gallery) into the content of a post/page.
 
 = Shortcode for the images of a WordPress post/page =
 
-To embed a slideshow with the images uploaded to a WordPress post/page through it's media gallery, simply insert `[slideshow post_id="X"]` (where X is the ID value of the post). Whether you want to display the images from a post or a page, the parameter remains `post_id`.
+To embed a slideshow with the images uploaded to a WordPress post/page through it's media gallery, simply insert `[tribulant_slideshow post_id="X"]` (where X is the ID value of the post). Whether you want to display the images from a post or a page, the parameter remains `post_id`.
 
 = Shortcode for latest/featured products =
 
-In order to display latest or featured products in a slideshow, you need the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin" title="WordPress Shopping Cart">Shopping Cart plugin</a> from Tribulant Software. Once you have this installed and activated, you can easily display recent or featured products. To display recent products use the shortcode `[slideshow products="latest"]` and to display featured products, use `[slideshow products="featured"]`. For both, you can use the `productsnumber` parameter to limit the number of products eg. `[slideshow products="latest" productsnumber="5"]`
+In order to display latest or featured products in a slideshow, you need the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin" title="WordPress Shopping Cart">Shopping Cart plugin</a> from Tribulant Software. Once you have this installed and activated, you can easily display recent or featured products. To display recent products use the shortcode `[tribulant_slideshow products="latest"]` and to display featured products, use `[tribulant_slideshow products="featured"]`. For both, you can use the `productsnumber` parameter to limit the number of products eg. `[tribulant_slideshow products="latest" productsnumber="5"]`
 
 = Hardcode into any plugin/theme with PHP =
 
@@ -44,8 +44,8 @@ To hardcode into any PHP file of your WordPress theme, simply use `<?php if (fun
 
 You can use any of the following parameters with both the hardcoding and shortcode to customize each slideshow gallery:
 
-Shortcode Ex 1: `[slideshow layout="responsive" gallery_id="3" auto="true" navopacity="0" showthumbs="true"]`
-Shortcode Ex 2: `[slideshow layout="specific" post_id="379" width="600" height="300" auto="false" showinfo="false"]`
+Shortcode Ex 1: `[tribulant_slideshow layout="responsive" gallery_id="3" auto="true" navopacity="0" showthumbs="true"]`
+Shortcode Ex 2: `[tribulant_slideshow layout="specific" post_id="379" width="600" height="300" auto="false" showinfo="false"]`
 
 Hardcode Ex 1: `<?php slideshow(true, 3, false, array('layout' => "responsive", 'auto' => "true", 'navopacity' => "0", 'showthumbs' => "true")); ?>`
 Hardcode Ex 2: `<?php slideshow(true, false, 379, array('layout' => "specific", 'width' => "600", 'height' => "300", 'auto' => "false", 'showinfo' => "false")); ?>`
@@ -87,7 +87,7 @@ Installing the WordPress slideshow gallery plugin is very easy. Simply follow th
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Configure the settings according to your needs through the **Slideshow > Configuration** menu
 1. Add and manage your slides in the 'Slideshow' section
-1. Put `[slideshow post_id="X"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow gallery_id="X"]` to display the slides of a specific gallery by ID or use `[slideshow]` to embed a slideshow with your custom added slides under **Slideshow > Manage Slides** or `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>` into your WordPress theme using PHP code.
+1. Put `[tribulant_slideshow post_id="X"]` to embed a slideshow with the images of a post into your posts/pages or use `[tribulant_slideshow gallery_id="X"]` to display the slides of a specific gallery by ID or use `[tribulant_slideshow]` to embed a slideshow with your custom added slides under **Slideshow > Manage Slides** or `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>` into your WordPress theme using PHP code.
 
 == Frequently Asked Questions ==
 
@@ -101,11 +101,11 @@ You can organize slides either into multiple galleries according to your needs o
 
 = How do I display the images uploaded to a post? =
 
-You can embed a slideshow and show the images uploaded to a post with the `post_id` parameter. Like this `[slideshow post_id="123"]`.
+You can embed a slideshow and show the images uploaded to a post with the `post_id` parameter. Like this `[tribulant_slideshow post_id="123"]`.
 
 = Can I exclude certain images from a post in the slideshow? =
 
-Yes, you can use the `exclude` parameter to exclude post images by their order in the gallery (comma separated) like this `[slideshow post_id="123" exclude="2,4,8"]`.
+Yes, you can use the `exclude` parameter to exclude post images by their order in the gallery (comma separated) like this `[tribulant_slideshow post_id="123" exclude="2,4,8"]`.
 
 = How can I fix slide images or thumbnails not displaying? =
 
@@ -121,6 +121,19 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4 =
+* ADD: WordPress 3.9 compatibility
+* ADD: New shortcode `[tribulant_slideshow]` to prevent conflicts
+* IMPROVE: Reduced/hidden information bar on mobile
+* IMPROVE: More CSS selectors on elements
+* IMPROVE: New dashicon for help instead of CSS
+* IMPROVE: File and folder permissions incorrect on some servers
+* FIX: TinyMCE editor button/icon not inserting shortcodes
+* FIX: PHP strict standards warnings
+* FIX: NextGen Conflict
+* FIX: Slideshow not showing with 1 slide
+* FIX: TinyMCE editor icon/button since WordPress 3.9 missing
 
 = 1.3.1.3 =
 * FIX: Image could not be moved from TMP error in some cases
@@ -253,7 +266,7 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 * ADDED: Default, English language file in the `languages` folder.
 * ADDED: Configuration setting to turn On/Off resizing of images via CSS.
 * ADDED: Webkit border radius in CSS for thumbnail images.
-* ADDED: `post_id` parameter for the `[slideshow]` shortcode to display images from a post/page.
+* ADDED: `post_id` parameter for the `[tribulant_slideshow]` shortcode to display images from a post/page.
 * IMPROVED: Plugin doesn't utilize PHP short open tags anymore.
 * COMPATIBILITY: Removed `autoLoad` (introduced in PHP 5) parameter from `class_exists` function for PHP 4 compatibility.
 * IMPROVED: Directory separator constant DS from DIRECTORY_SEPARATOR.

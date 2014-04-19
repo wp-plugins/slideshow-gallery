@@ -98,7 +98,7 @@
                             	<a href="?page=<?php echo $this -> sections -> galleries; ?>&amp;method=view&amp;id=<?php echo $gallery -> id; ?>"><?php echo $gallery -> slidescount; ?></a>
                             </td>
                             <td>
-                            	<code>[slideshow gallery_id="<?php echo $gallery -> id; ?>"]</code>
+                            	<code>[tribulant_slideshow gallery_id="<?php echo $gallery -> id; ?>"]</code>
                             </td>
 							<td><abbr title="<?php echo $gallery -> modified; ?>"><?php echo date("Y-m-d", strtotime($gallery -> modified)); ?></abbr></td>
 						</tr>

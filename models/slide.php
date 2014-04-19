@@ -107,6 +107,8 @@ class GallerySlide extends GalleryDbHelper {
 						if (!is_uploaded_file($_FILES['image_file']['tmp_name'])) { $this -> errors['image_file'] = __('The image did not upload, please try again', $this -> plugin_name); }
 						elseif (!move_uploaded_file($_FILES['image_file']['tmp_name'], $imagefull)) { $this -> errors['image_file'] = __('Image could not be moved from TMP to "wp-content/uploads/", please check permissions', $this -> plugin_name); }
 						else {
+							@chmod($imagefull, 0644);
+						
 							$this -> data -> image = $imagename;
 							//$this -> data -> image_path = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $imagename;
 							$imagespath = $this -> get_option('imagespath');

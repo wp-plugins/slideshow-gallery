@@ -87,45 +87,45 @@ $thumbopacity = $this -> get_option('thumbopacity');
 		<?php endif; ?>
 	</ul>
 	
-	<div id="<?php echo $wrapperid; ?>">
+	<div id="<?php echo $wrapperid; ?>" class="slideshow-wrapper">
 		<?php if ($options['showthumbs'] == "true" && $options['thumbsposition'] == "top") : ?>
-			<div id="thumbnails<?php echo $unique; ?>" class="thumbstop">
-				<div id="slideleft<?php echo $unique; ?>" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
-				<div id="slidearea<?php echo $unique; ?>">
-					<div id="slider<?php echo $unique; ?>"></div>
+			<div id="thumbnails<?php echo $unique; ?>" class="slideshow-thumbnails thumbstop">
+				<div class="slideshow-slideleft" id="slideleft<?php echo $unique; ?>" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
+				<div class="slideshow-slidearea" id="slidearea<?php echo $unique; ?>">
+					<div class="slideshow-slider" id="slider<?php echo $unique; ?>"></div>
 				</div>
-				<div id="slideright<?php echo $unique; ?>" title="<?php _e('Slide Right', $this -> plugin_name); ?>"></div>
+				<div class="slideshow-slideright" id="slideright<?php echo $unique; ?>" title="<?php _e('Slide Right', $this -> plugin_name); ?>"></div>
 				<br style="clear:both; visibility:hidden; height:1px;" />
 			</div>
 		<?php endif; ?>
 	
-		<div id="fullsize<?php echo $unique; ?>">
+		<div class="slideshow-fullsize" id="fullsize<?php echo $unique; ?>">
 			<?php $navb = false; $navf = false; ?>
 			<?php if ($options['shownav'] == "true" && count($slides) > 1) : ?>
 				<?php $navb = "imgprev"; ?>
-				<div id="imgprev<?php echo $unique; ?>" class="imgnav" title="<?php _e('Previous Image', $this -> plugin_name); ?>"></div>
+				<div id="imgprev<?php echo $unique; ?>" class="slideshow-imgprev imgnav" title="<?php _e('Previous Image', $this -> plugin_name); ?>"></div>
 			<?php endif; ?>
-			<div id="imglink<?php echo $unique; ?>" class="imglink"><!-- link --></div>
+			<div id="imglink<?php echo $unique; ?>" class="slideshow-imglink imglink"><!-- link --></div>
 			<?php if ($options['shownav'] == "true" && count($slides) > 1) : ?>
 				<?php $navf = "imgnext"; ?>
-				<div id="imgnext<?php echo $unique; ?>" class="imgnav" title="<?php _e('Next Image', $this -> plugin_name); ?>"></div>
+				<div id="imgnext<?php echo $unique; ?>" class="slideshow-imgnext imgnav" title="<?php _e('Next Image', $this -> plugin_name); ?>"></div>
 			<?php endif; ?>
-			<div id="image<?php echo $unique; ?>"></div>
+			<div id="image<?php echo $unique; ?>" class="slideshow-image"></div>
 			<?php if ($options['showinfo'] == "true") : ?>
-				<div id="information<?php echo $unique; ?>">
-					<h3></h3>
-					<p></p>
+				<div class="slideshow-information" id="information<?php echo $unique; ?>">
+					<h3 class="slideshow-info-heading"></h3>
+					<p class="slideshow-info-content"></p>
 				</div>
 			<?php endif; ?>
 		</div>
 		
 		<?php if ($options['showthumbs'] == "true" && $options['thumbsposition'] == "bottom") : ?>
-			<div id="thumbnails<?php echo $unique; ?>" class="thumbsbot">
-				<div id="slideleft<?php echo $unique; ?>" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
-				<div id="slidearea<?php echo $unique; ?>">
-					<div id="slider<?php echo $unique; ?>"></div>
+			<div id="thumbnails<?php echo $unique; ?>" class="slideshow-thumbnails thumbsbot">
+				<div class="slideshow-slideleft" id="slideleft<?php echo $unique; ?>" title="<?php _e('Slide Left', $this -> plugin_name); ?>"></div>
+				<div class="slideshow-slidearea" id="slidearea<?php echo $unique; ?>">
+					<div class="slideshow-slider" id="slider<?php echo $unique; ?>"></div>
 				</div>
-				<div id="slideright<?php echo $unique; ?>" title="<?php _e('Slide Right', $this -> plugin_name); ?>"></div>
+				<div class="slideshow-slideright" id="slideright<?php echo $unique; ?>" title="<?php _e('Slide Right', $this -> plugin_name); ?>"></div>
 				<br style="clear:both; visibility:hidden; height:1px;" />
 			</div>
 		<?php endif; ?>
@@ -160,7 +160,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 		slideshow<?php echo $unique; ?>.active = "<?php echo $options['thumbsborder']; ?>";
 		slideshow<?php echo $unique; ?>.imagesthickbox = "<?php echo $options['imagesoverlay']; ?>";
 		jQuery("#spinner<?php echo $unique; ?>").remove();
-		slideshow<?php echo $unique; ?>.init("slideshow<?php echo $unique; ?>","image<?php echo $unique; ?>","<?php echo (!empty($options['shownav']) && $options['shownav'] == "true") ? $navb . $unique : ''; ?>","<?php echo (!empty($options['shownav']) && $options['shownav'] == "true") ? $navf . $unique : ''; ?>","imglink<?php echo $unique; ?>");
+		slideshow<?php echo $unique; ?>.init("slideshow<?php echo $unique; ?>","image<?php echo $unique; ?>","<?php echo (!empty($options['shownav']) && count($slides) > 1 && $options['shownav'] == "true") ? $navb . $unique : ''; ?>","<?php echo (!empty($options['shownav']) && count($slides) > 1 && $options['shownav'] == "true") ? $navf . $unique : ''; ?>","imglink<?php echo $unique; ?>");
 		tid('<?php echo $wrapperid; ?>').style.visibility = 'visible';
 		jQuery(window).trigger('resize');
 	});
@@ -185,6 +185,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	$cssattr['thumbwidth'] = $this -> get_option('thumbwidth');
 	$cssattr['thumbheight'] = $this -> get_option('thumbheight');
 	$cssattr['sliderwidth'] = ((($cssattr['thumbwidth'] + ($options['thumbsspacing'] * 2) + 5) * count($slides)));
+	$cssattr['infohideonmobile'] = $this -> get_option('infohideonmobile');
 	
 	?>
 	

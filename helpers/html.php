@@ -9,7 +9,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 			?>
 			
 			<span class="galleryhelp">
-				<a href="" onclick="return false;" title="<?php echo esc_attr(strip_tags(stripslashes($help))); ?>">?</a>
+				<a href="" onclick="return false;" title="<?php echo esc_attr(stripslashes($help)); ?>"></a>
 			</span>
 			
 			<?php
@@ -173,7 +173,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function queryString($params, $name = null) {
+	public static function queryString($params, $name = null) {
 	
 		$ret = "";
 		foreach ($params as $key => $val) {
@@ -195,7 +195,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return rtrim($ret, "&");   
 	} 
 	
-	function retainquery($add = null, $old_url = null, $endslash = true) {
+	public static function retainquery($add = null, $old_url = null, $endslash = true) {
 		$url = (empty($old_url)) ? $_SERVER['REQUEST_URI'] : rtrim($old_url, '&');
 		$urls = @explode("?", $url);
 		$add = ltrim($add, '&');
@@ -217,7 +217,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 
 		$querystring = GalleryHtmlHelper::queryString($path_parts);
 		
-		$urls[1] = preg_replace("/[\&|\?]" . $this -> pre . "message\=([0-9a-z-_+]*)/i", "", $urls[1]);
+		$urls[1] = preg_replace("/[\&|\?]Gallerymessage\=([0-9a-z-_+]*)/i", "", $urls[1]);
 		$urls[1] = preg_replace("/[\&|\?]page\=/si", "", $urls[1]);
 		
 		$url = $urls[0];

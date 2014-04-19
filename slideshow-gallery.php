@@ -5,8 +5,8 @@ Plugin Name: Slideshow Gallery
 Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
-Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.3.1.3
+Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
+Version: 1.4
 */
 
 if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
@@ -43,7 +43,10 @@ if (!class_exists('Gallery')) {
 			$this -> add_filter('mce_external_plugins');
 			$this -> add_filter("plugin_action_links_" . $this -> plugin_file, 'plugin_settings_link', 10, 1);
 			
-			if (!is_admin()) { add_shortcode('slideshow', array($this, 'embed')); }
+			if (!is_admin()) { 
+				add_shortcode('slideshow', array($this, 'embed')); 
+				add_shortcode('tribulant_slideshow', array($this, 'embed'));
+			}
 		}
 		
 		function plugin_settings_link($links) { 
@@ -514,6 +517,7 @@ if (!class_exists('Gallery')) {
 				default					:
 					if (!empty($_POST)) {
 						delete_option('tridebugging');
+						delete_option('Galleryinfohideonmobile');
 					
 						foreach ($_POST as $pkey => $pval) {					
 							switch ($pkey) {

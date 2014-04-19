@@ -186,7 +186,7 @@ class GalleryPaginate extends GalleryPlugin {
 					if ($k != $this -> page) {
 						$this -> pagination .= '<a class="page-numbers" href="' . GalleryHtmlHelper::retainquery($add_numbers) . '" title="' . __('Page', $this -> plugin_name) . ' ' . $k . '">' . $k . '</a>';
 					} else {
-						$this -> pagination .= '<span class="page-numbers current">' . $k . '</span>';
+						$this -> pagination .= '<a class="page-numbers current">' . $k . '</span>';
 					}
 				}
 				

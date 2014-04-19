@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.3.1.3';
+	var $version = '1.4';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -126,6 +126,7 @@ class GalleryPlugin {
 		$this -> add_option('navhover', 70);
 		$this -> add_option('information', "Y");
 		$this -> add_option('infospeed', 10);
+		$this -> add_option('infohideonmobile', 1);
 		$this -> add_option('thumbnails', "N");
 		$this -> add_option('thumbwidth', "100");
 		$this -> add_option('thumbheight', "75");

@@ -8,6 +8,7 @@ $fadespeed = $this -> get_option('fadespeed');
 $navopacity = $this -> get_option('navopacity');
 $navhover = $this -> get_option('navhover');
 $infospeed = $this -> get_option('infospeed');
+$infohideonmobile = $this -> get_option('infohideonmobile');
 $thumbopacity = $this -> get_option('thumbopacity');
 $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 
@@ -25,7 +26,7 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 		</tr>
 		<tr>
 			<th><label for="autoslideY"><?php _e('Auto Slide', $this -> plugin_name); ?></label>
-			<?php echo $this -> Html -> help(__('Turn this on so that the slideshow can automatically slide through the slides.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>auto</code> with value <code>true</code> or <code>false</code> eg. <code>[slideshow auto="false"]</code>.', $this -> plugin_name)); ?></th>
+			<?php echo $this -> Html -> help(__('Turn this on so that the slideshow can automatically slide through the slides.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>auto</code> with value <code>true</code> or <code>false</code> eg. <code>[tribulant_slideshow auto="false"]</code>.', $this -> plugin_name)); ?></th>
 			<td>
 				<label><input onclick="jQuery('#autoslide_div').show();" <?php echo ($this -> get_option('autoslide') == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="autoslide" value="Y" id="autoslideY" /> <?php _e('Yes', $this -> plugin_name); ?></label>
 				<label><input onclick="jQuery('#autoslide_div').hide();" <?php echo ($this -> get_option('autoslide') == "N") ? 'checked="checked"' : ''; ?> type="radio" name="autoslide" value="N" id="autoslideN" /> <?php _e('No', $this -> plugin_name); ?></label>
@@ -203,6 +204,14 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 					});
 					</script>
 					<span class="howto"><?php _e('Speed at which the information bar will slide in and out.', $this -> plugin_name); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="infohideonmobile"><?php _e('Hide On Mobiles', $this -> plugin_name); ?></label>
+				<?php echo $this -> Html -> help(__('With a responsive layout turned on, the slideshow will respond in width on mobile devices and the information bar tends to overlap the entire slide since it increases in height as it reduces in width. You can tick/check this setting to hide the information bar on mobile devices so that the slides remain fully visible.', $this -> plugin_name)); ?></th>
+				<td>
+					<label><input <?php echo (!empty($infohideonmobile)) ? 'checked="checked"' : ''; ?> type="checkbox" name="infohideonmobile" value="1" id="infohideonmobile" /> <?php _e('Yes, hide the information bar on mobiles', $this -> plugin_name); ?></label>
+					<span class="howto"><?php _e('Tick/check this to hide the information bar on mobiles', $this -> plugin_name); ?></span>
 				</td>
 			</tr>
 		</tbody>
