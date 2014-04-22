@@ -93,7 +93,7 @@ Installing the WordPress slideshow gallery plugin is very easy. Simply follow th
 
 = Can I display/embed multiple instances of the slideshow gallery? =
 
-Yes, you can, but only one slideshow per page.
+Yes, you can and you can put multiple slideshows on the same page as well.
 
 = How can I display specific slides in a slideshow gallery instance? =
 
