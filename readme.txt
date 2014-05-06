@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 3.9
-Stable tag: 1.4
+Stable tag: 1.4.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -121,6 +121,16 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.1 =
+* ADD: Set opacity for information bar per slide
+* ADD: Setting per slide to show title/description or not
+* IMPROVE: Updated TimThumb script
+* IMPROVE: Updated WordPress plugin file header
+* IMPROVE: Function call_user_method() is deprecated
+* IMPROVE: New spinner/loading image
+* FIX: More PHP warnings/notices
+* FIX: 404 Not Found on spinner/loading image
 
 = 1.4 =
 * ADD: WordPress 3.9 compatibility
