@@ -63,27 +63,6 @@ a.colorbox img.slideshow {
 	-moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
-/*.galleryhelp {
-	display: inline-block;
-    margin: 2px 0 0 5px;
-    vertical-align: top;
-	-moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    z-index: 26;
-	background-color: #444444;
-}
-
-.galleryhelp a {
-	display: block;
-	padding: 0 5px;
-	color: white;
-	text-decoration: none;
-	font-weight: bold;
-	font-size: 10px;
-    line-height: 15px;
-}*/
-
 .galleryhelp a,
 .galleryhelp a:hover, 
 .galleryhelp a:active {

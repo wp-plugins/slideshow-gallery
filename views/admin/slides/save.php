@@ -1,4 +1,12 @@
-<div class="wrap <?php echo $this -> pre; ?>">
+<!-- Save a Slide -->
+
+<?php
+
+$showtd = $this -> Slide -> data -> showtd;
+
+?>
+
+<div class="wrap <?php echo $this -> pre; ?> slideshow-gallery">
 	<h2><?php _e('Save a Slide', $this -> plugin_name); ?></h2>
 	
 	<form action="<?php echo $this -> url; ?>&amp;method=save" method="post" enctype="multipart/form-data">
@@ -25,6 +33,32 @@
 						<?php echo (!empty($this -> Slide -> errors['description'])) ? '<div style="color:red;">' . $this -> Slide -> errors['description'] . '</div>' : ''; ?>
 					</td>
 				</tr>
+				<tr>
+					<th><label for="showtd"><?php _e('Show Information?', $this -> plugin_name); ?></label></th>
+					<td>
+						<label><input onclick="if (jQuery(this).is(':checked')) { jQuery('#showtd_div').show(); } else { jQuery('#showtd_div').hide(); }" <?php echo (!empty($showtd) && $showtd == 1) ? 'checked="checked"' : ''; ?> type="checkbox" name="Slide[showtd]" value="1" id="showtd" /> <?php _e('Yes, show the title and description on the slide', $this -> plugin_name); ?></label>
+						<span class="howto"><?php _e('Tick/check to show the information bar with title and description on the slide.', $this -> plugin_name); ?></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div id="showtd_div" style="display:<?php echo (!empty($showtd) && $showtd == 1) ? 'block' : 'none'; ?>;">
+			<table class="form-table">
+				<tbody>
+					<tr>
+						<th><label for="iopacity"><?php _e('Opacity', $this -> plugin_name); ?></label></th>
+						<td>
+							<input type="text" id="iopacity" class="widefat" style="width:45px;" name="Slide[iopacity]" value="<?php echo esc_attr(stripslashes($this -> Slide -> data -> iopacity)); ?>" />
+							<span class="howto"><?php _e('A value between 0 and 100. Leave empty for default.', $this -> plugin_name); ?></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<table class="form-table">
+			<tbody>
 				<tr>
 					<th><label for="checkboxall"><?php _e('Galleries', $this -> plugin_name); ?></label>
 					<?php echo $this -> Html -> help(__('You can organize/assign a slide to multiple galleries as needed. It is easy to display a slideshow with the slides of a specific gallery then.', $this -> plugin_name)); ?></th>

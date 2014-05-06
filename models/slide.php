@@ -14,6 +14,8 @@ class GallerySlide extends GalleryDbHelper {
 		'id'				=>	"INT(11) NOT NULL AUTO_INCREMENT",
 		'title'				=>	"VARCHAR(150) NOT NULL DEFAULT ''",
 		'description'		=>	"TEXT NOT NULL",
+		'showtd'			=>	"INT(11) NOT NULL DEFAULT '1'",
+		'iopacity'			=>	"INT(11) NOT NULL DEFAULT '70'",
 		'image'				=>	"VARCHAR(50) NOT NULL DEFAULT ''",
 		'type'				=>	"ENUM('file','url') NOT NULL DEFAULT 'file'",
 		'image_url'			=>	"VARCHAR(200) NOT NULL DEFAULT ''",
@@ -83,6 +85,8 @@ class GallerySlide extends GalleryDbHelper {
 			extract($data, EXTR_SKIP);
 			
 			if (empty($title)) { $this -> errors['title'] = __('Please fill in a title', $this -> plugin_name); }
+			if (empty($showtd)) { $this -> data -> showtd = 0; }
+			
 			if (empty($type)) { $this -> errors['type'] = __('Please select an image type', $this -> plugin_name); }
 			elseif ($type == "file") {
 				if (!empty($image_oldfile) && empty($_FILES['image_file']['name'])) {

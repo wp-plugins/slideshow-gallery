@@ -19,7 +19,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		}
 	}
 	
-	function uploads_path() {
+	public static function uploads_path() {
 		if ($upload_dir = wp_upload_dir()) {		
 			return str_replace("\\", "/", $upload_dir['basedir']);
 		}
@@ -258,7 +258,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function gen_date($format = "Y-m-d H:i:s", $time = false) {
+	public static function gen_date($format = "Y-m-d H:i:s", $time = false) {
 		$time = (empty($time)) ? time() : $time;
 		$date = date($format, $time);
 		

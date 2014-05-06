@@ -60,13 +60,13 @@ $thumbopacity = $this -> get_option('thumbopacity');
 		<?php else : ?>
 			<?php foreach ($slides as $slide) : ?>		
 				<li>
-					<h3><?php echo $slide -> title; ?></h3>
+					<h3 style="opacity:<?php echo (!empty($slide -> iopacity)) ? ($slide -> iopacity) : 70; ?>;"><?php echo (!empty($slide -> showtd) && $slide -> showtd == 1) ? $slide -> title : ''; ?></h3>
 					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
 						<span><?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo $this -> Html -> image_url($slide -> image); ?></span>
 					<?php endif; ?>
-					<p><?php echo $slide -> description; ?></p>
+					<p><?php echo (!empty($slide -> showtd) && $slide -> showtd == 1) ? $slide -> description : ''; ?></p>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
 							<a href="<?php echo $slide -> link; ?>" title="<?php echo esc_attr($slide -> title); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
