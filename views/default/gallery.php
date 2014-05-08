@@ -17,7 +17,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 					<?php $full_image_path = get_attached_file($slide -> ID); ?>
 					<?php $full_image_url = wp_get_attachment_url($slide -> ID); ?>					
 					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
-						<span><?php echo $this -> Html -> timthumb_image_src($full_image_path, $options['width'], $options['height'], 100); ?></span>
+						<span><?php echo $this -> Html -> bfithumb_image_src($full_image_path, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo $full_image_href[0]; ?></span>
 					<?php endif; ?>
@@ -25,9 +25,9 @@ $thumbopacity = $this -> get_option('thumbopacity');
 					<?php $thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false); ?>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if (!empty($slide -> guid)) : ?>
-							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr($slide -> post_title); ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($full_image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
+							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr($slide -> post_title); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
 						<?php else : ?>
-							<a><img src="<?php echo $this -> Html -> timthumb_image_src($full_image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
+							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
 						<a href="<?php echo $slide -> guid; ?>" title="<?php echo $slide -> post_title; ?>"></a>
@@ -40,16 +40,16 @@ $thumbopacity = $this -> get_option('thumbopacity');
 				<li>
 					<h3><?php echo stripslashes($slide -> title); ?></h3>
 					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
-						<span><?php echo $this -> Html -> timthumb_image_src($slide -> image_url, $options['width'], $options['height'], 100); ?></span>
+						<span><?php echo $this -> Html -> bfithumb_image_src($slide -> image_url, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo site_url() . '/' . $slide -> image_url; ?></span>
 					<?php endif; ?>
 					<p><?php echo substr(stripslashes($slide -> description), 0, 255); ?></p>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if (!empty($slide -> post_id)) : ?>
-							<a href="<?php echo get_permalink($slide -> post_id); ?>" target="_self" title="<?php echo esc_attr($slide -> title); ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" /></a>
+							<a href="<?php echo get_permalink($slide -> post_id); ?>" target="_self" title="<?php echo esc_attr($slide -> title); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" /></a>
 						<?php else : ?>
-							<a><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" /></a>
+							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
 						<a href="<?php echo get_permalink($slide -> post_id); ?>" target="_self" title="<?php echo esc_attr($slide -> title); ?>"></a>
@@ -60,18 +60,18 @@ $thumbopacity = $this -> get_option('thumbopacity');
 		<?php else : ?>
 			<?php foreach ($slides as $slide) : ?>		
 				<li>
-					<h3 style="opacity:<?php echo (!empty($slide -> iopacity)) ? ($slide -> iopacity) : 70; ?>;"><?php echo (!empty($slide -> showtd) && $slide -> showtd == 1) ? $slide -> title : ''; ?></h3>
+					<h3 style="opacity:<?php echo (!empty($slide -> iopacity)) ? ($slide -> iopacity) : 70; ?>;"><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "title")) ? $slide -> title : ''; ?></h3>
 					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
-						<span><?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $options['width'], $options['height'], 100); ?></span>
+						<span><?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo $this -> Html -> image_url($slide -> image); ?></span>
 					<?php endif; ?>
-					<p><?php echo (!empty($slide -> showtd) && $slide -> showtd == 1) ? $slide -> description : ''; ?></p>
+					<p><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "description")) ? $slide -> description : ''; ?></p>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
-							<a href="<?php echo $slide -> link; ?>" title="<?php echo esc_attr($slide -> title); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+							<a href="<?php echo $slide -> link; ?>" title="<?php echo esc_attr($slide -> title); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
 						<?php else : ?>
-							<a><img src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>

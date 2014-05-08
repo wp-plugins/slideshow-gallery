@@ -118,7 +118,7 @@
 							<td><?php echo $slide -> id; ?></td>
 							<td style="width:75px;">
 								<?php $image = $slide -> image; ?>
-								<a href="<?php echo $this -> Html -> image_url($image); ?>" title="<?php echo $slide -> title; ?>" class="colorbox" rel="slides"><img class="dropshadow" src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, 50, 50, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+								<a href="<?php echo $this -> Html -> image_url($image); ?>" title="<?php echo $slide -> title; ?>" class="colorbox" rel="slides"><img class="dropshadow" src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 50, 50, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
 							</td>
 							<td>
                             	<a class="row-title" href="<?php echo $this -> url; ?>&amp;method=save&amp;id=<?php echo $slide -> id; ?>" title=""><?php echo $slide -> title; ?></a>

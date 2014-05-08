@@ -3,7 +3,7 @@
 <?php 
 
 $styles = $this -> get_option('styles'); 
-$timthumb_align = $this -> get_option('timthumb_align');
+$resizeimagescrop = $this -> get_option('resizeimagescrop');
 
 ?>
 
@@ -59,20 +59,11 @@ $timthumb_align = $this -> get_option('timthumb_align');
 		<table class="form-table">
 			<tbody>
 				<tr>
-					<th><label for="timthumb_align"><?php _e('Crop Alignment', $this -> plugin_name); ?></label>
-					<?php echo $this -> Html -> help(__('With this setting you can choose the location from which the image will be cropped/resized. For example if you prefer to have the top parts of images shown instead of being cut off, you can change this setting to "Top".', $this -> plugin_name)); ?></th>
+					<th><label for="resizeimagescrop_Y"><?php _e('Crop', $this -> plugin_name); ?></label></th>
 					<td>
-						<?php
-						
-						$alignments = array('c' => __('Center', $this -> plugin_name), 't' => __('Top', $this -> plugin_name), 'l' => __('Left', $this -> plugin_name), 'r' => __('Right', $this -> plugin_name), 'b' => __('Bottom', $this -> plugin_name), 'tl' => __('Top Left', $this -> plugin_name), 'tr' => __('Top Right', $this -> plugin_name), 'bl' => __('Bottom Left', $this -> plugin_name), 'br' => __('Bottom Right', $this -> plugin_name));
-						
-						?>
-						<select name="timthumb_align" id="timthumb_align">
-							<?php foreach ($alignments as $akey => $aval) : ?>
-								<option <?php echo (!empty($timthumb_align) && $timthumb_align == $akey) ? 'selected="selected"' : ''; ?> value="<?php echo $akey; ?>"><?php echo $aval; ?></option>
-							<?php endforeach; ?>
-						</select>
-						<span class="howto"><?php _e('Choose the image crop/resize location which is used as the starting point.', $this -> plugin_name); ?></span>
+						<label><input <?php echo (!empty($resizeimagescrop) && $resizeimagescrop == "Y") ? 'checked="checked"' : ''; ?> type="radio" name="resizeimagescrop" value="Y" id="resizeimagescrop_Y" /> <?php _e('Yes', $this -> plugin_name); ?></label>
+						<label><input <?php echo (!empty($resizeimagescrop) && $resizeimagescrop == "N") ? 'checked="checked"' : ''; ?> type="radio" name="resizeimagescrop" value="N" id="resizeimagescrop_N" /> <?php _e('No', $this -> plugin_name); ?></label>
+						<span class="howto"><?php _e('Should images be cropped?', $this -> plugin_name); ?></span>
 					</td>
 				</tr>
 			</tbody>

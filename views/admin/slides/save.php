@@ -2,7 +2,7 @@
 
 <?php
 
-$showtd = $this -> Slide -> data -> showtd;
+$showinfo = $this -> Slide -> data -> showinfo;
 
 ?>
 
@@ -34,20 +34,25 @@ $showtd = $this -> Slide -> data -> showtd;
 					</td>
 				</tr>
 				<tr>
-					<th><label for="showtd"><?php _e('Show Information?', $this -> plugin_name); ?></label></th>
+					<th><label for="showinfo_both"><?php _e('Show Information?', $this -> plugin_name); ?></label>
+					<?php echo $this -> Html -> help(__('You can choose to show both title and description, only title, only description or not show the information bar at all. Please note that this setting is only effective when the information bar is turned on in configuration or via a parameter in shortcode or hardcode.', $this -> plugin_name)); ?></th>
 					<td>
-						<label><input onclick="if (jQuery(this).is(':checked')) { jQuery('#showtd_div').show(); } else { jQuery('#showtd_div').hide(); }" <?php echo (!empty($showtd) && $showtd == 1) ? 'checked="checked"' : ''; ?> type="checkbox" name="Slide[showtd]" value="1" id="showtd" /> <?php _e('Yes, show the title and description on the slide', $this -> plugin_name); ?></label>
-						<span class="howto"><?php _e('Tick/check to show the information bar with title and description on the slide.', $this -> plugin_name); ?></span>
+						<label><input onclick="jQuery('#showinfo_div').show();" <?php echo (!empty($showinfo) && $showinfo == "both") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[showinfo]" value="both" id="showinfo_both" /> <?php _e('Both title and description', $this -> plugin_name); ?></label><br/>
+						<label><input onclick="jQuery('#showinfo_div').show();" <?php echo (!empty($showinfo) && $showinfo == "title") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[showinfo]" value="title" id="showinfo_title" /> <?php _e('Title only', $this -> plugin_name); ?></label><br/>
+						<label><input onclick="jQuery('#showinfo_div').show();" <?php echo (!empty($showinfo) && $showinfo == "description") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[showinfo]" value="description" id="showinfo_description" /> <?php _e('Description only', $this -> plugin_name); ?></label><br/>
+						<label><input onclick="jQuery('#showinfo_div').hide();" <?php echo (!empty($showinfo) && $showinfo == "none") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[showinfo]" value="none" id="showinfo_none" /> <?php _e('None, do not show', $this -> plugin_name); ?></label>
+						<span class="howto"><?php _e('Choose how the information bar will be displayed on this slide.', $this -> plugin_name); ?></span>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		
-		<div id="showtd_div" style="display:<?php echo (!empty($showtd) && $showtd == 1) ? 'block' : 'none'; ?>;">
+		<div id="showinfo_div" style="display:<?php echo (!empty($showinfo) && $showinfo != "none") ? 'block' : 'none'; ?>;">
 			<table class="form-table">
 				<tbody>
 					<tr>
-						<th><label for="iopacity"><?php _e('Opacity', $this -> plugin_name); ?></label></th>
+						<th><label for="iopacity"><?php _e('Info Opacity', $this -> plugin_name); ?></label>
+						<?php echo $this -> Html -> help(__('The opacity of the information bar from 0 to 100 where 0 is transparent and 100 is opague.', $this -> plugin_name)); ?></th>
 						<td>
 							<input type="text" id="iopacity" class="widefat" style="width:45px;" name="Slide[iopacity]" value="<?php echo esc_attr(stripslashes($this -> Slide -> data -> iopacity)); ?>" />
 							<span class="howto"><?php _e('A value between 0 and 100. Leave empty for default.', $this -> plugin_name); ?></span>
@@ -106,7 +111,7 @@ $showtd = $this -> Slide -> data -> showtd;
                                     
                                     <input type="hidden" name="Slide[image_oldfile]" value="<?php echo esc_attr(stripslashes($this -> Slide -> data -> image)); ?>" />
                                     <p><small><?php _e('Current image. Leave the field above blank to keep this image.', $this -> plugin_name); ?></small></p>
-                                    <p><a title="<?php echo esc_attr($this -> Slide -> data -> title); ?>" class="colorbox" href="<?php echo $this -> Html -> image_url($this -> Slide -> data -> image); ?>"><img src="<?php echo $this -> Html -> timthumb_image_src($this -> Slide -> data -> image_path, 100, 100, 100); ?>" alt="" class="slideshow" /></a></p>
+                                    <p><a title="<?php echo esc_attr($this -> Slide -> data -> title); ?>" class="colorbox" href="<?php echo $this -> Html -> image_url($this -> Slide -> data -> image); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($this -> Slide -> data -> image_path, 100, 100, 100); ?>" alt="" class="slideshow" /></a></p>
                                     
                                     <?php	
 								}

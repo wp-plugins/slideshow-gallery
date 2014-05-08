@@ -42,18 +42,17 @@ if (!empty($_GET['changepath'])) {
 				<p><?php _e('Below is a button to open the resized image in a new tab and then an actual 100 by 100 pixels sample of the image.', $this -> plugin_name); ?><br/>
 				<?php _e('If both the image from the button below and the sample below works fine, there is nothing wrong with the image cropping procedure.', $this -> plugin_name); ?><br/>
 				<?php _e('If neither of them work, there is something wrong, continue to step 3 below.', $this -> plugin_name); ?></p>
-				<p><a class="button" target="_blank" href="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, 100, 100, 100); ?>"><?php echo sprintf(__('Open Resized Image: %s', $this -> plugin_name), __($slide -> title)); ?></a></p>
-				<p><?php echo $this -> Html -> timthumb_image($slide -> image_path, 100, 100, 100, "slideshow_dropshadow"); ?></p>
+				<p><a class="button" target="_blank" href="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 100, 100, 100); ?>"><?php echo sprintf(__('Open Resized Image: %s', $this -> plugin_name), __($slide -> title)); ?></a></p>
+				<p><?php echo $this -> Html -> bfithumb_image($slide -> image_path, 100, 100, 100, "slideshow_dropshadow"); ?></p>
 			</li>
 			<li>
 				<h3><?php _e('Analyze Error Message', $this -> plugin_name); ?></h3>
-				<p><?php _e('When you clicked the "Open Resized Image" button above, it opened the TimThumb URL of the image.', $this -> plugin_name); ?><br/>
-				<?php _e('TimThumb will give you a descriptive error telling you what is wrong.', $this -> plugin_name); ?></p>
+				<p><?php _e('When you clicked the "Open Resized Image" button above, it opened the BFI Thumb URL of the image.', $this -> plugin_name); ?><br/>
+				<?php _e('BFI Thumb will give you a descriptive error telling you what is wrong.', $this -> plugin_name); ?></p>
 				
 				<p><?php _e('If the error is simply "Could not find the internal image you specified." then you now your "Images Path" setting is incorrect.', $this -> plugin_name); ?><br/>
 				<?php _e('With that being the case, let us try a different "Images Path" to see if that resolves it. Click "Try Different Path" below.', $this -> plugin_name); ?><br/>
 				<?php _e('Alternatively, if you know what the path should be, go and change it under Slideshow > Configuration > General Settings.', $this -> plugin_name); ?></p>				
-				<p><a class="button" href="?page=<?php echo $this -> sections -> settings; ?>&amp;method=imagestester&amp;id=<?php echo $slide -> id; ?>&amp;changepath=<?php echo $newpath; ?>"><?php _e('Try Different Path', $this -> plugin_name); ?></a></p>
 			</li>
 		</ol>
 	<?php else : ?>

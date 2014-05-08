@@ -27,7 +27,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return str_replace("\\", "/", WP_CONTENT_DIR . '/uploads');
 	}
 	
-	function uploads_url() {
+	public static function uploads_url() {
 		if ($upload_dir = wp_upload_dir()) {
 			return $upload_dir['baseurl'];
 		}
@@ -94,33 +94,40 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function timthumb_image($image = null, $width = null, $height = null, $quality = 100, $class = "slideshow", $rel = "") {	
-		$tt_image = '<img src="' . $this -> timthumb_url() . '?src=' . $image;
-		if (!empty($width)) { $tt_image .= '&w=' . $width; };
-		if (!empty($height)) { $tt_image .= '&h=' . $height; };
-		$tt_image .= '&q=' . $quality . '"';
-		$timthumb_align = $this -> get_option('timthumb_align');
-		$align = (!empty($timthumb_align)) ? $timthumb_align : "c";
-		$tt_image .= '&a=' . $align;
-		if (!empty($class)) { $tt_image .= ' class="' . $class . '"'; };
-		if (!empty($rel)) { $tt_image .= ' rel="' . $rel . '"'; }
-		$tt_image .= ' />';
+	function bfithumb_image($image = null, $width = null, $height = null, $quality = 100, $class = "slideshow", $rel = "") {		
+		require_once($this -> plugin_base() . DS . 'vendors' . DS . 'BFI_Thumb.php');
+		
+		$params = array();
+		if (!empty($width)) { $params['width'] = $width; }
+		if (!empty($height)) { $params['height'] = $height; }
+		$resizeimagescrop = $this -> get_option('resizeimagescrop');
+		$crop = (!empty($resizeimagescrop) && $resizeimagescrop == "Y") ? true : false;
+		$params['crop'] = $crop;
+		
+		$src = bfi_thumb($image, $params);
+		
+		$tt_image = '<img src="' . $src . '" />';
 		return $tt_image;
 	}
 	
-	function timthumb_image_src($image = null, $width = null, $height = null, $quality = 100) {	
-		$tt_image = $this -> timthumb_url() . '?src=' . $image;
-		if (!empty($width)) { $tt_image .= '&w=' . $width; };
-		if (!empty($height)) { $tt_image .= '&h=' . $height; };
-		$tt_image .= '&q=' . $quality;
-		$timthumb_align = $this -> get_option('timthumb_align');
-		$align = (!empty($timthumb_align)) ? $timthumb_align : "c";
-		$tt_image .= '&a=' . $align;
+	function bfithumb_image_src($image = null, $width = null, $height = null, $quality = 100) {			
+		require_once($this -> plugin_base() . DS . 'vendors' . DS . 'BFI_Thumb.php');
+		
+		$params = array();
+		if (!empty($width)) { $params['width'] = $width; }
+		if (!empty($height)) { $params['height'] = $height; }
+		$resizeimagescrop = $this -> get_option('resizeimagescrop');
+		$crop = (!empty($resizeimagescrop) && $resizeimagescrop == "Y") ? true : false;
+		$params['crop'] = $crop;
+		
+		$src = bfi_thumb($image, $params);
+		
+		$tt_image = $src;
 		return $tt_image;
 	}
 	
-	function timthumb_url() {
-		return plugins_url() . '/slideshow-gallery/vendors/timthumb.php';
+	function bfithumb_url() {
+		return plugins_url() . '/slideshow-gallery/vendors/bfithumb.php';
 	}
 	
 	function image_url($filename = null) {

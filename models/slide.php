@@ -14,7 +14,7 @@ class GallerySlide extends GalleryDbHelper {
 		'id'				=>	"INT(11) NOT NULL AUTO_INCREMENT",
 		'title'				=>	"VARCHAR(150) NOT NULL DEFAULT ''",
 		'description'		=>	"TEXT NOT NULL",
-		'showtd'			=>	"INT(11) NOT NULL DEFAULT '1'",
+		'showinfo'			=>	"VARCHAR(50) NOT NULL DEFAULT 'both'",
 		'iopacity'			=>	"INT(11) NOT NULL DEFAULT '70'",
 		'image'				=>	"VARCHAR(50) NOT NULL DEFAULT ''",
 		'type'				=>	"ENUM('file','url') NOT NULL DEFAULT 'file'",
@@ -85,13 +85,12 @@ class GallerySlide extends GalleryDbHelper {
 			extract($data, EXTR_SKIP);
 			
 			if (empty($title)) { $this -> errors['title'] = __('Please fill in a title', $this -> plugin_name); }
-			if (empty($showtd)) { $this -> data -> showtd = 0; }
+			if (empty($showinfo)) { $this -> data -> showinfo = "both"; }
 			
 			if (empty($type)) { $this -> errors['type'] = __('Please select an image type', $this -> plugin_name); }
 			elseif ($type == "file") {
 				if (!empty($image_oldfile) && empty($_FILES['image_file']['name'])) {
 					$imagename = $image_oldfile;
-					//$imagepath = ABSPATH . "wp-content" . DS . "uploads" . DS . $this -> plugin_name . DS;
 					$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
 					$imagefull = $imagepath . $imagename;
 					
@@ -114,7 +113,6 @@ class GallerySlide extends GalleryDbHelper {
 							@chmod($imagefull, 0644);
 						
 							$this -> data -> image = $imagename;
-							//$this -> data -> image_path = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $imagename;
 							$imagespath = $this -> get_option('imagespath');
 							if (empty($imagespath)) {
 								$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;

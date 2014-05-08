@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.4.1';
+	var $version = '1.4.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -24,6 +24,7 @@ class GalleryPlugin {
 		$this -> plugin_base = rtrim(dirname($base), DS);
 		$this -> sections = (object) $this -> sections;
 		$this -> initialize_classes();
+		$this -> initialize_options();
 		
 		global $wpdb;
 		$debugging = get_option('tridebugging');
@@ -117,9 +118,10 @@ class GalleryPlugin {
 			'resizeimages'		=>	"N",
 		);
 		
-		$this -> add_option('imagespath', $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS);
+		$this -> add_option('resizeimagescrop', "Y");
+		//$this -> add_option('imagespath', $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS);
+		$this -> update_option('imagespath', $this -> Html -> uploads_url() . '/slideshow-gallery/');
 		$this -> add_option('styles', $styles);
-		$this -> add_option('timthumb_align', "c");
 		$this -> add_option('fadespeed', 10);
 		$this -> add_option('shownav', "Y");
 		$this -> add_option('navopacity', 25);

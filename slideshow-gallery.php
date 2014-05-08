@@ -6,10 +6,10 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.4.1
+Version: 1.4.2
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Tags: slideshow gallery, slideshow, gallery, slider, jquery, timthumb, galleries, photos, images
+Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
 Text Domain: slideshow-gallery
 Domain Path: /languages
 */
@@ -24,7 +24,7 @@ if (file_exists($path)) {
 if (!class_exists('Gallery')) {
 	class Gallery extends GalleryPlugin {
 		
-		function Gallery() {
+		function Gallery() {		
 			$url = explode("&", $_SERVER['REQUEST_URI']);
 			$this -> url = $url[0];
 			$this -> referer = (empty($_SERVER['HTTP_REFERER'])) ? $this -> url : $_SERVER['HTTP_REFERER'];
@@ -102,13 +102,6 @@ if (!class_exists('Gallery')) {
 			if (!empty($_GET[$this -> pre . 'message'])) {		
 				$msg_type = (!empty($_GET[$this -> pre . 'updated'])) ? 'msg' : 'err';
 				call_user_func(array($this, 'render_' . $msg_type), $_GET[$this -> pre . 'message']);
-			}
-			
-			if (!empty($_GET['page']) && (empty($_GET['method']) || $_GET['method'] != "imagestester") && in_array($_GET['page'], (array) $this -> sections)) {
-				$dismiss_imagestester = $this -> get_option('dismiss_imagestester');
-				if (empty($dismiss_imagestester)) {
-					$this -> render_msg(sprintf(__('Slideshow Gallery plugin images and thumbnails working fine? If not, use the %sImages Tester%s to fix it. Working fine? Then you can %s this message.', $this -> plugin_name), '<a class="button button-small" href="admin.php?page=' . $this -> sections -> settings . '&amp;method=imagestester">', '</a>', '<a class="button button-small" href="admin.php?page=' . $this -> sections -> settings . '&amp;method=dismiss&amp;dismiss=imagestester">' . __('Dismiss', $this -> plugin_name) . '</a>'));
-				}
 			}
 		}
 		
@@ -233,7 +226,6 @@ if (!class_exists('Gallery')) {
 					$imagespath = $this -> get_option('imagespath');
 				
 					foreach ($slides as $skey => $slide) {
-						//$slides[$skey] -> image_path = $this -> Html -> uploads_path() . DS . $this -> plugin_name . DS . $slide -> image;
 						if (empty($imagespath)) {
 							$slides[$skey] -> image_path = $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS . $slide -> image;
 						} else {
@@ -466,40 +458,6 @@ if (!class_exists('Gallery')) {
 					}
 					
 					$this -> redirect($this -> referer);
-					break;
-				case 'imagestester'		:
-				
-					if (!empty($_GET['changepath'])) {
-						$newpath = $_GET['changepath'];
-						
-						switch ($newpath) {
-							case 1				:
-								$path = $this -> Html -> uploads_path() . DS . $this -> plugin_name . DS;
-								break;
-							case 2				:
-								if (is_multisite()) {
-									global $blog_id;
-									$path = 'wp-content' . DS . 'uploads' . DS . 'sites' . DS . $blog_id . DS . $this -> plugin_name . DS;
-								} else {
-									$path = 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
-								}
-								break;
-							case 3				:
-								$path = $this -> Html -> uploads_url() . DS . $this -> plugin_name . DS;
-								break;
-						}
-						
-						$this -> update_option('imagespath', $path);
-						$this -> render_msg(__('Images path has been updated, please check if the images work now. If not, click "Try Different Path" again in Step 3.', $this -> plugin_name));
-					}
-					
-					$conditions = false;
-					if (!empty($_GET['id'])) {
-						$conditions['id'] = $_GET['id'];
-					}
-					
-					$slide = $this -> Slide -> find($conditions, false, "RAND");
-					$this -> render('settings-images', array('slide' => $slide), true, 'admin');
 					break;
 				case 'reset'			:
 					global $wpdb;

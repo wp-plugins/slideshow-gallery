@@ -83,7 +83,7 @@ TINY.slideshow.prototype={
 		this.is(t,c)
 	},
 	is:function(s,c){	
-		if(this.info && this.a[s].t.length > 0){			
+		if(this.info && (this.a[s].t.length > 0 || this.a[s].d.length > 0)) {			
 			TINY.height.set(this.r,1,this.infoSpeed/2,-1)
 		}
 		var i=new Image();
@@ -147,7 +147,7 @@ TINY.slideshow.prototype={
 			var h=parseInt(this.r.offsetHeight);
 			this.r.style.height=0;
 			
-			if (s.t.length > 0) {
+			if (s.t.length > 0 || s.d.length > 0) {
 				TINY.height.set(this.r,h,this.infoSpeed,0);
 				TINY.alpha.set(this.r,s.io,5);
 			}
