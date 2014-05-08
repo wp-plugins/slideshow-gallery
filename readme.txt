@@ -3,8 +3,8 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 3.7
-Stable tag: 1.2.3.2
+Tested up to: 3.9
+Stable tag: 1.4.2
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -16,19 +16,25 @@ You can easily display multiple galleries throughout your WordPress website disp
 
 The slideshow is flexible, all aspects can easily be configured and embedding/hardcoding the slideshow gallery is a breeze. 
 
+See the <a href="http://tribulant.net/slideshowgallery/">online demonstration</a>.
+
 Here are several ways to display a slideshow: 
 
 = Shortcode for all slides =
 
-To embed a slideshow with all slides under **Slideshow > Manage Slides** in the plugin, simply insert `[slideshow]` into the content of a post/page.
+To embed a slideshow with all slides under **Slideshow > Manage Slides** in the plugin, simply insert `[tribulant_slideshow]` into the content of a post/page.
 
 = Shortcode for a gallery's slides =
 
-To embed a slideshow with slides from a specific gallery under **Slideshow > Manage Galleries** in the plugin, simply insert `[slideshow gallery_id="X"]` (where X is the ID value of the gallery) into the content of a post/page.
+To embed a slideshow with slides from a specific gallery under **Slideshow > Manage Galleries** in the plugin, simply insert `[tribulant_slideshow gallery_id="X"]` (where X is the ID value of the gallery) into the content of a post/page.
 
 = Shortcode for the images of a WordPress post/page =
 
-To embed a slideshow with the images uploaded to a WordPress post/page through it's media gallery, simply insert `[slideshow post_id="X"]` (where X is the ID value of the post). Whether you want to display the images from a post or a page, the parameter remains `post_id`.
+To embed a slideshow with the images uploaded to a WordPress post/page through it's media gallery, simply insert `[tribulant_slideshow post_id="X"]` (where X is the ID value of the post). Whether you want to display the images from a post or a page, the parameter remains `post_id`.
+
+= Shortcode for latest/featured products =
+
+In order to display latest or featured products in a slideshow, you need the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin" title="WordPress Shopping Cart">Shopping Cart plugin</a> from Tribulant Software. Once you have this installed and activated, you can easily display recent or featured products. To display recent products use the shortcode `[tribulant_slideshow products="latest"]` and to display featured products, use `[tribulant_slideshow products="featured"]`. For both, you can use the `productsnumber` parameter to limit the number of products eg. `[tribulant_slideshow products="latest" productsnumber="5"]`
 
 = Hardcode into any plugin/theme with PHP =
 
@@ -38,11 +44,26 @@ To hardcode into any PHP file of your WordPress theme, simply use `<?php if (fun
 
 You can use any of the following parameters with both the hardcoding and shortcode to customize each slideshow gallery:
 
+Shortcode Ex 1: `[tribulant_slideshow layout="responsive" gallery_id="3" auto="true" navopacity="0" showthumbs="true"]`
+Shortcode Ex 2: `[tribulant_slideshow layout="specific" post_id="379" width="600" height="300" auto="false" showinfo="false"]`
+
+Hardcode Ex 1: `<?php slideshow(true, 3, false, array('layout' => "responsive", 'auto' => "true", 'navopacity' => "0", 'showthumbs' => "true")); ?>`
+Hardcode Ex 2: `<?php slideshow(true, false, 379, array('layout' => "specific", 'width' => "600", 'height' => "300", 'auto' => "false", 'showinfo' => "false")); ?>`
+
+This way you can customize each slideshow you embed or hardcode, despite the settings you saved under **Slideshow > Configuration**.
+
+* `products` [ latest | featured ] = String "latest" or "featured" to display products from the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin">Checkout plugin</a>.
+* `productsnumber` [ productsnumber ] = Numeric/integer to limit the number of products to display.
+* `gallery_id` [ gallery_id ] = Numeric/integer ID of a gallery to display images from.
+* `post_id` [ post_id ] = Numeric/integer ID of a post to take images from it, uploaded through it's "Add Media" button.
+* `layout` [ responsive | specific ] = Set to 'responsive' for mobile/tablet compatible theme and 'specific' for fixed width/height.
 * `resizeimages` [ true | false ] = Set to 'true' to resize images to fit the slideshow dimensions.
 * `imagesoverlay` [ true | false ] (default: setting) = Set to 'true' to display links of slides that are images in a Colorbox overlay on the page.
 * `orderby` [ random ] = Set to 'random' to randomly order the slides. Leave this shortcode parameter to order by the order set on the slides.
-* `width` [ width | auto ] = Width of the slideshow in pixels. Don't specify 'px' part, just the numeric value for the height.
-* `height` [ height ] (default: setting) = Height of the slideshow in pixels. Don't specify the 'px' part, just the numeric value for the height.
+* `width` [ width | auto ] = (only with layout="specific") Width of the slideshow in pixels. Don't specify 'px' part, just the numeric value for the height.
+* `resheight` [ resheight ] = (only with layout="responsive") Numeric/integer value such as "30" to be used with 'resheighttype' below
+* `resheighttype [ resheighttype ] = (only with layout="responsive") "px" (pixels) or "%" (percent) as the value eg. resheighttype="%"
+* `height` [ height ] (only with layout="specific"; default: setting) = Height of the slideshow in pixels. Don't specify the 'px' part, just the numeric value for the height.
 * `auto` [ true | false ] (default: setting) = Set this to 'true' to automatically slide the slides in the slideshow.
 * `autospeed` [ speed ] (default: setting) = Speed of the auto sliding. 10 is normal. Lower number is faster. Between 5 and 15 is recommended.
 * `fadespeed` [ speed ] (default: setting) = Speed of the fading of images. 10 is normal. Lower number is faster. Between 1 and 20 is recommended.
@@ -66,13 +87,13 @@ Installing the WordPress slideshow gallery plugin is very easy. Simply follow th
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Configure the settings according to your needs through the **Slideshow > Configuration** menu
 1. Add and manage your slides in the 'Slideshow' section
-1. Put `[slideshow post_id="X"]` to embed a slideshow with the images of a post into your posts/pages or use `[slideshow gallery_id="X"]` to display the slides of a specific gallery by ID or use `[slideshow]` to embed a slideshow with your custom added slides under **Slideshow > Manage Slides** or `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>` into your WordPress theme using PHP code.
+1. Put `[tribulant_slideshow post_id="X"]` to embed a slideshow with the images of a post into your posts/pages or use `[tribulant_slideshow gallery_id="X"]` to display the slides of a specific gallery by ID or use `[tribulant_slideshow]` to embed a slideshow with your custom added slides under **Slideshow > Manage Slides** or `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>` into your WordPress theme using PHP code.
 
 == Frequently Asked Questions ==
 
 = Can I display/embed multiple instances of the slideshow gallery? =
 
-Yes, you can, but only one slideshow per page.
+Yes, you can and you can put multiple slideshows on the same page as well.
 
 = How can I display specific slides in a slideshow gallery instance? =
 
@@ -80,11 +101,15 @@ You can organize slides either into multiple galleries according to your needs o
 
 = How do I display the images uploaded to a post? =
 
-You can embed a slideshow and show the images uploaded to a post with the `post_id` parameter. Like this `[slideshow post_id="123"]`.
+You can embed a slideshow and show the images uploaded to a post with the `post_id` parameter. Like this `[tribulant_slideshow post_id="123"]`.
 
 = Can I exclude certain images from a post in the slideshow? =
 
-Yes, you can use the `exclude` parameter to exclude post images by their order in the gallery (comma separated) like this `[slideshow post_id="123" exclude="2,4,8"]`.
+Yes, you can use the `exclude` parameter to exclude post images by their order in the gallery (comma separated) like this `[tribulant_slideshow post_id="123" exclude="2,4,8"]`.
+
+= How can I fix slide images or thumbnails not displaying? =
+
+There is an "Images Tester" utility under Slideshow > Configuration on the right-hand side. Use that to determine the problem.
 
 == Screenshots ==
 
@@ -96,6 +121,79 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.2 =
+* ADD: More flexible settings for information bar per slide
+* ADD: Switch from TimThumb to BFI Thumb
+* FIX: Change mysql_real_escape_string() to esc_sql()
+* REMOVE: Images tester is no longer needed
+
+= 1.4.1 =
+* ADD: Set opacity for information bar per slide
+* ADD: Setting per slide to show title/description or not
+* IMPROVE: Updated TimThumb script
+* IMPROVE: Updated WordPress plugin file header
+* IMPROVE: Function call_user_method() is deprecated
+* IMPROVE: New spinner/loading image
+* FIX: More PHP warnings/notices
+* FIX: 404 Not Found on spinner/loading image
+
+= 1.4 =
+* ADD: WordPress 3.9 compatibility
+* ADD: New shortcode `[tribulant_slideshow]` to prevent conflicts
+* IMPROVE: Reduced/hidden information bar on mobile
+* IMPROVE: More CSS selectors on elements
+* IMPROVE: New dashicon for help instead of CSS
+* IMPROVE: File and folder permissions incorrect on some servers
+* FIX: TinyMCE editor button/icon not inserting shortcodes
+* FIX: PHP strict standards warnings
+* FIX: NextGen Conflict
+* FIX: Slideshow not showing with 1 slide
+* FIX: TinyMCE editor icon/button since WordPress 3.9 missing
+
+= 1.3.1.3 =
+* FIX: Image could not be moved from TMP error in some cases
+* FIX: PHP Strict, Notice and Warning messages
+
+= 1.3.1.2 =
+* FIX: Not all configuration settings loading
+
+= 1.3.1 =
+
+* ADD: Images tester utility under Configuration to fix broken images
+* FIX: Issue with turning off navigation images
+* FIX: Issue with new slider settings if empty or set to zero (0)
+
+= 1.3 =
+
+* ADD: Show latest/featured products from Shopping Cart plugin
+* ADD: Plugin "Settings" link on the "Plugins" page in WordPress
+* ADD: TimThumb crop position setting 
+* ADD: WordPress multi-site compatibility
+* ADD: Sortable columns in all admin sections 
+* ADD: Help tooltips in admin 
+* ADD: Sliders for speed settings 
+* ADD: Color picker for color settings
+* ADD: Delete image upon deletion of locally created slide 
+* ADD: WordPress 3.8+ design and compatibility
+* ADD: Multiple slideshows on a single page 
+* ADD: Responsive design for mobiles and tablets 
+* ADD: Debugging setting in configuration 
+* IMPROVE: Colorbox upgrade/fix
+* IMPROVE: Use wp_upload_dir() for dynamic paths 
+* IMPROVE: Better thumbnail slider using CSS calc 
+* IMPROVE: Move images to default theme folder 
+* IMPROVE: New TinyMCE icon/button
+* IMPROVE: New dashicons menu icon 
+* IMPROVE: When the nav arrows are turned off, the link click area should be full 
+* IMPROVE: Automatically center align images in the slideshow
+* FIX: Empty/zero thumbs spacing causes JS error
+* FIX: Deleting a slide leaves empty reference in gallery 
+* FIX: Information overlaps arrows when long 
+* FIX: Permissions settings not working
+* FIX: Turning off autoslide setting doesn't stop autoslide 
+* FIX: Javascript error due to tooltip() call 
+* FIX: Width/height of slideshow is less than the settings
 
 = 1.2.3.2 =
 * ADD: List/grid switching for ordering of slides
@@ -184,7 +282,7 @@ Yes, you can use the `exclude` parameter to exclude post images by their order i
 * ADDED: Default, English language file in the `languages` folder.
 * ADDED: Configuration setting to turn On/Off resizing of images via CSS.
 * ADDED: Webkit border radius in CSS for thumbnail images.
-* ADDED: `post_id` parameter for the `[slideshow]` shortcode to display images from a post/page.
+* ADDED: `post_id` parameter for the `[tribulant_slideshow]` shortcode to display images from a post/page.
 * IMPROVED: Plugin doesn't utilize PHP short open tags anymore.
 * COMPATIBILITY: Removed `autoLoad` (introduced in PHP 5) parameter from `class_exists` function for PHP 4 compatibility.
 * IMPROVED: Directory separator constant DS from DIRECTORY_SEPARATOR.

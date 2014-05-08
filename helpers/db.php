@@ -45,9 +45,14 @@ class GalleryDbHelper extends GalleryPlugin {
 			}
 		}
 		
-		$order = (empty($order)) ? array('id', "DESC") : $order;
-		list($ofield, $odir) = $order;
-		$query .= " ORDER BY `" . $ofield . "` " . $odir . "";
+		if (!empty($order) && $order == "RAND") {
+			$query .= " ORDER BY RAND()";	
+		} else {
+			$order = (empty($order)) ? array('id', "DESC") : $order;
+			list($ofield, $odir) = $order;
+			$query .= " ORDER BY `" . $ofield . "` " . $odir . "";
+		}
+			
 		$query .= " LIMIT 1";
 		
 		if ($record = $wpdb -> get_row($query)) {		
@@ -217,14 +222,17 @@ class GalleryDbHelper extends GalleryPlugin {
 		if (!empty($record_id) && $record = $this -> find(array('id' => $record_id))) {
 			$query = "DELETE FROM `" . $this -> table . "` WHERE `id` = '" . $record_id . "' LIMIT 1";
 			
-			if ($wpdb -> query($query)) {
+			if ($wpdb -> query($query)) {			
 				switch ($this -> model) {
 					case 'Gallery'			:
 						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `gallery_id` = '" . $record_id . "'";
 						$wpdb -> query($query);
 						break;
 					case 'Slide'			:
+						$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $record -> image;
+						@unlink($imagepath);
 						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `slide_id` = '" . $record_id . "'";
+						$wpdb -> query($query);
 						break;
 				}
 							
@@ -251,7 +259,7 @@ class GalleryDbHelper extends GalleryPlugin {
 							if (is_array($this -> data -> {$field}) || is_object($this -> data -> {$field})) {
 								$value = serialize($this -> data -> {$field});
 							} else {
-								$value = mysql_escape_string($this -> data -> {$field});
+								$value = esc_sql($this -> data -> {$field});
 							}
 				
 							$query1 .= "`" . $field . "`";
@@ -297,7 +305,7 @@ class GalleryDbHelper extends GalleryPlugin {
 					if (is_array($this -> data -> {$field}) || is_object($this -> data -> {$field})) {
 						$value = serialize($this -> data -> {$field});
 					} else {
-						$value = mysql_escape_string($this -> data -> {$field});
+						$value = esc_sql($this -> data -> {$field});
 					}
 				
 					$query .= "`" . $field . "` = '" . $value . "'";

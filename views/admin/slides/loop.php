@@ -7,7 +7,8 @@
 					<?php else : ?>
 						<a href="<?php echo $this -> url; ?>&amp;method=order" title="<?php _e('Order all your slides', $this -> plugin_name); ?>" class="button"><?php _e('Order Slides', $this -> plugin_name); ?></a>
 					<?php endif; ?>
-				
+				</div>
+				<div class="alignleft actions">
 					<select name="action" class="action">
 						<option value=""><?php _e('- Bulk Actions -', $this -> plugin_name); ?></option>
 						<option value="delete"><?php _e('Delete', $this -> plugin_name); ?></option>
@@ -16,30 +17,98 @@
 				</div>
 				<?php $this -> render('paginate', array('paginate' => $paginate), true, 'admin'); ?>
 			</div>
+			
+			<?php
+			
+			$orderby = (empty($_GET['orderby'])) ? 'modified' : $_GET['orderby'];
+			$order = (empty($_GET['order'])) ? 'desc' : strtolower($_GET['order']);
+			$otherorder = ($order == "desc") ? 'asc' : 'desc';
+			
+			?>
 		
 			<table class="widefat">
 				<thead>
 					<tr>
 						<th class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></th>
-						<th><?php _e('ID', $this -> plugin_name); ?></th>
-						<th><?php _e('Image', $this -> plugin_name); ?></th>
-						<th><?php _e('Title', $this -> plugin_name); ?></th>
+						<th class="column-id <?php echo ($orderby == "id") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=id&order=' . (($orderby == "id") ? $otherorder : "asc")); ?>">
+								<span><?php _e('ID', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
+						<th class="column-image <?php echo ($orderby == "image") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=image&order=' . (($orderby == "image") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Image', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
+						<th class="column-title <?php echo ($orderby == "title") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=title&order=' . (($orderby == "title") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Title', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
 						<th><?php _e('Galleries', $this -> plugin_name); ?></th>
-                        <th><?php _e('Link', $this -> plugin_name); ?></th>
-						<th><?php _e('Date', $this -> plugin_name); ?></th>
-						<th><?php _e('Order', $this -> plugin_name); ?></th>
+                        <th class="column-uselink <?php echo ($orderby == "uselink") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=uselink&order=' . (($orderby == "uselink") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Link', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
+						<th class="column-modified <?php echo ($orderby == "modified") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=modified&order=' . (($orderby == "modified") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Date', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
+						<th class="column-order <?php echo ($orderby == "order") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=order&order=' . (($orderby == "order") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Order', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
 					</tr>
 				</thead>
 				<tfoot>
 					<tr>
 						<th class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></th>
-						<th><?php _e('ID', $this -> plugin_name); ?></th>
-						<th><?php _e('Image', $this -> plugin_name); ?></th>
-						<th><?php _e('Title', $this -> plugin_name); ?></th>
+						<th class="column-id <?php echo ($orderby == "id") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=id&order=' . (($orderby == "id") ? $otherorder : "asc")); ?>">
+								<span><?php _e('ID', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
+						<th class="column-image <?php echo ($orderby == "image") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=image&order=' . (($orderby == "image") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Image', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
+						<th class="column-title <?php echo ($orderby == "title") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=title&order=' . (($orderby == "title") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Title', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
 						<th><?php _e('Galleries', $this -> plugin_name); ?></th>
-                        <th><?php _e('Link', $this -> plugin_name); ?></th>
-						<th><?php _e('Date', $this -> plugin_name); ?></th>
-						<th><?php _e('Order', $this -> plugin_name); ?></th>
+                        <th class="column-uselink <?php echo ($orderby == "uselink") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=uselink&order=' . (($orderby == "uselink") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Link', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
+						<th class="column-modified <?php echo ($orderby == "modified") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=modified&order=' . (($orderby == "modified") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Date', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
+						<th class="column-order <?php echo ($orderby == "order") ? 'sorted ' . $order : 'sortable desc'; ?>">
+							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=order&order=' . (($orderby == "order") ? $otherorder : "asc")); ?>">
+								<span><?php _e('Order', $this -> plugin_name); ?></span>
+								<span class="sorting-indicator"></span>
+							</a>
+						</th>
 					</tr>
 				</tfoot>
 				<tbody>
@@ -49,7 +118,7 @@
 							<td><?php echo $slide -> id; ?></td>
 							<td style="width:75px;">
 								<?php $image = $slide -> image; ?>
-								<a href="<?php echo $this -> Html -> image_url($image); ?>" title="<?php echo $slide -> title; ?>" class="colorbox" rel="slides"><img class="slideshow" src="<?php echo $this -> Html -> timthumb_image_src($slide -> image_path, 40, 40, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+								<a href="<?php echo $this -> Html -> image_url($image); ?>" title="<?php echo $slide -> title; ?>" class="colorbox" rel="slides"><img class="dropshadow" src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 50, 50, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
 							</td>
 							<td>
                             	<a class="row-title" href="<?php echo $this -> url; ?>&amp;method=save&amp;id=<?php echo $slide -> id; ?>" title=""><?php echo $slide -> title; ?></a>
