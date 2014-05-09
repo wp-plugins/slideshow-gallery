@@ -45,21 +45,32 @@ class GalleryDbHelper extends GalleryPlugin {
 			}
 		}
 		
-		$order = (empty($order)) ? array('id', "DESC") : $order;
-		list($ofield, $odir) = $order;
-		$query .= " ORDER BY `" . $ofield . "` " . $odir . "";
+		if (!empty($order) && $order == "RAND") {
+			$query .= " ORDER BY RAND()";	
+		} else {
+			$order = (empty($order)) ? array('id', "DESC") : $order;
+			list($ofield, $odir) = $order;
+			$query .= " ORDER BY `" . $ofield . "` " . $odir . "";
+		}
+			
 		$query .= " LIMIT 1";
 		
-		if ($record = $wpdb -> get_row($query)) {		
-			if (!empty($record)) {			
-				$data = $this -> init_class($this -> model, $record);
-				
-				if ($assign == true) {
-					$this -> data = $data;
-				}
-
-				return $data;
+		$query_hash = md5($query);
+		if ($oc_record = wp_cache_get($query_hash, 'slideshowgallery')) {
+			$record = $oc_record;
+		} else {
+			$record = $wpdb -> get_row($query);
+			wp_cache_set($query_hash, $record, 'slideshowgallery', 0);
+		}
+			
+		if (!empty($record)) {			
+			$data = $this -> init_class($this -> model, $record);
+			
+			if ($assign == true) {
+				$this -> data = $data;
 			}
+
+			return $data;
 		}
 		
 		return false;
@@ -101,20 +112,26 @@ class GalleryDbHelper extends GalleryPlugin {
 			
 		$query .= (empty($limit)) ? '' : " LIMIT " . $limit . "";
 		
-		if ($records = $wpdb -> get_results($query)) {
-			if (!empty($records)) {
-				$data = array();
-			
-				foreach ($records as $record) {
-					$data[] = $this -> init_class($this -> model, $record);
-				}
-				
-				if ($assign == true) {
-					$this -> data = $data;
-				}
-				
-				return $data;
+		$query_hash = md5($query);
+		if ($oc_records = wp_cache_get($query_hash, 'slideshowgallery')) {
+			$records = $oc_records;
+		} else {
+			$records = $wpdb -> get_row($query);
+			wp_cache_set($query_hash, $records, 'slideshowgallery', 0);
+		}
+		
+		if (!empty($records)) {
+			$data = array();
+		
+			foreach ($records as $record) {
+				$data[] = $this -> init_class($this -> model, $record);
 			}
+			
+			if ($assign == true) {
+				$this -> data = $data;
+			}
+			
+			return $data;
 		}
 		
 		return false;
@@ -217,14 +234,17 @@ class GalleryDbHelper extends GalleryPlugin {
 		if (!empty($record_id) && $record = $this -> find(array('id' => $record_id))) {
 			$query = "DELETE FROM `" . $this -> table . "` WHERE `id` = '" . $record_id . "' LIMIT 1";
 			
-			if ($wpdb -> query($query)) {
+			if ($wpdb -> query($query)) {			
 				switch ($this -> model) {
 					case 'Gallery'			:
 						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `gallery_id` = '" . $record_id . "'";
 						$wpdb -> query($query);
 						break;
 					case 'Slide'			:
+						$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $record -> image;
+						@unlink($imagepath);
 						$query = "DELETE FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `slide_id` = '" . $record_id . "'";
+						$wpdb -> query($query);
 						break;
 				}
 							
@@ -251,7 +271,7 @@ class GalleryDbHelper extends GalleryPlugin {
 							if (is_array($this -> data -> {$field}) || is_object($this -> data -> {$field})) {
 								$value = serialize($this -> data -> {$field});
 							} else {
-								$value = mysql_escape_string($this -> data -> {$field});
+								$value = esc_sql($this -> data -> {$field});
 							}
 				
 							$query1 .= "`" . $field . "`";
@@ -297,7 +317,7 @@ class GalleryDbHelper extends GalleryPlugin {
 					if (is_array($this -> data -> {$field}) || is_object($this -> data -> {$field})) {
 						$value = serialize($this -> data -> {$field});
 					} else {
-						$value = mysql_escape_string($this -> data -> {$field});
+						$value = esc_sql($this -> data -> {$field});
 					}
 				
 					$query .= "`" . $field . "` = '" . $value . "'";

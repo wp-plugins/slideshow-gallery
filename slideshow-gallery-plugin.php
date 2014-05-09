@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.2.3.2';
+	var $version = '1.4.3';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -24,13 +24,17 @@ class GalleryPlugin {
 		$this -> plugin_base = rtrim(dirname($base), DS);
 		$this -> sections = (object) $this -> sections;
 		$this -> initialize_classes();
+		$this -> initialize_options();
 		
 		global $wpdb;
+		$debugging = get_option('tridebugging');
+		$this -> debugging = (empty($debugging)) ? $this -> debugging : true;
+		
 		if ($this -> debugging == true) {
 			$wpdb -> show_errors();
 			
 			if ($this -> debug_level == 2) {
-				error_reporting(E_ALL ^ E_NOTICE);
+				error_reporting(E_ALL & ~(E_STRICT|E_NOTICE));
 				@ini_set('display_errors', 1);
 			}
 		} else {
@@ -98,6 +102,7 @@ class GalleryPlugin {
 	
 	function initialize_options() {
 		if (!is_admin()) { return; }
+		
 		$this -> init_roles();
 	
 		$styles = array(
@@ -113,6 +118,9 @@ class GalleryPlugin {
 			'resizeimages'		=>	"N",
 		);
 		
+		$this -> add_option('resizeimagescrop', "Y");
+		//$this -> add_option('imagespath', $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS);
+		$this -> update_option('imagespath', $this -> Html -> uploads_url() . '/slideshow-gallery/');
 		$this -> add_option('styles', $styles);
 		$this -> add_option('fadespeed', 10);
 		$this -> add_option('shownav', "Y");
@@ -120,6 +128,7 @@ class GalleryPlugin {
 		$this -> add_option('navhover', 70);
 		$this -> add_option('information', "Y");
 		$this -> add_option('infospeed', 10);
+		$this -> add_option('infohideonmobile', 1);
 		$this -> add_option('thumbnails', "N");
 		$this -> add_option('thumbwidth', "100");
 		$this -> add_option('thumbheight', "75");
@@ -132,18 +141,20 @@ class GalleryPlugin {
 		$this -> add_option('autospeed', 10);
 		$this -> add_option('alwaysauto', "true");
 		$this -> add_option('imagesthickbox', "N");
+		
+		return;
 	}
 	
 	function check_roles() {
 		global $wp_roles;
 		$permissions = $this -> get_option('permissions');
 		
-		if ($role = get_role('administrator')) {				
+		if ($role = get_role('administrator')) {					
 			if (!empty($this -> sections)) {			
 				foreach ($this -> sections as $section_key => $section_menu) {								
-					if (empty($role -> capabilities['gallery_' . $section_key])) {
-						$role -> add_cap('gallery_' . $section_key);
-						$permissions[$section_key][] = 'administrator';
+					if (empty($role -> capabilities['slideshow_' . $section_key])) {
+						$role -> add_cap('slideshow_' . $section_key);
+						$permissions['administrator'][] = $section_key;
 					}
 				}
 				
@@ -157,28 +168,40 @@ class GalleryPlugin {
 	function init_roles($sections = null) {
 		global $wp_roles;
 		$sections = $this -> sections;
-		$role =& get_role('administrator');
+	
+		/* Get the administrator role. */
+		$role = get_role('administrator');
 
+		/* If the administrator role exists, add required capabilities for the plugin. */
 		if (!empty($role)) {
 			if (!empty($sections)) {			
 				foreach ($sections as $section_key => $section_menu) {
-					$role -> add_cap('gallery_' . $section_key);
+					$role -> add_cap('slideshow_' . $section_key);
 				}
 			}
-		} elseif (empty($role) && !is_multisite()) {			
-			$newrolecapabilities['read'] = 1;
-			add_role('slideshow', __('Slideshow Manager', $this -> plugin_name), $newrolecapabilities);
-			$role = get_role('slideshow');
-			$role -> add_cap('read');
-			$role -> add_cap('gallery_slides');
-			$role -> add_cap('gallery_galleries');
-			$role -> add_cap('gallery_settings');
+		} else if (empty($role) && !is_multisite()) {
+			$newrolecapabilities = array();
+			$newrolecapabilities[] = 'read';
+		
+			if (!empty($sections)) {
+				foreach ($sections as $section_key => $section_menu) {
+					$newrolecapabilities[] = 'slideshow_' . $section_key;
+				}
+			}
+
+			add_role(
+				'slideshow',
+				_e('Slideshow Manager', $this -> plugin_name),
+				$newrolecapabilities
+			);
 		}
 		
 		if (!empty($sections)) {
-			$permissions = array();		
+			$permissions = array();
+		
 			foreach ($sections as $section_key => $section_menu) {
-				$permissions[$section_key][] = 'administrator';
+				$wp_roles -> add_cap('administrator', 'slideshow_' . $section_key);
+				$permissions['administrator'][] = $section_key;
 			}
 			
 			$this -> update_option('permissions', $permissions);
@@ -271,7 +294,7 @@ class GalleryPlugin {
 	}
 	
 	function check_uploaddir() {
-		$uploaddir = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+		$uploaddir = $this -> Html -> uploads_path() . DS . $this -> plugin_name . DS;
 		$cachedir = $uploaddir . 'cache' . DS;
 		
 		if (!file_exists($uploaddir)) {
@@ -321,8 +344,24 @@ class GalleryPlugin {
 		
 		if (is_admin()) {
 			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {
+				wp_enqueue_script(
+			        'iris',
+			        admin_url('js/iris.min.js'),
+			        array( 'jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch' ),
+			        false,
+			        1
+			    );
+			    
+			    wp_enqueue_script(
+			        'wp-color-picker',
+			        admin_url('js/color-picker.min.js'),
+			        array( 'iris' ),
+			        false,
+			        1
+			    );
 			
-				wp_enqueue_script('jquery-ui-tooltip', plugins_url() . '/' . $this -> plugin_name . '/js/jquery-ui-tooltip.js', array('jquery'));
+				wp_enqueue_script('jquery-ui-tooltip');
+				wp_enqueue_script('jquery-ui-slider');
 						
 				if ($_GET['page'] == 'slideshow-settings') {
 					wp_enqueue_script('common');
@@ -373,11 +412,14 @@ class GalleryPlugin {
 	
 	function enqueue_styles() {
 		if (is_admin()) {
-			$src = WP_PLUGIN_URL . '/' . $this -> plugin_name . '/css/admin.css';			
+			$src = plugins_url() . '/' . $this -> plugin_name . '/css/admin.css';			
 			wp_enqueue_style($this -> plugin_name, $src, null, "1.0", "all");
+			wp_enqueue_style('wp-color-picker');
+			$jquery_ui_src = plugins_url() . '/' . $this -> plugin_name . '/css/jquery-ui.css';
+			wp_enqueue_style('jquery-ui', $jquery_ui_src, null, "1.0", "all");
 		}
 		
-		$colorbox_src = WP_PLUGIN_URL . '/' . $this -> plugin_name . '/css/colorbox.css';
+		$colorbox_src = plugins_url() . '/' . $this -> plugin_name . '/css/colorbox.css';
 		wp_enqueue_style('colorbox', $colorbox_src, null, "1.3.19", "all");
 	
 		return true;
@@ -399,7 +441,7 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function update_option($name = null, $value = null) {
+	function update_option($name = null, $value = null) {	
 		if (update_option($this -> pre . $name, $value)) {
 			return true;
 		}
@@ -407,23 +449,28 @@ class GalleryPlugin {
 		return false;
 	}
 	
-	function get_option($name = null, $stripslashes = true) {
-		if ($option = get_option($this -> pre . $name)) {
-			if (@unserialize($option) !== false) {
-				return unserialize($option);
+	function get_option($name = null) {	
+		if (!empty($name)) {
+			if ($value = get_option($this -> pre . $name)) {
+				return $value;
 			}
-			
-			if ($stripslashes == true) {
-				$option = stripslashes_deep($option);
-			}
-			
-			return $option;
+		}
+		
+		return false;
+	}
+	
+	function delete_option($name = null) {
+		if (delete_option($this -> pre . $name)) {
+			return true;
 		}
 		
 		return false;
 	}
 	
 	function debug($var = array()) {
+		$debugging = get_option('tridebugging');
+		$this -> debugging = (empty($debugging)) ? $this -> debugging : true;
+	
 		if ($this -> debugging) {
 			echo '<pre>' . print_r($var, true) . '</pre>';
 			return true;
@@ -577,6 +624,8 @@ class GalleryPlugin {
 						${$pkey} = $pval;
 					}
 				}
+				
+				$this -> initialize_classes();
 			
 				if ($output == false) {
 					ob_start();
