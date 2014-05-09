@@ -116,7 +116,7 @@ class GalleryDbHelper extends GalleryPlugin {
 		if ($oc_records = wp_cache_get($query_hash, 'slideshowgallery')) {
 			$records = $oc_records;
 		} else {
-			$records = $wpdb -> get_row($query);
+			$records = $wpdb -> get_results($query);
 			wp_cache_set($query_hash, $records, 'slideshowgallery', 0);
 		}
 		
