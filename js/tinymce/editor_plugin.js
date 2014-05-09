@@ -12,8 +12,8 @@
 			ed.addCommand('mcegallery', function() {			
 				ed.windowManager.open({
 					file : url + '/dialog.php',
-					width : 400,
-					height : 250,
+					width : 500,
+					height : 300,
 					inline : 1
 				}, {
 					plugin_url : url // Plugin absolute URL
@@ -24,19 +24,12 @@
 			ed.addButton('gallery', {
 				title : 'gallery.desc',
 				cmd : 'mcegallery',
-				image : url + '/gallery.png'
+				//image : url + '/gallery.png'
 			});			
 		},		
 		createControl : function(n, cm) {
 			return null;
 		},
-
-		/**
-		 * Returns information about the plugin as a name/value array.
-		 * The current keys are longname, author, authorurl, infourl and version.
-		 *
-		 * @return {Object} Name/value array containing information about the plugin.
-		 */
 		getInfo : function() {
 			return {
 				longname : 'Slideshow Gallery TinyMCE Plugin',

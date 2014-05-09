@@ -1,9 +1,5 @@
-<div class="wrap <?php echo $this -> pre; ?>">
-	<div class="icon32">
-		<img src="<?php echo $this -> url(); ?>/images/icon-32.png" />
-	</div>
-
-	<h2><?php _e('Manage Slides', $this -> plugin_name); ?> <?php echo $this -> Html -> link(__('Add New'), $this -> url . '&amp;method=save', array('class' => "button add-new-h2")); ?></h2>
+<div class="wrap <?php echo $this -> pre; ?> slideshow">
+	<h2><?php _e('Manage Slides', $this -> plugin_name); ?> <?php echo $this -> Html -> link(__('Add New'), $this -> url . '&amp;method=save', array('class' => "add-new-h2")); ?></h2>
 
 	<?php if (!empty($slides)) : ?>	
 		<form id="posts-filter" action="<?php echo $this -> url; ?>" method="post">

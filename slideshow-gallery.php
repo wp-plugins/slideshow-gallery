@@ -5,22 +5,32 @@ Plugin Name: Slideshow Gallery
 Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
-Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.2.3.2
+Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
+Version: 1.4.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
+Text Domain: slideshow-gallery
+Domain Path: /languages
 */
 
-define('DS', DIRECTORY_SEPARATOR);
-require_once(dirname(__FILE__) . DS . 'slideshow-gallery-plugin.php');
+if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
+
+$path = dirname(__FILE__) . DS . 'slideshow-gallery-plugin.php';
+if (file_exists($path)) {
+	require_once($path);
+}
 
 if (!class_exists('Gallery')) {
 	class Gallery extends GalleryPlugin {
 		
-		function Gallery() {
+		function Gallery() {		
 			$url = explode("&", $_SERVER['REQUEST_URI']);
 			$this -> url = $url[0];
 			$this -> referer = (empty($_SERVER['HTTP_REFERER'])) ? $this -> url : $_SERVER['HTTP_REFERER'];
-			$this -> register_plugin('slideshow-gallery', __FILE__);
-			$this -> initialize_options();
+			$this -> plugin_name = basename(dirname(__FILE__));
+			$this -> plugin_file = plugin_basename(__FILE__);
+			$this -> register_plugin($this -> plugin_name, __FILE__);
 			
 			//WordPress action hooks
 			$this -> add_action('wp_head');
@@ -36,8 +46,18 @@ if (!class_exists('Gallery')) {
 			//WordPress filter hooks
 			$this -> add_filter('mce_buttons');
 			$this -> add_filter('mce_external_plugins');
+			$this -> add_filter("plugin_action_links_" . $this -> plugin_file, 'plugin_settings_link', 10, 1);
 			
-			if (!is_admin()) { add_shortcode('slideshow', array($this, 'embed')); }
+			if (!is_admin()) { 
+				add_shortcode('slideshow', array($this, 'embed')); 
+				add_shortcode('tribulant_slideshow', array($this, 'embed'));
+			}
+		}
+		
+		function plugin_settings_link($links) { 
+			$settings_link = '<a href="' . admin_url('admin.php') . '?page=' . $this -> sections -> settings . '">' . __('Settings', $this -> plugin_name) . '</a>'; 
+			array_unshift($links, $settings_link); 
+			return $links; 
 		}
 		
 		function init_textdomain() {		
@@ -52,10 +72,10 @@ if (!class_exists('Gallery')) {
 		
 		function admin_menu() {
 			$this -> check_roles();
-			add_menu_page(__('Slideshow', $this -> plugin_name), __('Slideshow', $this -> plugin_name), 'gallery_slides', $this -> sections -> slides, array($this, 'admin_slides'), $this -> url() . '/images/icon.png');
-			$this -> menus['slideshow-slides'] = add_submenu_page($this -> sections -> slides, __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 'gallery_slides', $this -> sections -> slides, array($this, 'admin_slides'));
-			$this -> menus['slideshow-galleries'] = add_submenu_page($this -> sections -> slides, __('Manage Galleries', $this -> plugin_name), __('Manage Galleries', $this -> plugin_name), 'gallery_galleries', $this -> sections -> galleries, array($this, 'admin_galleries'));
-			$this -> menus['slideshow-settings'] = add_submenu_page($this -> sections -> slides, __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 'gallery_settings', $this -> sections -> settings, array($this, 'admin_settings'));
+			add_menu_page(__('Slideshow', $this -> plugin_name), __('Slideshow', $this -> plugin_name), 'slideshow_slides', $this -> sections -> slides, array($this, 'admin_slides'), false);
+			$this -> menus['slideshow-slides'] = add_submenu_page($this -> sections -> slides, __('Manage Slides', $this -> plugin_name), __('Manage Slides', $this -> plugin_name), 'slideshow_slides', $this -> sections -> slides, array($this, 'admin_slides'));
+			$this -> menus['slideshow-galleries'] = add_submenu_page($this -> sections -> slides, __('Manage Galleries', $this -> plugin_name), __('Manage Galleries', $this -> plugin_name), 'slideshow_galleries', $this -> sections -> galleries, array($this, 'admin_galleries'));
+			$this -> menus['slideshow-settings'] = add_submenu_page($this -> sections -> slides, __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 'slideshow_settings', $this -> sections -> settings, array($this, 'admin_settings'));
 			
 			add_action('admin_head-' . $this -> menus['slideshow-settings'], array($this, 'admin_head_gallery_settings'));
 		}
@@ -66,11 +86,11 @@ if (!class_exists('Gallery')) {
 		
 		function admin_head_gallery_settings() {		
 			add_meta_box('submitdiv', __('Save Settings', $this -> plugin_name), array($this -> Metabox, "settings_submit"), $this -> menus['slideshow-settings'], 'side', 'core');
-			add_meta_box('aboutdiv', __('About This Plugin', $this -> plugin_name), array($this -> Metabox, "settings_about"), $this -> menus['slideshow-settings'], 'side', 'core');
-			add_meta_box('wprelateddiv', __('WordPress Related', $this -> plugin_name), array($this -> Metabox, "settings_wprelated"), $this -> menus['slideshow-settings'], 'normal', 'core');
-			add_meta_box('generaldiv', __('General Settings', $this -> plugin_name), array($this -> Metabox, "settings_general"), $this -> menus['slideshow-settings'], 'normal', 'core');
-			add_meta_box('linksimagesdiv', __('Links &amp; Images Overlay', $this -> plugin_name), array($this -> Metabox, "settings_linksimages"), $this -> menus['slideshow-settings'], 'normal', 'core');
-			add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name), array($this -> Metabox, "settings_styles"), $this -> menus['slideshow-settings'], 'normal', 'core');
+			add_meta_box('aboutdiv', __('About This Plugin', $this -> plugin_name) . $this -> Html -> help(__('More about this plugin and the creators of it', $this -> plugin_name)), array($this -> Metabox, "settings_about"), $this -> menus['slideshow-settings'], 'side', 'core');
+			add_meta_box('generaldiv', __('General Settings', $this -> plugin_name) . $this -> Html -> help(__('General configuration settings for the inner workings and some default behaviours', $this -> plugin_name)), array($this -> Metabox, "settings_general"), $this -> menus['slideshow-settings'], 'normal', 'core');
+			add_meta_box('linksimagesdiv', __('Links &amp; Images Overlay', $this -> plugin_name) . $this -> Html -> help(__('Configure the way that slides with links are opened', $this -> plugin_name)), array($this -> Metabox, "settings_linksimages"), $this -> menus['slideshow-settings'], 'normal', 'core');
+			add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name) . $this -> Html -> help(__('Change the way the slideshows look so that it suits your needs', $this -> plugin_name)), array($this -> Metabox, "settings_styles"), $this -> menus['slideshow-settings'], 'normal', 'core');
+			add_meta_box('wprelateddiv', __('WordPress Related', $this -> plugin_name) . $this -> Html -> help(__('Settings specifically related to WordPress', $this -> plugin_name)), array($this -> Metabox, "settings_wprelated"), $this -> menus['slideshow-settings'], 'normal', 'core');
 			
 			do_action('do_meta_boxes', $this -> menus['slideshow-settings'], 'normal');
 			do_action('do_meta_boxes', $this -> menus['slideshow-settings'], 'side');
@@ -81,7 +101,7 @@ if (!class_exists('Gallery')) {
 		
 			if (!empty($_GET[$this -> pre . 'message'])) {		
 				$msg_type = (!empty($_GET[$this -> pre . 'updated'])) ? 'msg' : 'err';
-				call_user_method('render_' . $msg_type, $this, $_GET[$this -> pre . 'message']);
+				call_user_func(array($this, 'render_' . $msg_type), $_GET[$this -> pre . 'message']);
 			}
 		}
 		
@@ -116,6 +136,8 @@ if (!class_exists('Gallery')) {
 			// default shortcode parameters
 			$defaults = array(
 				'source'				=>	"slides",
+				'products'				=>	false,
+				'productsnumber'		=>	10,
 				'gallery_id'			=>	false,
 				'orderby'				=>	array('order', "ASC"),
 				'resizeimages'			=>	(($styles['resizeimages'] == "Y") ? "true" : "false"),
@@ -136,7 +158,7 @@ if (!class_exists('Gallery')) {
 				'infospeed'				=>	($this -> get_option('infospeed')),
 				'showthumbs'			=>	(($this -> get_option('thumbnails') == "Y") ? "true" : "false"),
 				'thumbsposition'		=>	($this -> get_option('thumbposition')),
-				'thumbsborder'			=>	($this -> get_option('thumbactive')),
+				'thumbsborder'			=>	($styles['thumbactive']),
 				'thumbsspeed'			=>	($this -> get_option('thumbscrollspeed')),
 				'thumbsspacing'			=>	($this -> get_option('thumbspacing')),
 				'post_id' 				=> 	null, 
@@ -150,7 +172,40 @@ if (!class_exists('Gallery')) {
 			// if this is an RSS/Atom feed, it should not continue...
 			if (is_feed()) { return false; }
 			
-			if (!empty($gallery_id)) {
+			if (!empty($products)) {
+				include_once(ABSPATH . 'wp-admin/includes/plugin.php');			
+				if (is_plugin_active('wp-checkout' . DS . 'wp-checkout.php')) {
+					$slides = array();
+					
+					if (class_exists('wpCheckout')) {
+						if ($wpCheckout = new wpCheckout()) {
+							global $wpcoDb, $Product;
+							$wpcoDb -> model = $Product -> model;
+							$productstype = $products;
+						
+							switch ($productstype) {
+								case 'latest'		:
+									$products = $wpcoDb -> find_all(false, false, array('created', "DESC"), $productsnumber);
+									break;
+								case 'featured'		:
+									$products = $wpcoDb -> find_all(array('featured' => "1"), false, array('created', "DESC"), $productsnumber);
+									break;
+							}
+						}
+					}
+					
+					$content = $this -> render('gallery', array('slides' => $products, 'unique' => 'products' . $productstype . $productsnumber, 'products' => true, 'options' => $s, 'frompost' => false), false, 'default');
+				} else {
+					$error = sprintf(__('You need the %sShopping Cart plugin%s to display products slides.', $this -> plugin_name), '<a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin" target="_blank">', '</a>');
+				}
+				
+				if (!empty($error)) {
+					$content = '';
+					$content .= '<p>';
+					$content .= stripslashes($error);
+					$content .= '</p>';
+				}
+			} elseif (!empty($gallery_id)) {
 				if (!is_array($orderby) || $orderby == "random") {
 					$orderbystring = "ORDER BY RAND()";
 				} else {
@@ -167,13 +222,27 @@ if (!class_exists('Gallery')) {
 				" ON " . $this -> Slide -> table . ".id = " . $this -> GallerySlides -> table . ".slide_id WHERE " . 
 				$this -> GallerySlides -> table . ".gallery_id = '" . $gallery_id . "' " . $orderbystring;
 				
-				if ($slides = $wpdb -> get_results($slidesquery)) {
+				$query_hash = md5($slidesquery);
+				if ($oc_slides = wp_cache_get($query_hash, 'slideshowgallery')) {
+					$slides = $oc_slides;
+				} else {
+					$slides = $wpdb -> get_results($slidesquery);
+					wp_cache_set($query_hash, $slides, 'slideshowgallery', 0);
+				}
+				
+				if (!empty($slides)) {				
+					$imagespath = $this -> get_option('imagespath');
+				
 					foreach ($slides as $skey => $slide) {
-						$slides[$skey] -> image_path = 'wp-content/uploads/slideshow-gallery/' . $slide -> image;
+						if (empty($imagespath)) {
+							$slides[$skey] -> image_path = $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS . $slide -> image;
+						} else {
+							$slides[$skey] -> image_path = rtrim($imagespath, DS) . DS . $slide -> image;
+						}
 					}
 				
 					if ($orderby == "random") { shuffle($slides); }
-					$content = $this -> render('gallery', array('slides' => $slides, 'options' => $s, 'frompost' => false), false, 'default');	
+					$content = $this -> render('gallery', array('slides' => $slides, 'unique' => 'gallery' . $gallery_id, 'options' => $s, 'frompost' => false), false, 'default');	
 				}
 			} elseif (!empty($custom) || empty($post_id)) {
 				$slides = $this -> Slide -> find_all(null, null, $orderby);
@@ -189,7 +258,7 @@ if (!class_exists('Gallery')) {
 				}
 				
 				if ($orderby == "random") { shuffle($slides); }
-				$content = $this -> render('gallery', array('slides' => $slides, 'options' => $s, 'frompost' => false), false, 'default');
+				$content = $this -> render('gallery', array('slides' => $slides, 'unique' => "custom", 'options' => $s, 'frompost' => false), false, 'default');
 			} else {
 				global $post;
 				$pid = (empty($post_id)) ? $post -> ID : $post_id;
@@ -210,7 +279,7 @@ if (!class_exists('Gallery')) {
 						}
 					
 						if ($orderby == "random") { shuffle($attachments); }
-						$content = $this -> render('gallery', array('slides' => $attachments, 'options' => $s, 'frompost' => true), false, 'default');
+						$content = $this -> render('gallery', array('slides' => $attachments, 'unique' => $pid, 'options' => $s, 'frompost' => true), false, 'default');
 					}
 				}
 			}
@@ -280,7 +349,16 @@ if (!class_exists('Gallery')) {
 						
 						$slides = array();
 						$gsquery = "SELECT gs.slide_id FROM `" . $this -> GallerySlides -> table . "` gs WHERE `gallery_id` = '" . $gallery -> id . "' ORDER BY gs.order ASC";
-						if ($gs = $wpdb -> get_results($gsquery)) {
+						
+						$query_hash = md5($gsquery);
+						if ($oc_gs = wp_cache_set($query_hash, 'slideshowgallery')) {
+							$gs = $oc_gs;
+						} else {
+							$gs = $wpdb -> get_results($gsquery);
+							wp_cache_set($query_hash, $gs, 'slideshowgallery', 0);
+						}
+						
+						if (!empty($gs)) {
 							foreach ($gs as $galleryslide) {
 								$slides[] = $this -> Slide -> find(array('id' => $galleryslide -> slide_id));
 							}
@@ -293,7 +371,10 @@ if (!class_exists('Gallery')) {
 					}
 					break;
 				default					:
-					$data = $this -> paginate('Slide');				
+					$orderfield = (empty($_GET['orderby'])) ? 'modified' : $_GET['orderby'];
+					$orderdirection = (empty($_GET['order'])) ? 'DESC' : strtoupper($_GET['order']);
+					$order = array($orderfield, $orderdirection);
+					$data = $this -> paginate('Slide', false, false, false, false, 10, $order);				
 					$this -> render('slides' . DS . 'index', array('slides' => $data[$this -> Slide -> model], 'paginate' => $data['Paginate']), true, 'admin');
 					break;
 			}
@@ -375,19 +456,33 @@ if (!class_exists('Gallery')) {
 					}
 					break;
 				default							:
-					$data = $this -> paginate('Gallery');
+					$orderfield = (empty($_GET['orderby'])) ? 'modified' : $_GET['orderby'];
+					$orderdirection = (empty($_GET['order'])) ? 'DESC' : strtoupper($_GET['order']);
+					$order = array($orderfield, $orderdirection);
+					$data = $this -> paginate('Gallery', false, false, false, false, 10, $order);	
 					$this -> render('galleries' . DS . 'index', array('galleries' => $data[$this -> Gallery -> model], 'paginate' => $data['Paginate']), true, 'admin');
 					break;
 			}
 		}
 		
 		function admin_settings() {
+			$this -> initialize_options();
+		
 			switch ($_GET['method']) {
+				case 'dismiss'			:
+					if (!empty($_GET['dismiss'])) {
+						$this -> update_option('dismiss_' . $_GET['dismiss'], 1);
+					}
+					
+					$this -> redirect($this -> referer);
+					break;
 				case 'reset'			:
 					global $wpdb;
 					$query = "DELETE FROM `" . $wpdb -> prefix . "options` WHERE `option_name` LIKE '" . $this -> pre . "%';";
 					
 					if ($wpdb -> query($query)) {
+						$this -> initialize_options();
+					
 						$message = __('All configuration settings have been reset to their defaults', $this -> plugin_name);
 						$msg_type = 'message';
 						$this -> render_msg($message);	
@@ -401,8 +496,16 @@ if (!class_exists('Gallery')) {
 					break;
 				default					:
 					if (!empty($_POST)) {
+						delete_option('tridebugging');
+						delete_option('Galleryinfohideonmobile');
+					
 						foreach ($_POST as $pkey => $pval) {					
 							switch ($pkey) {
+								case 'debugging'			:
+									if (!empty($pval)) {
+										update_option('tridebugging', 1);
+									}
+									break;
 								case 'permissions'			:
 									global $wp_roles;
 									$role_names = $wp_roles -> get_names();
@@ -410,19 +513,18 @@ if (!class_exists('Gallery')) {
 									if (!empty($_POST['permissions'])) {
 										$permissions = $_POST['permissions'];
 										
-										foreach ($this -> sections as $section_key => $section_menu) {
-											foreach ($role_names as $role_key => $role_name) {
-												$wp_roles -> remove_cap($role_key, 'gallery_' . $section_key);
-											}
-											
-											if (!empty($permissions[$section_key])) {
-												foreach ($permissions[$section_key] as $role) {
-													$wp_roles -> add_cap($role, 'gallery_' . $section_key);
+										foreach ($role_names as $role_key => $role_name) {
+											foreach ($this -> sections as $section_key => $section_name) {
+												$wp_roles -> remove_cap($role_key, 'slideshow_' . $section_key);
+												
+												if (!empty($permissions[$role_key]) && in_array($section_key, $permissions[$role_key])) {
+													$wp_roles -> add_cap($role_key, 'slideshow_' . $section_key);
 												}
-											} else {
-												/* No roles were selected for this capability, at least add 'administrator' */
-												$wp_roles -> add_cap('administrator', 'gallery_' . $section_key);
-												$permissions[$section_key][] = 'administrator';
+												
+												if ($role_key == "administrator") {
+													$wp_roles -> add_cap("administrator", 'slideshow_' . $section_key);
+													$permissions[$role_key][] = $section_key;
+												}
 											}
 										}
 									}
@@ -438,10 +540,10 @@ if (!class_exists('Gallery')) {
 						$message = __('Configuration has been saved', $this -> plugin_name);
 						$this -> render_msg($message);
 					}	
+					
+					$this -> render('settings', false, true, 'admin');
 					break;
 			}
-					
-			$this -> render('settings', false, true, 'admin');
 		}
 	}
 }
