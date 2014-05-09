@@ -3,8 +3,8 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 3.9
-Stable tag: 1.4.2
+Tested up to: 3.9.1
+Stable tag: 1.4.3
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -121,6 +121,11 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.3 =
+* ADD: WordPress Object Cache API for performance
+* FIX: Post/page images slideshow not showing images with resize turned on
+* FIX: Featured/latest product images not showing with resizing
 
 = 1.4.2 =
 * ADD: More flexible settings for information bar per slide

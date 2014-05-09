@@ -43,7 +43,16 @@ class GallerySlide extends GalleryDbHelper {
 						$this -> gallery = array();
 						
 						$galleryslidesquery = "SELECT * FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `slide_id` = '" . $dval . "'";
-						if ($galleryslides = $wpdb -> get_results($galleryslidesquery)) {
+						
+						$query_hash = md5($galleryslidesquery);
+						if ($oc_galleryslides = wp_cache_get($query_hash, 'slideshowgallery')) {
+							$galleryslides = $oc_galleryslides;
+						} else {
+							$galleryslides = $wpdb -> get_results($galleryslidesquery);
+							wp_cache_set($query_hash, $galleryslides, 'slideshowgallery', 0);
+						}
+						
+						if (!empty($galleryslides)) {
 							foreach ($galleryslides as $galleryslide) {
 								$this -> galleries[] = $galleryslide -> gallery_id;
 								$this -> gallery[$galleryslide -> gallery_id] = $wpdb -> get_row("SELECT * FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleries` WHERE `id` = '" . $galleryslide -> gallery_id . "'");

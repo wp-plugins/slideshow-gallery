@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.4.2
+Version: 1.4.3
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
@@ -222,7 +222,15 @@ if (!class_exists('Gallery')) {
 				" ON " . $this -> Slide -> table . ".id = " . $this -> GallerySlides -> table . ".slide_id WHERE " . 
 				$this -> GallerySlides -> table . ".gallery_id = '" . $gallery_id . "' " . $orderbystring;
 				
-				if ($slides = $wpdb -> get_results($slidesquery)) {				
+				$query_hash = md5($slidesquery);
+				if ($oc_slides = wp_cache_get($query_hash, 'slideshowgallery')) {
+					$slides = $oc_slides;
+				} else {
+					$slides = $wpdb -> get_results($slidesquery);
+					wp_cache_set($query_hash, $slides, 'slideshowgallery', 0);
+				}
+				
+				if (!empty($slides)) {				
 					$imagespath = $this -> get_option('imagespath');
 				
 					foreach ($slides as $skey => $slide) {
@@ -341,7 +349,16 @@ if (!class_exists('Gallery')) {
 						
 						$slides = array();
 						$gsquery = "SELECT gs.slide_id FROM `" . $this -> GallerySlides -> table . "` gs WHERE `gallery_id` = '" . $gallery -> id . "' ORDER BY gs.order ASC";
-						if ($gs = $wpdb -> get_results($gsquery)) {
+						
+						$query_hash = md5($gsquery);
+						if ($oc_gs = wp_cache_set($query_hash, 'slideshowgallery')) {
+							$gs = $oc_gs;
+						} else {
+							$gs = $wpdb -> get_results($gsquery);
+							wp_cache_set($query_hash, $gs, 'slideshowgallery', 0);
+						}
+						
+						if (!empty($gs)) {
 							foreach ($gs as $galleryslide) {
 								$slides[] = $this -> Slide -> find(array('id' => $galleryslide -> slide_id));
 							}

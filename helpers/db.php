@@ -55,16 +55,22 @@ class GalleryDbHelper extends GalleryPlugin {
 			
 		$query .= " LIMIT 1";
 		
-		if ($record = $wpdb -> get_row($query)) {		
-			if (!empty($record)) {			
-				$data = $this -> init_class($this -> model, $record);
-				
-				if ($assign == true) {
-					$this -> data = $data;
-				}
-
-				return $data;
+		$query_hash = md5($query);
+		if ($oc_record = wp_cache_get($query_hash, 'slideshowgallery')) {
+			$record = $oc_record;
+		} else {
+			$record = $wpdb -> get_row($query);
+			wp_cache_set($query_hash, $record, 'slideshowgallery', 0);
+		}
+			
+		if (!empty($record)) {			
+			$data = $this -> init_class($this -> model, $record);
+			
+			if ($assign == true) {
+				$this -> data = $data;
 			}
+
+			return $data;
 		}
 		
 		return false;
@@ -106,20 +112,26 @@ class GalleryDbHelper extends GalleryPlugin {
 			
 		$query .= (empty($limit)) ? '' : " LIMIT " . $limit . "";
 		
-		if ($records = $wpdb -> get_results($query)) {
-			if (!empty($records)) {
-				$data = array();
-			
-				foreach ($records as $record) {
-					$data[] = $this -> init_class($this -> model, $record);
-				}
-				
-				if ($assign == true) {
-					$this -> data = $data;
-				}
-				
-				return $data;
+		$query_hash = md5($query);
+		if ($oc_records = wp_cache_get($query_hash, 'slideshowgallery')) {
+			$records = $oc_records;
+		} else {
+			$records = $wpdb -> get_row($query);
+			wp_cache_set($query_hash, $records, 'slideshowgallery', 0);
+		}
+		
+		if (!empty($records)) {
+			$data = array();
+		
+			foreach ($records as $record) {
+				$data[] = $this -> init_class($this -> model, $record);
 			}
+			
+			if ($assign == true) {
+				$this -> data = $data;
+			}
+			
+			return $data;
 		}
 		
 		return false;

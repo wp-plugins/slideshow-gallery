@@ -19,7 +19,15 @@ if(!current_user_can('edit_posts')) die;
 do_action('admin_init');
 
 $galleriesquery = "SELECT * FROM `" . $wpdb -> prefix . "gallery_galleries` ORDER BY `title` ASC";
-$galleries = $wpdb -> get_results($galleriesquery);
+
+$query_hash = md5($galleriesquery);
+if ($oc_galleries = wp_cache_get($query_hash, 'slideshowgallery')) {
+	$galleries = $oc_galleries;
+} else {
+	$galleries = $wpdb -> get_results($galleriesquery);
+	wp_cache_set($query_hash, $galleries, 'slideshowgallery', 0);
+}
+
 $checkout_active = is_plugin_active('wp-checkout' . DS . 'wp-checkout.php');
 
 ?>

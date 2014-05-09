@@ -156,7 +156,14 @@ class GalleryPaginate extends GalleryPlugin {
 		$query .= " ORDER BY `" . $osortby . "` " . $osort . " LIMIT " . $this -> begRecord . " , " . $this -> per_page . ";";
 		//echo $query;
 		
-		$records = $wpdb -> get_results($query);
+		$query_hash = md5($query);
+		if ($oc_records = wp_cache_get($query_hash, 'slideshowgallery')) {
+			$records = $oc_records;
+		} else {
+			$records = $wpdb -> get_results($query);
+			wp_cache_set($query_hash, $records, 'slideshowgallery', 0);	
+		}
+		
 		$records_count = count($records);
 		$allRecordsCount = $this -> allcount = $wpdb -> get_var($countquery);
 		$totalpagescount = round($records_count/$this -> per_page);
