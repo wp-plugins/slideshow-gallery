@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.4.4';
+	var $version = '1.4.4.1';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
