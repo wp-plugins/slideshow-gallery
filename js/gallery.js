@@ -83,10 +83,12 @@ TINY.slideshow.prototype={
 		this.is(t,c)
 	},
 	is:function(s,c){	
-		if(this.info && (this.a[s].t.length > 0 || this.a[s].d.length > 0)) {			
-			TINY.height.set(this.r,1,this.infoSpeed/2,-1)
-		} else {
-			TINY.height.set(this.r,0,this.infoSpeed/2,-1);
+		if(this.info) {			
+			if (this.a[s].t.length > 0 || this.a[s].d.length > 0) {
+				TINY.height.set(this.r,1,this.infoSpeed/2,-1);
+			} else {
+				TINY.height.set(this.r,0,this.infoSpeed/2,-1);
+			}
 		}
 		
 		var i=new Image();
