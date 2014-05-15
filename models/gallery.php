@@ -30,7 +30,14 @@ class GalleryGallery extends GalleryDbHelper {
 				switch ($dkey) {
 					case 'id'			:
 						$slidescountquery = "SELECT COUNT(`id`) FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `gallery_id` = '" . $dval . "'";
-						$this -> slidescount = $wpdb -> get_var($slidescountquery);
+						
+						$query_hash = md5($slidescountquery);
+						if ($oc_slidescount = wp_cache_get($query_hash, 'slideshowgallery')) {
+							$this -> slidescount = $oc_slidescount;
+						} else {
+							$this -> slidescount = $wpdb -> get_var($slidescountquery);
+							wp_cache_set($query_hash, $this -> slidescount, 'slideshowgallery', 0);	
+						}
 						break;
 				}
 			}

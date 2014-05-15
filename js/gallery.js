@@ -34,8 +34,9 @@ TINY.slideshow.prototype={
 		
 		for(i;i<this.l;i++){
 			this.a[i]={};
-			var h=m[i], a=this.a[i];
+			var h=m[i], a=this.a[i];			
 			a.t= tag('h3',h)[0].innerHTML;
+			a.io = tag('h3',h)[0].style.opacity;
 			a.d= tag('p',h)[0].innerHTML;
 			a.l= tag('a',h)[0]? tag('a',h)[0].href:'';
 			a.tg = tag('a',h)[0] != '' ? tag('a',h)[0].target:'_self';
@@ -53,7 +54,7 @@ TINY.slideshow.prototype={
 				g.style.filter='alpha(opacity='+this.thumbOpacity+')';
 				g.onmouseover=new Function('TINY.alpha.set(this,100,5)');
 				g.onmouseout=new Function('TINY.alpha.set(this,'+this.thumbOpacity+',5)');
-				g.onclick=new Function(this.n+'.pr('+i+',1)')
+				g.onclick=new Function(this.n+'.pr('+i+',1)');
 			}
 		}
 		if(b&&f){
@@ -81,10 +82,15 @@ TINY.slideshow.prototype={
 		this.c=t;
 		this.is(t,c)
 	},
-	is:function(s,c){
-		if(this.info){
-			TINY.height.set(this.r,1,this.infoSpeed/2,-1)
+	is:function(s,c){	
+		if(this.info) {			
+			if (this.a[s].t.length > 0 || this.a[s].d.length > 0) {
+				TINY.height.set(this.r,1,this.infoSpeed/2,-1);
+			} else {
+				TINY.height.set(this.r,0,this.infoSpeed/2,-1);
+			}
 		}
+		
 		var i=new Image();
 		i.style.opacity=0;
 		i.style.filter='alpha(opacity=0)';
@@ -109,7 +115,7 @@ TINY.slideshow.prototype={
 		TINY.alpha.set(this.i,100,this.imgSpeed);
 		var n=new Function(this.n+'.nf('+s+')');
 		this.lt=setTimeout(n,this.imgSpeed*100);
-		if(!c || this.alwaysauto == true){
+		if(!c || (this.auto == true && this.alwaysauto == true)) {
 			this.at=setTimeout(new Function(this.n+'.mv(1,0)'),this.speed*1000)
 		}
 		if(this.a[s].l != ""){			
@@ -136,14 +142,18 @@ TINY.slideshow.prototype={
 		}
 	},
 	nf:function(s){
-		if(this.info){
-			s=this.a[s];
+		if(this.info){		
+			s=this.a[s];			
 			tag('h3',this.r)[0].innerHTML=s.t;
 			tag('p',this.r)[0].innerHTML=s.d;
 			this.r.style.height='auto';
 			var h=parseInt(this.r.offsetHeight);
 			this.r.style.height=0;
-			TINY.height.set(this.r,h,this.infoSpeed,0)
+			
+			if (s.t.length > 0 || s.d.length > 0) {
+				TINY.height.set(this.r,h,this.infoSpeed,0);
+				TINY.alpha.set(this.r,s.io,5);
+			}
 		}
 	}
 };
