@@ -14,6 +14,8 @@ class GallerySlide extends GalleryDbHelper {
 		'id'				=>	"INT(11) NOT NULL AUTO_INCREMENT",
 		'title'				=>	"VARCHAR(150) NOT NULL DEFAULT ''",
 		'description'		=>	"TEXT NOT NULL",
+		'showinfo'			=>	"VARCHAR(50) NOT NULL DEFAULT 'both'",
+		'iopacity'			=>	"INT(11) NOT NULL DEFAULT '70'",
 		'image'				=>	"VARCHAR(50) NOT NULL DEFAULT ''",
 		'type'				=>	"ENUM('file','url') NOT NULL DEFAULT 'file'",
 		'image_url'			=>	"VARCHAR(200) NOT NULL DEFAULT ''",
@@ -41,7 +43,16 @@ class GallerySlide extends GalleryDbHelper {
 						$this -> gallery = array();
 						
 						$galleryslidesquery = "SELECT * FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleriesslides` WHERE `slide_id` = '" . $dval . "'";
-						if ($galleryslides = $wpdb -> get_results($galleryslidesquery)) {
+						
+						$query_hash = md5($galleryslidesquery);
+						if ($oc_galleryslides = wp_cache_get($query_hash, 'slideshowgallery')) {
+							$galleryslides = $oc_galleryslides;
+						} else {
+							$galleryslides = $wpdb -> get_results($galleryslidesquery);
+							wp_cache_set($query_hash, $galleryslides, 'slideshowgallery', 0);
+						}
+						
+						if (!empty($galleryslides)) {
 							foreach ($galleryslides as $galleryslide) {
 								$this -> galleries[] = $galleryslide -> gallery_id;
 								$this -> gallery[$galleryslide -> gallery_id] = $wpdb -> get_row("SELECT * FROM `" . $wpdb -> prefix . strtolower($this -> pre) . "_galleries` WHERE `id` = '" . $galleryslide -> gallery_id . "'");
@@ -49,7 +60,12 @@ class GallerySlide extends GalleryDbHelper {
 						}
 						break;
 					case 'image'				:
-						$this -> image_path = 'wp-content/uploads/slideshow-gallery/' . $dval;
+						$imagespath = $this -> get_option('imagespath');
+						if (empty($imagespath)) {
+							$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $dval;
+						} else {
+							$this -> image_path = rtrim($imagespath, DS) . DS . $dval;
+						}
 						break;
 				}
 			}
@@ -78,26 +94,40 @@ class GallerySlide extends GalleryDbHelper {
 			extract($data, EXTR_SKIP);
 			
 			if (empty($title)) { $this -> errors['title'] = __('Please fill in a title', $this -> plugin_name); }
+			if (empty($showinfo)) { $this -> data -> showinfo = "both"; }
+			
 			if (empty($type)) { $this -> errors['type'] = __('Please select an image type', $this -> plugin_name); }
 			elseif ($type == "file") {
 				if (!empty($image_oldfile) && empty($_FILES['image_file']['name'])) {
 					$imagename = $image_oldfile;
-					$imagepath = ABSPATH . "wp-content" . DS . "uploads" . DS . $this -> plugin_name . DS;
+					$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
 					$imagefull = $imagepath . $imagename;
 					
-					$this -> data -> image = $imagename;
-					$this -> data -> image_path = 'wp-content/uploads/slideshow-gallery/' . $imagename;
-				} else {					
+					$this -> data -> image = $imagename;					
+					$imagespath = $this -> get_option('imagespath');
+					if (empty($imagespath)) {
+						$this -> data -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;
+					} else {
+						$this -> data -> image_path = rtrim($imagespath, DS) . DS . $imagename;
+					}
+				} else {								
 					if ($_FILES['image_file']['error'] <= 0) {
 						$imagename = $_FILES['image_file']['name'];
-						$imagepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+						$imagepath = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS;
 						$imagefull = $imagepath . $imagename;
 						
 						if (!is_uploaded_file($_FILES['image_file']['tmp_name'])) { $this -> errors['image_file'] = __('The image did not upload, please try again', $this -> plugin_name); }
 						elseif (!move_uploaded_file($_FILES['image_file']['tmp_name'], $imagefull)) { $this -> errors['image_file'] = __('Image could not be moved from TMP to "wp-content/uploads/", please check permissions', $this -> plugin_name); }
 						else {
+							@chmod($imagefull, 0644);
+						
 							$this -> data -> image = $imagename;
-							$this -> data -> image_path = 'wp-content/uploads/slideshow-gallery/' . $imagename;
+							$imagespath = $this -> get_option('imagespath');
+							if (empty($imagespath)) {
+								$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;
+							} else {
+								$this -> image_path = rtrim($imagespath, DS) . DS . $imagename;
+							}
 						}
 					} else {					
 						switch ($_FILES['image_file']['error']) {
@@ -125,7 +155,8 @@ class GallerySlide extends GalleryDbHelper {
 				else {
 					if ($image = wp_remote_fopen($image_url)) {
 						$filename = basename($image_url);
-						$filepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+						//$filepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+						$filepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
 						$filefull = $filepath . $filename;
 						
 						if (!file_exists($filefull)) {
