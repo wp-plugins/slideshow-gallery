@@ -279,7 +279,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 	
 	function sanitize($string = '', $sep = '-') {
 		if (!empty($string)) {
-			$string = ereg_replace("[^0-9a-z" . $sep . "]", "", strtolower(str_replace(" ", $sep, $string)));
+			$string = preg_replace("/[^0-9a-z" . $sep . "]/si", "", strtolower(str_replace(" ", $sep, $string)));
 			$string = preg_replace("/" . $sep . "[" . $sep . "]*/i", $sep, $string);
 			
 			return $string;

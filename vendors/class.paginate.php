@@ -93,7 +93,7 @@ class GalleryPaginate extends GalleryPlugin {
 					$k = 1;
 				
 					foreach ($val as $vkey => $vval) {
-						if (eregi("LIKE", $val)) {
+						if (preg_match("/LIKE/si", $val)) {
 							$query .= " `" . $key . "` " . $vval . "";	
 							$countquery .= " `" . $key . "` " . $vval . "";
 						} elseif (preg_match("/SE (.*)/si", $vval, $vmatches)) {

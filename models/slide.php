@@ -110,7 +110,7 @@ class GallerySlide extends GalleryDbHelper {
 					} else {
 						$this -> data -> image_path = rtrim($imagespath, DS) . DS . $imagename;
 					}
-				} else {					
+				} else {								
 					if ($_FILES['image_file']['error'] <= 0) {
 						$imagename = $_FILES['image_file']['name'];
 						$imagepath = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS;

@@ -85,7 +85,10 @@ TINY.slideshow.prototype={
 	is:function(s,c){	
 		if(this.info && (this.a[s].t.length > 0 || this.a[s].d.length > 0)) {			
 			TINY.height.set(this.r,1,this.infoSpeed/2,-1)
+		} else {
+			TINY.height.set(this.r,0,this.infoSpeed/2,-1);
 		}
+		
 		var i=new Image();
 		i.style.opacity=0;
 		i.style.filter='alpha(opacity=0)';
@@ -137,9 +140,7 @@ TINY.slideshow.prototype={
 		}
 	},
 	nf:function(s){
-		if(this.info){
-			console.log(this.a[s]);
-		
+		if(this.info){		
 			s=this.a[s];			
 			tag('h3',this.r)[0].innerHTML=s.t;
 			tag('p',this.r)[0].innerHTML=s.d;

@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 3.9.1
-Stable tag: 1.4.4.1
+Stable tag: 1.4.4.2
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -121,6 +121,14 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.4.2 =
+* IMPROVE: Replaced eregi() with preg_match()
+* IMPROVE: Replaced ereg_replace() with preg_replace()
+* FIX: Multiple rows of thumbnails issue
+* FIX: Info bar delay on hide
+* FIX: console.log() call left behind
+* FIX: Current image not showing when saving slide and it doesn't save
 
 = 1.4.4.1 =
 * IMPROVE: Change admin-functions.php to includes/admin.php
