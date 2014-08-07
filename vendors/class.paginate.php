@@ -120,7 +120,7 @@ class GalleryPaginate extends GalleryPlugin {
 						$vmatches = false;
 					}
 				} else {
-					if (eregi("LIKE", $val)) {
+					if (preg_match("/LIKE/si", $val)) {
 						$query .= " `" . $key . "` " . $val . "";	
 						$countquery .= " `" . $key . "` " . $val . "";
 					} elseif (preg_match("/SE (.*)/si", $val, $vmatches)) {

@@ -143,7 +143,7 @@ $checkout_active = is_plugin_active('wp-checkout' . DS . 'wp-checkout.php');
 					<?php if (!empty($galleries)) : ?>
 						<?php foreach ($galleries as $gallery) : ?>
 							<?php $slidescount = $wpdb -> get_var("SELECT COUNT(`id`) FROM `" . $wpdb -> prefix . "gallery_galleriesslides` WHERE `gallery_id` = '" . $gallery -> id . "'"); ?>
-							<option value="<?php echo $gallery -> id; ?>"><?php echo $gallery -> title; ?> (<?php echo $slidescount; ?>)</option>
+							<option value="<?php echo $gallery -> id; ?>"><?php echo __($gallery -> title); ?> (<?php echo $slidescount; ?>)</option>
 						<?php endforeach; ?>
 					<?php endif; ?>
 				</select>

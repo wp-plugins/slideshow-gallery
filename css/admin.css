@@ -30,6 +30,12 @@ th.sorted.desc .sorting-indicator,th.asc:hover span.sorting-indicator{ display:b
 
 .slideshow .ui-slider {
 	margin: 10px 0;
+	background: #CCCCCC;
+}
+
+.slideshow .ui-slider-handle {
+	cursor: move !important;
+	background: #333333;
 }
 
 .slideshow .slider-value {

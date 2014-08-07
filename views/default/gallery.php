@@ -38,21 +38,21 @@ $thumbopacity = $this -> get_option('thumbopacity');
 		<?php elseif ($products) : ?>
 			<?php foreach ($slides as $slide) : ?>
 				<li>
-					<h3><?php echo stripslashes($slide -> title); ?></h3>
+					<h3><?php echo stripslashes(__($slide -> title)); ?></h3>
 					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
 						<span><?php echo $this -> Html -> bfithumb_image_src(site_url() . '/' . $slide -> image_url, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo site_url() . '/' . $slide -> image_url; ?></span>
 					<?php endif; ?>
-					<p><?php echo substr(stripslashes($slide -> description), 0, 255); ?></p>
+					<p><?php echo substr(stripslashes(__($slide -> description)), 0, 255); ?></p>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if (!empty($slide -> post_id)) : ?>
-							<a href="<?php echo get_permalink($slide -> post_id); ?>" target="_self" title="<?php echo esc_attr($slide -> title); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src(site_url() . '/' . $slide -> image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" /></a>
+							<a href="<?php echo get_permalink($slide -> post_id); ?>" target="_self" title="<?php echo esc_attr(__($slide -> title)); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src(site_url() . '/' . $slide -> image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" /></a>
 						<?php else : ?>
 							<a><img src="<?php echo $this -> Html -> bfithumb_image_src(site_url() . '/' . $slide -> image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
-						<a href="<?php echo get_permalink($slide -> post_id); ?>" target="_self" title="<?php echo esc_attr($slide -> title); ?>"></a>
+						<a href="<?php echo get_permalink($slide -> post_id); ?>" target="_self" title="<?php echo esc_attr(__($slide -> title)); ?>"></a>
 					<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
@@ -60,24 +60,26 @@ $thumbopacity = $this -> get_option('thumbopacity');
 		<?php else : ?>
 			<?php foreach ($slides as $slide) : ?>		
 				<li>
-					<h3 style="opacity:<?php echo (!empty($slide -> iopacity)) ? ($slide -> iopacity) : 70; ?>;"><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "title")) ? $slide -> title : ''; ?></h3>
+					<h3 style="opacity:<?php echo (!empty($slide -> iopacity)) ? ($slide -> iopacity) : 70; ?>;"><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "title")) ? __($slide -> title) : ''; ?></h3>
 					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
 						<span><?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
 						<span><?php echo $this -> Html -> image_url($slide -> image); ?></span>
 					<?php endif; ?>
-					<p><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "description")) ? $slide -> description : ''; ?></p>
+					<p><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "description")) ? __($slide -> description) : ''; ?></p>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
-							<a href="<?php echo $slide -> link; ?>" title="<?php echo esc_attr($slide -> title); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+							<a href="<?php echo $slide -> link; ?>" title="<?php echo esc_attr(__($slide -> title)); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
+						<?php elseif ($options['imagesoverlay'] == "true") : ?>
+							<a href="<?php echo $slide -> image_path; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 						<?php else : ?>
-							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
-							<a href="<?php echo $slide -> link; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo $slide -> title; ?>"></a>
+							<a href="<?php echo $slide -> link; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"></a>
 						<?php elseif ($options['imagesoverlay'] == "true") : ?>
-							<a href="<?php echo site_url('/') . $slide -> image_path; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo $slide -> title; ?>"></a>
+							<a href="<?php echo $slide -> image_path; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"></a>
 						<?php else : ?>
 							<a></a>
 						<?php endif; ?>

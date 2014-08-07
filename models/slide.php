@@ -113,6 +113,10 @@ class GallerySlide extends GalleryDbHelper {
 				} else {								
 					if ($_FILES['image_file']['error'] <= 0) {
 						$imagename = $_FILES['image_file']['name'];
+						$image_name = GalleryHtmlHelper::strip_ext($imagename, "name");
+						$image_ext = GalleryHtmlHelper::strip_ext($imagename, "ext");
+						$imagename = GalleryHtmlHelper::sanitize($image_name) . '.' . $image_ext;
+						
 						$imagepath = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS;
 						$imagefull = $imagepath . $imagename;
 						
@@ -153,9 +157,11 @@ class GallerySlide extends GalleryDbHelper {
 			} elseif ($type == "url") {
 				if (empty($image_url)) { $this -> errors['image_url'] = __('Please specify an image', $this -> plugin_name); }
 				else {
-					if ($image = wp_remote_fopen($image_url)) {
+					if ($image = wp_remote_fopen(str_replace(" ", "%20", $image_url))) {
 						$filename = basename($image_url);
-						//$filepath = ABSPATH . 'wp-content' . DS . 'uploads' . DS . $this -> plugin_name . DS;
+						$file_name = GalleryHtmlHelper::strip_ext($filename, "name");
+						$file_ext = GalleryHtmlHelper::strip_ext($filename, "ext");
+						$filename = GalleryHtmlHelper::sanitize($file_name) . '.' . $file_ext;
 						$filepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
 						$filefull = $filepath . $filename;
 						

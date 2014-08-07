@@ -3,6 +3,7 @@
 <?php
 
 $showinfo = $this -> Slide -> data -> showinfo;
+$languages = $this -> language_getlanguages();
 
 ?>
 
@@ -19,7 +20,29 @@ $showinfo = $this -> Slide -> data -> showinfo;
 					<th><label for="Slide.title"><?php _e('Title', $this -> plugin_name); ?></label>
 					<?php echo $this -> Html -> help(__('This title is for your reference in management and it will also be used to display the title of the slide in the information bar if you have that turned on.', $this -> plugin_name)); ?></th>
 					<td>
-						<input class="widefat" type="text" name="Slide[title]" value="<?php echo esc_attr($this -> Slide -> data -> title); ?>" id="Slide.title" />
+						<?php if ($this -> language_do()) : ?>
+							<?php $titles = qtrans_split($this -> Slide -> data -> title); ?>
+							<div id="slide-title-tabs">
+								<ul>
+									<?php foreach ($languages as $language) : ?>
+										<li><a href="#slide-title-tabs-<?php echo $language; ?>"><?php echo $this -> language_flag($language); ?></a></li>
+									<?php endforeach; ?>
+								</ul>
+								<?php foreach ($languages as $language) : ?>
+									<div id="slide-title-tabs-<?php echo $language; ?>">
+										<input type="text" name="Slide[title][<?php echo $language; ?>]" id="Slide_title_<?php echo $language; ?>" value="<?php echo esc_attr(stripslashes($titles[$language])); ?>" class="widefat" />
+									</div>
+								<?php endforeach; ?>
+							</div>
+							
+							<script type="text/javascript">
+							jQuery(document).ready(function() {
+								jQuery('#slide-title-tabs').tabs();
+							});
+							</script>
+						<?php else : ?>
+							<input class="widefat" type="text" name="Slide[title]" value="<?php echo esc_attr($this -> Slide -> data -> title); ?>" id="Slide.title" />
+						<?php endif; ?>
                         <span class="howto"><?php _e('Title/name of your slide as it will be displayed to your users.', $this -> plugin_name); ?></span>
 						<?php echo (!empty($this -> Slide -> errors['title'])) ? '<div style="color:red;">' . $this -> Slide -> errors['title'] . '</div>' : ''; ?>
 					</td>
@@ -28,7 +51,29 @@ $showinfo = $this -> Slide -> data -> showinfo;
 					<th><label for="Slide.description"><?php _e('Description', $this -> plugin_name); ?></label>
 					<?php echo $this -> Html -> help(__('The description is specifically used for the information bar if you have that turned on.', $this -> plugin_name)); ?></th>
 					<td>
-						<textarea class="widefat" rows="5" cols="100%" name="Slide[description]"><?php echo esc_attr($this -> Slide -> data -> description); ?></textarea>
+						<?php if ($this -> language_do()) : ?>
+							<?php $descriptions = qtrans_split($this -> Slide -> data -> description); ?>
+							<div id="slide-description-tabs">
+								<ul>
+									<?php foreach ($languages as $language) : ?>
+										<li><a href="#slide-description-tabs-<?php echo $language; ?>"><?php echo $this -> language_flag($language); ?></a></li>
+									<?php endforeach; ?>
+								</ul>
+								<?php foreach ($languages as $language) : ?>
+									<div id="slide-description-tabs-<?php echo $language; ?>">
+										<textarea name="Slide[description][<?php echo $language; ?>]" cols="100%" class="widefat" rows="5"><?php echo esc_attr(stripslashes($descriptions[$language])); ?></textarea>
+									</div>
+								<?php endforeach; ?>
+							</div>
+							
+							<script type="text/javascript">
+							jQuery(document).ready(function() {
+								jQuery('#slide-description-tabs').tabs();
+							});
+							</script>
+						<?php else : ?>
+							<textarea class="widefat" rows="5" cols="100%" name="Slide[description]"><?php echo esc_attr($this -> Slide -> data -> description); ?></textarea>
+						<?php endif; ?>
                         <span class="howto"><?php _e('Description of your slide as it will be displayed to your users below the title.', $this -> plugin_name); ?></span>
 						<?php echo (!empty($this -> Slide -> errors['description'])) ? '<div style="color:red;">' . $this -> Slide -> errors['description'] . '</div>' : ''; ?>
 					</td>

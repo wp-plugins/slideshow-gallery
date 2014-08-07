@@ -118,10 +118,10 @@
 							<td><?php echo $slide -> id; ?></td>
 							<td style="width:75px;">
 								<?php $image = $slide -> image; ?>
-								<a href="<?php echo $this -> Html -> image_url($image); ?>" title="<?php echo $slide -> title; ?>" class="colorbox" rel="slides"><img class="dropshadow" src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 50, 50, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></a>
+								<a href="<?php echo $this -> Html -> image_url($image); ?>" title="<?php echo __($slide -> title); ?>" class="colorbox" rel="slides"><img class="dropshadow" src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 50, 50, 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 							</td>
 							<td>
-                            	<a class="row-title" href="<?php echo $this -> url; ?>&amp;method=save&amp;id=<?php echo $slide -> id; ?>" title=""><?php echo $slide -> title; ?></a>
+                            	<a class="row-title" href="<?php echo $this -> url; ?>&amp;method=save&amp;id=<?php echo $slide -> id; ?>" title=""><?php echo __($slide -> title); ?></a>
                                 <div class="row-actions">
                                 	<span class="edit"><?php echo $this -> Html -> link(__('Edit', $this -> plugin_name), "?page=" . $this -> sections -> slides . "&amp;method=save&amp;id=" . $slide -> id); ?> |</span>
                                     <span class="delete"><?php echo $this -> Html -> link(__('Delete', $this -> plugin_name), "?page=" . $this -> sections -> slides . "&amp;method=delete&amp;id=" . $slide -> id, array('class' => "submitdelete", 'onclick' => "if (!confirm('" . __('Are you sure you want to permanently remove this slide?', $this -> plugin_name) . "')) { return false; }")); ?></span>
@@ -131,7 +131,7 @@
                             	<?php if (!empty($slide -> gallery)) : ?>
                             		<?php $g = 1; ?>
                             		<?php foreach ($slide -> gallery as $gallery) : ?>
-                            			<a href="?page=<?php echo $this -> sections -> galleries; ?>&amp;method=view&amp;id=<?php echo $gallery -> id; ?>" title="<?php echo esc_attr($gallery -> title); ?>"><?php echo $gallery -> title; ?></a>
+                            			<a href="?page=<?php echo $this -> sections -> galleries; ?>&amp;method=view&amp;id=<?php echo $gallery -> id; ?>" title="<?php echo esc_attr(__($gallery -> title)); ?>"><?php echo __($gallery -> title); ?></a>
                             			<?php if ($g < count($slide -> gallery)) : ?>, <?php endif; ?>
                             			<?php $g++; ?>
                             		<?php endforeach; ?>

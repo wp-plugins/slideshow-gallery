@@ -51,7 +51,7 @@ class GalleryGallery extends GalleryDbHelper {
 		
 		if ($galleries = $this -> find_all()) {
 			foreach ($galleries as $gallery) {
-				$select[$gallery -> id] = $gallery -> title;
+				$select[$gallery -> id] = __($gallery -> title);
 			}
 		}
 		

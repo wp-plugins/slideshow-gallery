@@ -9,6 +9,19 @@ $resizeimagescrop = $this -> get_option('resizeimagescrop');
 
 <table class="form-table">
 	<tbody>
+		<?php if ($this -> has_child_theme_folder()) : ?>
+			<tr>
+				<th><?php _e('Child Theme Folder', $this -> plugin_name); ?></th>
+				<td>
+					<?php
+					
+					$theme_folder = basename(get_stylesheet_directory());
+					
+					?>
+					<?php echo sprintf(__('Yes, there is a %s folder inside WordPress theme folder %s', $this -> plugin_name), '<code>slideshow</code>', '<code>' . $theme_folder . '</code>'); ?>
+				</td>
+			</tr>
+		<?php endif; ?>
 		<tr>
 			<th><label for="layout_responsive"><?php _e('Layout', $this -> plugin_name); ?></label>
 			<?php echo $this -> Html -> help(__('Choose responsive if you have a responsive theme and you want the slideshow to resize width/height in a responsive manner on different devices.<br/><br/><strong>Override per slideshow:</strong> Using parameter <code>layout</code> with value <code>responsive</code> or <code>specific</code> eg. <code>[tribulant_slideshow layout="specific"]</code>.', $this -> plugin_name)); ?></th>

@@ -360,6 +360,7 @@ class GalleryPlugin {
 			        1
 			    );
 			
+				wp_enqueue_script('jquery-ui-tabs');
 				wp_enqueue_script('jquery-ui-tooltip');
 				wp_enqueue_script('jquery-ui-slider');
 						
@@ -609,13 +610,123 @@ class GalleryPlugin {
 		return false;
 	}
 	
+	function language_do() {
+		
+		if ($this -> is_plugin_active('qtranslate')) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	function language_getlanguages() {
+		if ($this -> language_do()) {
+			if (function_exists('qtrans_getSortedLanguages')) {
+				if ($languages = qtrans_getSortedLanguages()) {
+					return $languages;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	function language_flag($language = null) {
+		$flag = false;
+	
+		if ($this -> language_do()) {
+			global $q_config;
+			$flag = '<img src="' . content_url() . '/' . $q_config['flag_location'] . '/' . $q_config['flag'][$language] . '" alt="' . $language . '" />';
+		}
+		
+		return $flag;
+	}
+	
+	function is_plugin_active($name = null, $orinactive = false) {
+		if (!empty($name)) {		
+			require_once ABSPATH . 'wp-admin' . DS . 'includes' . DS . 'admin.php';
+			
+			if (empty($path)) {
+				switch ($name) {
+					case 'qtranslate'			:
+						$path = 'qtranslate' . DS . 'qtranslate.php';
+						break;
+					case 'captcha'				:
+						$path = 'really-simple-captcha' . DS . 'really-simple-captcha.php';
+						break;
+					default						:
+						$path = $name;
+						break;
+				}
+			}
+			
+			$path2 = str_replace("\\", "/", $path);
+			
+			if (!empty($name) && $name == "qtranslate") {
+				$path2 = 'mqtranslate' . DS . 'mqtranslate.php';
+			}
+			
+			if (!empty($path)) {
+				$plugins = get_plugins();
+				
+				if (!empty($plugins)) {
+					if (array_key_exists($path, $plugins) || array_key_exists($path2, $plugins)) {
+						/* Let's see if the plugin is installed and activated */
+						if (is_plugin_active(plugin_basename($path)) ||
+							is_plugin_active(plugin_basename($path2))) {
+							return true;
+						}
+						
+						/* Maybe the plugin is installed but just not activated? */
+						if (!empty($orinactive) && $orinactive == true) {
+							if (is_plugin_inactive(plugin_basename($path)) ||
+								is_plugin_inactive(plugin_basename($path2))) {
+								return true;	
+							}
+						}	
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	function has_child_theme_folder() {
+		$theme_path = get_stylesheet_directory();
+		$full_path = $theme_path . DS . 'slideshow';
+		
+		if (file_exists($full_path)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	function render($file = null, $params = array(), $output = true, $folder = 'admin') {	
 		if (!empty($file)) {
 			$this -> plugin_name = 'slideshow-gallery';
 			$this -> plugin_base = rtrim(dirname(__FILE__), DS);
-		
+			$theme_serve = false;
 			$filename = $file . '.php';
 			$filepath = $this -> plugin_base() . DS . 'views' . DS . $folder . DS;
+			
+			if (!empty($folder) && $folder != "admin") {				
+				$theme_path = get_stylesheet_directory();
+				$full_path = $theme_path . DS . 'slideshow' . DS . $filename;
+				
+				if (!empty($theme_path) && file_exists($full_path)) {
+					$folder = $theme_path . DS . 'slideshow';
+					$theme_serve = true;
+				}
+			}
+			
+			if (empty($theme_serve)) {
+				$filepath = $this -> plugin_base() . DS . 'views' . DS . $folder . DS;
+			} else {
+				$filepath = $folder . DS;
+			}
+			
 			$filefull = $filepath . $filename;
 		
 			if (file_exists($filefull)) {

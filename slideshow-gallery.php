@@ -42,6 +42,7 @@ if (!class_exists('Gallery')) {
 			$this -> add_action('wp_print_scripts', 'print_scripts');
 			$this -> add_action('admin_print_scripts', 'print_scripts');
 			$this -> add_action('init', 'init_textdomain', 10, 1);
+			$this -> add_action('admin_init', 'custom_redirect', 1, 1);
 			
 			//WordPress filter hooks
 			$this -> add_filter('mce_buttons');
@@ -78,6 +79,13 @@ if (!class_exists('Gallery')) {
 			$this -> menus['slideshow-settings'] = add_submenu_page($this -> sections -> slides, __('Configuration', $this -> plugin_name), __('Configuration', $this -> plugin_name), 'slideshow_settings', $this -> sections -> settings, array($this, 'admin_settings'));
 			
 			add_action('admin_head-' . $this -> menus['slideshow-settings'], array($this, 'admin_head_gallery_settings'));
+			
+			add_dashboard_page(sprintf('Slideshow Gallery %s', $this -> version), sprintf('Slideshow Gallery %s', $this -> version), 'read', 'slideshow-gallery-about', array($this, 'slideshow_gallery_about'));
+			remove_submenu_page('index.php', 'slideshow-gallery-about');
+		}
+		
+		function slideshow_gallery_about() {
+			$this -> render('about', false, true, 'admin');
 		}
 		
 		function admin_head() {
@@ -545,12 +553,38 @@ if (!class_exists('Gallery')) {
 					break;
 			}
 		}
+		
+		function update_plugin_complete_actions($upgrade_actions = null, $plugin = null) {
+			$this_plugin = plugin_basename(__FILE__);
+			
+			if (!empty($plugin) && $plugin == $this_plugin) {
+				$this -> add_option('activation_redirect', true);
+			}
+			
+			return $upgrade_actions;
+		}
+		
+		function activation_hook() {
+			$this -> add_option('activation_redirect', true);
+			wp_redirect(admin_url('index.php') . "?page=slideshow-gallery-about");
+		}
+		
+		function custom_redirect() {
+			$activation_redirect = $this -> get_option('activation_redirect');
+			
+			if (is_admin() && !empty($activation_redirect)) {
+				$this -> delete_option('activation_redirect');
+				wp_redirect(admin_url('index.php') . "?page=slideshow-gallery-about");
+			}
+		}
 	}
 }
 
 //initialize a Gallery object
 $Gallery = new Gallery();
 register_activation_hook(plugin_basename(__FILE__), array($Gallery, 'initialize_options'));
+register_activation_hook(plugin_basename(__FILE__), array($Gallery, 'activation_hook'));
+add_filter('update_plugin_complete_actions', array($Gallery, 'update_plugin_complete_actions'), 10, 2);
 
 if (!function_exists('slideshow')) {
 	function slideshow($output = true, $gallery_id = null, $post_id = null, $params = array()) {

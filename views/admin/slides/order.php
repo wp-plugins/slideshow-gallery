@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h2><?php _e('Order Slides', $this -> plugin_name); ?><?php echo (!empty($gallery)) ? ': ' . $gallery -> title : ''; ?></h2>
+	<h2><?php _e('Order Slides', $this -> plugin_name); ?><?php echo (!empty($gallery)) ? ': ' . __($gallery -> title) : ''; ?></h2>
 	
 	<div style="float:none;" class="subsubsub">
 		<a href="<?php echo $this -> url; ?>"><?php _e('&larr; Manage All Slides', $this -> plugin_name); ?></a>
@@ -14,7 +14,7 @@
 			<ul id="slidelist">
 				<?php foreach ($slides as $slide) : ?>
 					<li class="gallerylineitem" id="item_<?php echo $slide -> id; ?>">
-						<span class="gallery_slide_image" style="display:none;"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 89, 89, 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> title); ?>" /></span>
+						<span class="gallery_slide_image" style="display:none;"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 89, 89, 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></span>
 						<span class="gallery_slide_title"><?php echo __($slide -> title); ?></span>
 					</li>
 				<?php endforeach; ?>

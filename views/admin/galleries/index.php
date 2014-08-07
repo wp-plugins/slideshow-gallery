@@ -85,7 +85,7 @@
 							<th class="check-column"><input type="checkbox" name="Gallery[checklist][]" value="<?php echo $gallery -> id; ?>" id="checklist<?php echo $gallery -> id; ?>" /></th>
 							<td><?php echo $gallery -> id; ?></td>
 							<td>
-                            	<a class="row-title" href="<?php echo $this -> url; ?>&amp;method=save&amp;id=<?php echo $gallery -> id; ?>" title=""><?php echo $gallery -> title; ?></a>
+                            	<a class="row-title" href="<?php echo $this -> url; ?>&amp;method=save&amp;id=<?php echo $gallery -> id; ?>" title=""><?php echo __($gallery -> title); ?></a>
                                 <div class="row-actions">
                                 	<span class="view"><?php echo $this -> Html -> link(__('View', $this -> plugin_name), "?page=" . $this -> sections -> galleries . "&amp;method=view&amp;id=" . $gallery -> id); ?> |</span>
                                 	<span class="edit"><?php echo $this -> Html -> link(__('Edit', $this -> plugin_name), "?page=" . $this -> sections -> galleries . "&amp;method=save&amp;id=" . $gallery -> id); ?> |</span>

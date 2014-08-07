@@ -147,9 +147,23 @@ class GalleryDbHelper extends GalleryPlugin {
 		$r = wp_parse_args($data, $defaults);
 		$this -> data = (object) $r;
 		
+		switch ($this -> model) {
+			case 'Slide'				:
+				if ($this -> language_do()) {
+					$this -> data -> title = qtrans_join($this -> data -> title);
+					$this -> data -> description = qtrans_join($this -> data -> description);
+				}
+				break;
+			case 'Gallery'				:
+				if ($this -> language_do()) {
+					$this -> data -> title = qtrans_join($this -> data -> title);
+				}
+				break;
+		}
+		
 		if ($validate == true) {
 			if (method_exists($this, 'validate')) {
-				$this -> validate($r);
+				$this -> validate((array) $this -> data);
 			}
 		}
 		

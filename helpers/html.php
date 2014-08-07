@@ -106,6 +106,11 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		
 		$src = bfi_thumb($image, $params);
 		
+		$oldimagename = basename($src);
+		$name = $this -> strip_ext($oldimagename, 'name');
+		$imagename = $name . '.' . $this -> strip_ext($oldimagename, 'ext');
+		$src = str_replace($oldimagename, $imagename, $src);
+		
 		$tt_image = '<img src="' . $src . '" />';
 		return $tt_image;
 	}
@@ -121,6 +126,11 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		$params['crop'] = $crop;
 		
 		$src = bfi_thumb($image, $params);
+		
+		$oldimagename = basename($src);
+		$name = $this -> strip_ext($oldimagename, 'name');
+		$imagename = $name . '.' . $this -> strip_ext($oldimagename, 'ext');
+		$src = str_replace($oldimagename, $imagename, $src);
 		
 		$tt_image = $src;
 		return $tt_image;
@@ -237,14 +247,14 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return preg_replace("/\?(\&)?/si", "?", $url);
 	}
 	
-	function strip_ext($filename = '', $return = 'ext') {
+	function strip_ext($filename = null, $return = 'ext') {
 		if (!empty($filename)) { 
-			$extArray = split("[/\\.]", $filename); 
+			$extArray = preg_split("/[\.]/", $filename); 
 			
 			if ($return == 'ext') {
 				$p = count($extArray) - 1; 
 				$extension = $extArray[$p]; 
-				return $extension;
+				return strtolower($extension);
 			} else {
 				$p = count($extArray) - 2;
 				$filename = $extArray[$p];
@@ -255,7 +265,7 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		return false;
 	}
 	
-	function strip_mn($name = '') {	
+	function strip_mn($name = null) {	
 		if (!empty($name)) {
 			if (preg_match("/^(.*?)\.(.*?)$/si", $name, $matches)) {
 				return $matches;
