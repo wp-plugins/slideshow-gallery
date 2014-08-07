@@ -3,8 +3,8 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 3.9.1
-Stable tag: 1.4.4.3
+Tested up to: 3.9.2
+Stable tag: 1.4.5
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -121,6 +121,19 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.5 =
+* ADD: Welcome/about screen on update
+* ADD: Child theme folder support
+* ADD: Multilingual with (m)qTranslate
+* IMPROVE: New style for sliders in configuration
+* IMPROVE: Deprecated: Function split() is deprecated
+* IMPROVE: Deprecated: Function eregi() is deprecated
+* FIX: Uppercase file extensions
+* FIX: Image overlay/enlargement only works with no thumbnails
+* FIX: Image overlay/enlargement URL wrong
+* FIX: Space in file name
+* FIX: Information bar is overlapped by prev/next
 
 = 1.4.4.3 =
 * FIX: TypeError: 'null' is not an object (evaluating 'e.offsetHeight')
