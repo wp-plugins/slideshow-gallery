@@ -3,6 +3,7 @@
 <?php 
 
 $styles = $this -> get_option('styles'); 
+$autoheight = $this -> get_option('autoheight');
 $resizeimagescrop = $this -> get_option('resizeimagescrop');
 
 ?>
@@ -107,6 +108,12 @@ $resizeimagescrop = $this -> get_option('resizeimagescrop');
 
 <table class="form-table">
 	<tbody>
+		<tr>
+			<th><label for="autoheight"><?php _e('Auto Height', $this -> plugin_name); ?></label></th>
+			<td>
+				<label><input <?php echo (!empty($autoheight)) ? 'checked="checked"' : ''; ?> type="checkbox" name="autoheight" value="1" id="autoheight" /> <?php _e('Yes, automatically adjust the slideshow height for each slide', $this -> plugin_name); ?></label>
+			</td>
+		</tr>
 		<tr>
 			<th><label for="styles.border"><?php _e('Slideshow Border', $this -> plugin_name); ?></label>
 			<?php echo $this -> Html -> help(__('This is a CSS style for the border around the entire slideshow. You can use a value such as "1px #FFFFFF solid" to display a 1 pixel, white, solid border or even a value such as "none" for no border at all.', $this -> plugin_name)); ?></th>

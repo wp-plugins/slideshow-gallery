@@ -8,11 +8,12 @@ $thumbopacity = $this -> get_option('thumbopacity');
 
 <?php if (!empty($slides)) : ?>
 	<ul id="slideshow<?php echo $unique; ?>" class="slideshow<?php echo $unique; ?>" style="display:none;">
-		<!-- From a WordPress post/page -->
 		<?php if ($frompost) : ?>
+			<!-- From a WordPress post/page -->
 			<?php foreach ($slides as $slide) : ?>
+				<?php setup_postdata($slide -> ID); ?>
 				<li>
-					<h3><?php echo $slide -> post_title; ?></h3>
+					<h3 style="opacity:70;"><?php echo __($slide -> post_title); ?></h3>
 					<?php $full_image_href = wp_get_attachment_image_src($slide -> ID, 'full', false); ?>
 					<?php $full_image_path = get_attached_file($slide -> ID); ?>
 					<?php $full_image_url = wp_get_attachment_url($slide -> ID); ?>										
@@ -21,24 +22,53 @@ $thumbopacity = $this -> get_option('thumbopacity');
 					<?php else : ?>
 						<span><?php echo $full_image_href[0]; ?></span>
 					<?php endif; ?>
-					<p><?php echo stripslashes($slide -> post_content); ?></p>
+					<p><?php echo stripslashes(__(get_the_excerpt())); ?></p>
 					<?php $thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false); ?>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if (!empty($slide -> guid)) : ?>
-							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr($slide -> post_title); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
+							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr(__($slide -> post_title)); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
 						<?php else : ?>
-							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize($slide -> post_title); ?>" /></a>
+							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
-						<a href="<?php echo $slide -> guid; ?>" title="<?php echo $slide -> post_title; ?>"></a>
+						<a href="<?php echo $slide -> guid; ?>" title="<?php echo __($slide -> post_title); ?>"></a>
 					<?php endif; ?>
 				</li>
+				<?php wp_reset_postdata(); ?>
 			<?php endforeach; ?>
-		<!-- Shopping Cart plugin products http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin -->
+		<?php elseif ($featured) : ?>
+			<!-- Featured images from posts -->
+			<?php foreach ($slides as $slide) : ?>
+				<?php setup_postdata($slide); ?>
+				<li>
+					<h3 style="opacity:70;"><a href="<?php echo get_permalink($slide -> ID); ?>"><?php echo stripslashes(__($slide -> post_title)); ?></a></h3>
+					<?php $full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($slide -> ID), 'full', false); ?>
+					<?php $full_image_path = get_attached_file(get_post_thumbnail_id($slide -> ID)); ?>
+					<?php $full_image_url = wp_get_attachment_url(get_post_thumbnail_id($slide -> ID)); ?>										
+					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
+						<span><?php echo $this -> Html -> bfithumb_image_src($full_image_url, $options['width'], $options['height'], 100); ?></span>
+					<?php else : ?>
+						<span><?php echo $full_image_href[0]; ?></span>
+					<?php endif; ?>
+					<p><?php echo stripslashes(__(get_the_excerpt())); ?></p>
+					<?php $thumbnail_link = wp_get_attachment_image_src(get_post_thumbnail_id($slide -> ID), 'thumbnail', false); ?>
+					<?php if ($options['showthumbs'] == "true") : ?>
+						<?php if (!empty($slide -> guid)) : ?>
+							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr(__($slide -> post_title)); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
+						<?php else : ?>
+							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
+						<?php endif; ?>
+					<?php else : ?>
+						<a href="<?php echo $slide -> guid; ?>" title="<?php echo __($slide -> post_title); ?>"></a>
+					<?php endif; ?>
+				</li>
+				<?php wp_reset_postdata(); ?>
+			<?php endforeach; ?>
 		<?php elseif ($products) : ?>
+			<!-- Shopping Cart plugin products http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin -->
 			<?php foreach ($slides as $slide) : ?>
 				<li>
-					<h3><?php echo stripslashes(__($slide -> title)); ?></h3>
+					<h3 style="opacity:70;"><?php echo stripslashes(__($slide -> title)); ?></h3>
 					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
 						<span><?php echo $this -> Html -> bfithumb_image_src(site_url() . '/' . $slide -> image_url, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
@@ -56,8 +86,8 @@ $thumbopacity = $this -> get_option('thumbopacity');
 					<?php endif; ?>
 				</li>
 			<?php endforeach; ?>
-		<!-- From all slides or gallery slides -->
 		<?php else : ?>
+			<!-- From all slides or gallery slides -->
 			<?php foreach ($slides as $slide) : ?>		
 				<li>
 					<h3 style="opacity:<?php echo (!empty($slide -> iopacity)) ? ($slide -> iopacity) : 70; ?>;"><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "title")) ? __($slide -> title) : ''; ?></h3>
@@ -184,6 +214,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	$cssattr['resizeimages'] = (($options['resizeimages'] == "true") ? "Y" : "N");
 	$cssattr['width'] = $options['width'];
 	$cssattr['height'] = $options['height'];
+	$cssattr['autoheight'] = $options['autoheight'];
 	$cssattr['thumbwidth'] = $this -> get_option('thumbwidth');
 	$cssattr['thumbheight'] = $this -> get_option('thumbheight');
 	$cssattr['sliderwidth'] = ((($cssattr['thumbwidth'] + ($options['thumbsspacing'] * 2) + 5) * count($slides)) + 50);

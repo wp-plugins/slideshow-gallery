@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 3.9.2
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -54,6 +54,9 @@ This way you can customize each slideshow you embed or hardcode, despite the set
 
 * `products` [ latest | featured ] = String "latest" or "featured" to display products from the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin">Checkout plugin</a>.
 * `productsnumber` [ productsnumber ] = Numeric/integer to limit the number of products to display.
+* `featured` [ true | false ] = Show posts with their featured images 
+* `featurednumber` [ number ] = A numeric/integer value. The default is 10
+* `featuredtype` [ post_type ] = A post type slug like 'post', 'page', etc. The default is 'post'
 * `gallery_id` [ gallery_id ] = Numeric/integer ID of a gallery to display images from.
 * `post_id` [ post_id ] = Numeric/integer ID of a post to take images from it, uploaded through it's "Add Media" button.
 * `layout` [ responsive | specific ] = Set to 'responsive' for mobile/tablet compatible theme and 'specific' for fixed width/height.
@@ -64,6 +67,7 @@ This way you can customize each slideshow you embed or hardcode, despite the set
 * `resheight` [ resheight ] = (only with layout="responsive") Numeric/integer value such as "30" to be used with 'resheighttype' below
 * `resheighttype [ resheighttype ] = (only with layout="responsive") "px" (pixels) or "%" (percent) as the value eg. resheighttype="%"
 * `height` [ height ] (only with layout="specific"; default: setting) = Height of the slideshow in pixels. Don't specify the 'px' part, just the numeric value for the height.
+* `autoheight` [ true | false ] = Should the gallery adjust it's height for each slide?
 * `auto` [ true | false ] (default: setting) = Set this to 'true' to automatically slide the slides in the slideshow.
 * `autospeed` [ speed ] (default: setting) = Speed of the auto sliding. 10 is normal. Lower number is faster. Between 5 and 15 is recommended.
 * `fadespeed` [ speed ] (default: setting) = Speed of the fading of images. 10 is normal. Lower number is faster. Between 1 and 20 is recommended.
@@ -121,6 +125,14 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.6 =
+* ADD: Featured content. Display a slide for each post with it's featured image
+* ADD: Auto height setting to adjust height for each slide
+* IMPROVE: (m)qTranslate compatibility for post images and featured posts
+* IMPROVE: Change direct Ajax calls to wp_ajax_ hooks
+* FIX: Slideshow inside float:left; element breaks height
+* FIX: Information bar not showing on post/pages images slides
 
 = 1.4.5 =
 * ADD: Welcome/about screen on update
