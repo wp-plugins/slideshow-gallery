@@ -26,10 +26,14 @@
 		jQuery(document).ready(function() {				
 			jQuery('#gallery_convert_list').click(function() {
 				jQuery('.gallery_slides_grid').removeClass('gallery_slides_grid').addClass('gallery_slides_list');
+				
+				return false;
 			});
 			
 			jQuery('#gallery_convert_grid').click(function() {
 				jQuery('.gallery_slides_list').removeClass('gallery_slides_list').addClass('gallery_slides_grid');
+				
+				return false;
 			});
 			
 			jQuery("ul#slidelist").sortable({
@@ -41,7 +45,7 @@
 					jQuery("#slidemessage").slideUp();
 				},
 				stop: function(request) {					
-					jQuery.post(GalleryAjax + '?cmd=slides_order<?php echo (!empty($gallery)) ? '&gallery_id=' . $gallery -> id : ''; ?>', jQuery('#slidelist').sortable('serialize'), function(response) {
+					jQuery.post(slideshowajax + '?action=slideshow_slides_order<?php echo (!empty($gallery)) ? '&gallery_id=' . $gallery -> id : ''; ?>', jQuery('#slidelist').sortable('serialize'), function(response) {
 						jQuery('#slidemessage').html('<p>' + response + '</p>').fadeIn();
 					});
 				}

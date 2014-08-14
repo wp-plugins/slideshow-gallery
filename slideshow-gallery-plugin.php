@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.4.4.3';
+	var $version = '1.4.6';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -44,6 +44,23 @@ class GalleryPlugin {
 		}
 		
 		return true;
+	}
+	
+	function ajax_slides_order() {	
+		if (!empty($_REQUEST['item'])) {
+			foreach ($_REQUEST['item'] as $order => $slide_id) {
+				if (empty($_REQUEST['gallery_id'])) {
+					$this -> Slide -> save_field('order', ($order + 1), array('id' => $slide_id));
+				} else {
+					$this -> GallerySlides -> save_field('order', ($order + 1), array('slide_id' => $slide_id, 'gallery_id' => $_REQUEST['gallery_id']));
+				}
+			}
+			
+			_e('Slides have been ordered', $this -> plugin_name);
+		}
+		
+		exit();
+		die();
 	}
 	
 	function init_class($name = null, $params = array()) {

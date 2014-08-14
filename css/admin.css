@@ -119,18 +119,23 @@ ul.connectedSortable {
 	width: 100%;
 }
 
+span.gallery_slides_convert_list a,
+span.gallery_slides_convert_grid a{
+	text-decoration: none;
+}
+
 span.gallery_slides_convert_list a:before {
 	font-family: 'slideshow_dashicons' !important;
 	content: '\f228';
 	text-decoration: none;
-	font-size: 24px;
+	font-size: 20px;
 }
 
 span.gallery_slides_convert_grid a:before {
 	font-family: 'slideshow_dashicons' !important;
 	content: '\f180';
 	text-decoration: none;
-	font-size: 24px;
+	font-size: 20px;
 }
 
 .sortable-elements {
