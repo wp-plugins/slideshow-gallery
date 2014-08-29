@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.4.6
+Version: 1.4.7
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
@@ -46,6 +46,7 @@ if (!class_exists('Gallery')) {
 			
 			//WordPress Ajax hooks
 			$this -> add_action('wp_ajax_slideshow_slides_order', 'ajax_slides_order', 10, 1);
+			$this -> add_action('wp_ajax_slideshow_tinymce', 'ajax_tinymce', 10, 1);
 			
 			//WordPress filter hooks
 			$this -> add_filter('mce_buttons');
@@ -56,6 +57,8 @@ if (!class_exists('Gallery')) {
 				add_shortcode('slideshow', array($this, 'embed')); 
 				add_shortcode('tribulant_slideshow', array($this, 'embed'));
 			}
+			
+			$this -> updating_plugin();
 		}
 		
 		function plugin_settings_link($links) { 
@@ -98,6 +101,7 @@ if (!class_exists('Gallery')) {
 		function admin_head_gallery_settings() {		
 			add_meta_box('submitdiv', __('Save Settings', $this -> plugin_name), array($this -> Metabox, "settings_submit"), $this -> menus['slideshow-settings'], 'side', 'core');
 			add_meta_box('aboutdiv', __('About This Plugin', $this -> plugin_name) . $this -> Html -> help(__('More about this plugin and the creators of it', $this -> plugin_name)), array($this -> Metabox, "settings_about"), $this -> menus['slideshow-settings'], 'side', 'core');
+			add_meta_box('pluginsdiv', __('Recommended Plugin', $this -> plugin_name), array($this -> Metabox, "settings_plugins"), $this -> menus['slideshow-settings'], 'side', 'core');
 			add_meta_box('generaldiv', __('General Settings', $this -> plugin_name) . $this -> Html -> help(__('General configuration settings for the inner workings and some default behaviours', $this -> plugin_name)), array($this -> Metabox, "settings_general"), $this -> menus['slideshow-settings'], 'normal', 'core');
 			add_meta_box('linksimagesdiv', __('Links &amp; Images Overlay', $this -> plugin_name) . $this -> Html -> help(__('Configure the way that slides with links are opened', $this -> plugin_name)), array($this -> Metabox, "settings_linksimages"), $this -> menus['slideshow-settings'], 'normal', 'core');
 			add_meta_box('stylesdiv', __('Appearance &amp; Styles', $this -> plugin_name) . $this -> Html -> help(__('Change the way the slideshows look so that it suits your needs', $this -> plugin_name)), array($this -> Metabox, "settings_styles"), $this -> menus['slideshow-settings'], 'normal', 'core');

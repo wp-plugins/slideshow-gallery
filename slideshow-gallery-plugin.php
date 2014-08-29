@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.4.6';
+	var $version = '1.4.7';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -63,6 +63,13 @@ class GalleryPlugin {
 		die();
 	}
 	
+	function ajax_tinymce() {
+		$this -> render('tinymce-dialog', false, true, 'admin');
+		
+		exit();
+		die();
+	}
+	
 	function init_class($name = null, $params = array()) {
 		if (!empty($name)) {
 			$name = $this -> pre . $name;
@@ -115,6 +122,36 @@ class GalleryPlugin {
 				} 
 			}
 		}
+	}
+	
+	function updating_plugin() {
+		if (!is_admin()) return;
+		
+		global $wpdb;
+	
+		if (!$this -> get_option('version')) {
+			$this -> add_option('version', $this -> version);
+			$this -> initialize_options();
+			return;
+		}
+
+		$cur_version = $this -> get_option('version');
+		$version = $this -> version;
+
+		if (version_compare($this -> version, $cur_version) === 1) {			
+			if (version_compare($cur_version, "1.4.7") < 0) {
+				$this -> initialize_options();
+				
+				$query = "ALTER TABLE `" . $this -> Slide -> table . "` CHANGE `image` `image` TEXT NOT NULL;";
+				$wpdb -> query($query);
+				
+				$version = "1.4.7";
+			}
+		
+			//the current version is older.
+			//lets update the database
+			$this -> update_option('version', $version);
+		}	
 	}
 	
 	function initialize_options() {
@@ -392,6 +429,8 @@ class GalleryPlugin {
 				if ($_GET['page'] == "slideshow-slides" && $_GET['method'] == "order") {
 					wp_enqueue_script('jquery-ui-sortable');
 				}
+				
+				add_thickbox();
 			}
 			
 			wp_enqueue_script('colorbox', plugins_url() . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');

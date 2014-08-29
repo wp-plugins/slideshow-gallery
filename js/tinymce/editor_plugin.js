@@ -11,9 +11,9 @@
 		init: function(ed, url) {
 			ed.addCommand('mcegallery', function() {			
 				ed.windowManager.open({
-					file : url + '/dialog.php',
+					file : slideshowajax + '?action=slideshow_tinymce',
 					width : 500,
-					height : 300,
+					height : 350,
 					inline : 1
 				}, {
 					plugin_url : url // Plugin absolute URL
@@ -24,7 +24,6 @@
 			ed.addButton('gallery', {
 				title : 'gallery.desc',
 				cmd : 'mcegallery',
-				//image : url + '/gallery.png'
 			});			
 		},		
 		createControl : function(n, cm) {

@@ -17,6 +17,10 @@ class GalleryMetaboxHelper extends GalleryPlugin {
 		$this -> render('metaboxes' . DS . 'settings-about', false, true, 'admin');
 	}
 	
+	function settings_plugins() {
+		$this -> render('metaboxes' . DS . 'settings-plugins', false, true, 'admin');
+	}
+	
 	function settings_general() {
 		$this -> render('metaboxes' . DS . 'settings-general', false, true, 'admin');
 	}

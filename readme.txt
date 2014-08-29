@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 3.9.2
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -125,6 +125,18 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.7 =
+* ADD: Recommended plugin under configuration
+* IMPROVE: TimThumb absolute URLs to prevent permission problems
+* IMPROVE: Allow long filenames for custom slides
+* IMPROVE: Replace direct Ajax calls with wp_ajax_
+* IMPROVE: Prefill the post ID in the TinyMCE dialog with ID of current post
+* FIX: Spaces in filenames uploaded to post/page breaks images
+* FIX: Remove all wp-config.php and wp-load.php references
+* FIX: Possible shell exploit by uploading PHP file as slide
+* FIX: Colorbox script should only load with this featured turned on
+* FIX: Thumbnails On/Off setting doesn't work
 
 = 1.4.6 =
 * ADD: Featured content. Display a slide for each post with it's featured image
