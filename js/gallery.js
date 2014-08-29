@@ -83,10 +83,10 @@ TINY.slideshow.prototype={
 		this.is(t,c)
 	},
 	is:function(s,c){	
-		if(this.info) {			
-			if (this.a[s].t.length > 0 || this.a[s].d.length > 0) {
+		if(this.info) {					
+			if (this.a[s].t.length > 0 || this.a[s].d.length > 0) {			
 				TINY.height.set(this.r,1,this.infoSpeed/2,-1);
-			} else {
+			} else {			
 				TINY.height.set(this.r,0,this.infoSpeed/2,-1);
 			}
 		}
@@ -142,7 +142,7 @@ TINY.slideshow.prototype={
 		}
 	},
 	nf:function(s){
-		if(this.info){		
+		if(this.info){				
 			s=this.a[s];			
 			tag('h3',this.r)[0].innerHTML=s.t;
 			tag('p',this.r)[0].innerHTML=s.d;
@@ -150,7 +150,7 @@ TINY.slideshow.prototype={
 			var h=parseInt(this.r.offsetHeight);
 			this.r.style.height=0;
 			
-			if (s.t.length > 0 || s.d.length > 0) {
+			if (s.t.length > 0 || s.d.length > 0) {			
 				TINY.height.set(this.r,h,this.infoSpeed,0);
 				TINY.alpha.set(this.r,s.io,5);
 			}

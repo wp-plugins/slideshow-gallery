@@ -16,7 +16,7 @@ $unique = $styles['unique'];
 	ul.slideshow<?php echo $unique; ?> span { display:none; }
 	#<?php echo $styles['wrapperid']; ?> { position:relative; width:100%; background:<?php echo $styles['background']; ?>; padding:0 0 0 0; border:<?php echo $styles['border']; ?>; margin:0; display:none; }
 	#<?php echo $styles['wrapperid']; ?> * { margin:0; padding:0; }
-	#<?php echo $styles['wrapperid']; ?> #fullsize<?php echo $unique; ?> { position:relative; z-index:1; overflow:hidden; width:100%; height:<?php echo $resheight; ?>; border: none; }
+	#<?php echo $styles['wrapperid']; ?> #fullsize<?php echo $unique; ?> { position:relative; z-index:1; overflow:hidden; width:100%; height:<?php echo $resheight; ?><?php if (!empty($styles['autoheight']) && $styles['autoheight'] == "true") : ?> !important<?php endif; ?>; clear:both; border: none; }
 	#<?php echo $styles['wrapperid']; ?> #information<?php echo $unique; ?> { text-align:left; font-family:Verdana, Arial, Helvetica, sans-serif !important; position:absolute; bottom:0; width:100%; height:0; background:<?php echo $styles['infobackground']; ?>; color:<?php echo $styles['infocolor']; ?>; overflow:hidden; z-index:300; opacity:.7; filter:alpha(opacity=70); }
 	#<?php echo $styles['wrapperid']; ?> #information<?php echo $unique; ?> h3 { color:<?php echo $styles['infocolor']; ?>; padding:4px 8px 3px; margin:0 !important; font-size:16px; font-weight:bold; }
 	#<?php echo $styles['wrapperid']; ?> #information<?php echo $unique; ?> p { color:<?php echo $styles['infocolor']; ?>; padding:0 8px 8px; margin:0 !important; font-size: 14px; font-weight:normal; }

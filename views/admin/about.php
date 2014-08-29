@@ -10,12 +10,12 @@ require_once( ABSPATH . 'wp-admin/admin-header.php' );
 
 ?>
 
-<div class="wrap newsletters about-wrap">
+<div class="wrap slideshow-gallery about-wrap">
 	<h1><?php echo sprintf(__( 'Welcome to Slideshow Gallery %s', $this -> plugin_name), $this -> version); ?></h1>
 	<div class="about-text">
 		<?php echo sprintf(__('Thank you for installing! Slideshow Gallery %s is more powerful, reliable and versatile than before. It includes many features and improvements.', $this -> plugin_name), $this -> version); ?>
 	</div>
-	<div class="newsletters-badge"><?php echo sprintf(__('Version %s', $this -> plugin_name), $this -> version); ?></div>
+	<div class="slideshow-gallery-badge"><?php echo sprintf(__('Version %s', $this -> plugin_name), $this -> version); ?></div>
 	
 	<div class="changelog">
 		<h3><?php _e( 'What\'s new in this release', $this -> plugin_name); ?></h3>
@@ -89,7 +89,7 @@ require_once( ABSPATH . 'wp-admin/admin-header.php' );
 		<hr>
 		
 		<div class="return-to-dashboard">
-		<a href="<?php echo admin_url('admin.php'); ?>?page=slideshow"><?php _e('Go to Slideshow Gallery overview', $this -> plugin_name); ?></a>
+		<a href="<?php echo admin_url('admin.php'); ?>?page=slideshow-gallery"><?php _e('Go to Slideshow Gallery overview', $this -> plugin_name); ?></a>
 		</div>
 	
 	</div>

@@ -16,9 +16,9 @@ class GallerySlide extends GalleryDbHelper {
 		'description'		=>	"TEXT NOT NULL",
 		'showinfo'			=>	"VARCHAR(50) NOT NULL DEFAULT 'both'",
 		'iopacity'			=>	"INT(11) NOT NULL DEFAULT '70'",
-		'image'				=>	"VARCHAR(50) NOT NULL DEFAULT ''",
+		'image'				=>	"TEXT NOT NULL",
 		'type'				=>	"ENUM('file','url') NOT NULL DEFAULT 'file'",
-		'image_url'			=>	"VARCHAR(200) NOT NULL DEFAULT ''",
+		'image_url'			=>	"TEXT NOT NULL",
 		'uselink'			=>	"ENUM('Y','N') NOT NULL DEFAULT 'N'",
 		'linktarget'		=>	"ENUM('self','blank') NOT NULL DEFAULT 'self'",
 		'link'				=>	"VARCHAR(200) NOT NULL DEFAULT ''",
@@ -120,18 +120,30 @@ class GallerySlide extends GalleryDbHelper {
 						$imagepath = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS;
 						$imagefull = $imagepath . $imagename;
 						
-						if (!is_uploaded_file($_FILES['image_file']['tmp_name'])) { $this -> errors['image_file'] = __('The image did not upload, please try again', $this -> plugin_name); }
-						elseif (!move_uploaded_file($_FILES['image_file']['tmp_name'], $imagefull)) { $this -> errors['image_file'] = __('Image could not be moved from TMP to "wp-content/uploads/", please check permissions', $this -> plugin_name); }
-						else {
-							@chmod($imagefull, 0644);
-						
-							$this -> data -> image = $imagename;
-							$imagespath = $this -> get_option('imagespath');
-							if (empty($imagespath)) {
-								$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;
-							} else {
-								$this -> image_path = rtrim($imagespath, DS) . DS . $imagename;
+						$issafe = false;
+						$mimes = get_allowed_mime_types();						
+						foreach ($mimes as $type => $mime) {
+							if (strpos($type, $image_ext) !== false) {
+								$issafe = true;
 							}
+						}
+						
+						if (empty($issafe) || $issafe == false) {
+							$this -> errors['image_file'] = __('This file type is not allowed for security reasons', $this -> plugin_name);
+						} else {
+							if (!is_uploaded_file($_FILES['image_file']['tmp_name'])) { $this -> errors['image_file'] = __('The image did not upload, please try again', $this -> plugin_name); }
+							elseif (!move_uploaded_file($_FILES['image_file']['tmp_name'], $imagefull)) { $this -> errors['image_file'] = __('Image could not be moved from TMP to "wp-content/uploads/", please check permissions', $this -> plugin_name); }
+							else {
+								@chmod($imagefull, 0644);
+							
+								$this -> data -> image = $imagename;
+								$imagespath = $this -> get_option('imagespath');
+								if (empty($imagespath)) {
+									$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;
+								} else {
+									$this -> image_path = rtrim($imagespath, DS) . DS . $imagename;
+								}
+							}	
 						}
 					} else {					
 						switch ($_FILES['image_file']['error']) {
