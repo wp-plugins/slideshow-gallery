@@ -1,9 +1,9 @@
-=== Slideshow Gallery ===
+=== Tribulant Slideshow Gallery ===
 Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 3.9.2
+Tested up to: 4.0
 Stable tag: 1.4.7
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
