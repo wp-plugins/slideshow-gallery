@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.4.7';
+	var $version = '1.4.8';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -24,7 +24,7 @@ class GalleryPlugin {
 		$this -> plugin_base = rtrim(dirname($base), DS);
 		$this -> sections = (object) $this -> sections;
 		$this -> initialize_classes();
-		$this -> initialize_options();
+		//$this -> initialize_options();
 		
 		global $wpdb;
 		$debugging = get_option('tridebugging');
@@ -139,13 +139,13 @@ class GalleryPlugin {
 		$version = $this -> version;
 
 		if (version_compare($this -> version, $cur_version) === 1) {			
-			if (version_compare($cur_version, "1.4.7") < 0) {
+			if (version_compare($cur_version, "1.4.8") < 0) {
 				$this -> initialize_options();
 				
 				$query = "ALTER TABLE `" . $this -> Slide -> table . "` CHANGE `image` `image` TEXT NOT NULL;";
 				$wpdb -> query($query);
 				
-				$version = "1.4.7";
+				$version = "1.4.8";
 			}
 		
 			//the current version is older.
@@ -173,7 +173,6 @@ class GalleryPlugin {
 		);
 		
 		$this -> add_option('resizeimagescrop', "Y");
-		//$this -> add_option('imagespath', $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS);
 		$this -> update_option('imagespath', $this -> Html -> uploads_url() . '/slideshow-gallery/');
 		$this -> add_option('styles', $styles);
 		$this -> add_option('fadespeed', 10);

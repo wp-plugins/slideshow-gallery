@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 4.0
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -23,6 +23,14 @@ Here are several ways to display a slideshow:
 = Shortcode for all slides =
 
 To embed a slideshow with all slides under **Slideshow > Manage Slides** in the plugin, simply insert `[tribulant_slideshow]` into the content of a post/page.
+
+= Shortcode for featured posts =
+
+You can create a slideshow from featured posts, each post being a slide and it's featured image used as the slide image. The link of the slide will be the link of the post so clicking on the slide will take users to that post.
+
+Here is a sample shortcode that you can use for this:
+
+`[tribulant_slideshow featured="true" featurednumber="10" featuredtype="post"]`
 
 = Shortcode for a gallery's slides =
 
@@ -125,6 +133,11 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.8 =
+* ADD: WordPress 4.0 compatibility
+* FIX: Post/page images slideshow order broken
+* FIX: Hide information bar on mobile checkbox resets to on
 
 = 1.4.7 =
 * ADD: Recommended plugin under configuration

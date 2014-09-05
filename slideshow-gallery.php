@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.4.7
+Version: 1.4.8
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
@@ -307,7 +307,18 @@ if (!class_exists('Gallery')) {
 				$pid = (empty($post_id)) ? $post -> ID : $post_id;
 			
 				if (!empty($pid) && $post = get_post($pid)) {
-					if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=" . ((!empty($orderby) && $orderby == "random") ? "rand" : "menu_order ASC, ID ASC"))) {
+					$children_attributes = array(
+						'numberposts'					=>	false,
+						'post_parent'					=>	$post -> ID,
+						'post_type'						=>	"attachment",
+						'post_status'					=>	"any",
+						'post_mime_type'				=>	"image",
+						'orderby'						=>	"menu_order",
+						'order'							=>	"ASC",
+					);
+				
+					if ($attachments = get_children($children_attributes)) {
+					//if ($attachments = get_children("post_parent=" . $post -> ID . "&post_type=attachment&post_mime_type=image&orderby=" . ((!empty($orderby) && $orderby == "random") ? "rand" : "menu_order ASC, ID ASC"))) {
 						if (!empty($exclude)) {
 							$exclude = array_map('trim', explode(',', $exclude));
 							
@@ -509,7 +520,7 @@ if (!class_exists('Gallery')) {
 		}
 		
 		function admin_settings() {
-			$this -> initialize_options();
+			//$this -> initialize_options();
 		
 			switch ($_GET['method']) {
 				case 'dismiss'			:
@@ -540,7 +551,7 @@ if (!class_exists('Gallery')) {
 				default					:
 					if (!empty($_POST)) {
 						delete_option('tridebugging');
-						delete_option('Galleryinfohideonmobile');
+						$this -> delete_option('infohideonmobile');
 						$this -> delete_option('autoheight');
 					
 						foreach ($_POST as $pkey => $pval) {					
@@ -575,7 +586,7 @@ if (!class_exists('Gallery')) {
 									
 									$this -> update_option('permissions', $permissions);
 									break;
-								default						:
+								default						:								
 									$this -> update_option($pkey, $pval);
 									break;
 							}
