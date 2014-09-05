@@ -10,27 +10,25 @@ require_once( ABSPATH . 'wp-admin/admin-header.php' );
 
 ?>
 
-<div class="wrap newsletters about-wrap">
+<div class="wrap slideshow-gallery about-wrap">
 	<h1><?php echo sprintf(__( 'Welcome to Slideshow Gallery %s', $this -> plugin_name), $this -> version); ?></h1>
 	<div class="about-text">
 		<?php echo sprintf(__('Thank you for installing! Slideshow Gallery %s is more powerful, reliable and versatile than before. It includes many features and improvements.', $this -> plugin_name), $this -> version); ?>
 	</div>
-	<div class="newsletters-badge"><?php echo sprintf(__('Version %s', $this -> plugin_name), $this -> version); ?></div>
+	<div class="slideshow-gallery-badge"><?php echo sprintf(__('Version %s', $this -> plugin_name), $this -> version); ?></div>
 	
 	<div class="changelog">
 		<h3><?php _e( 'What\'s new in this release', $this -> plugin_name); ?></h3>
 		<div class="feature-section col three-col">
 			<div class="col-1">
-				<img src="<?php echo $this -> url(); ?>/images/about/feature-1.jpg">
-				<h4><?php _e('WordPress 3.9 Compatibility', $this -> plugin_name); ?></h4>
+				<img src="<?php echo $this -> url(); ?>/images/about/feature-1.png">
+				<h4><?php _e('WordPress 4.0 Compatibility', $this -> plugin_name); ?></h4>
 				<p><?php _e('This version is 100% compatible with the latest WordPress version. It will fit nicely into your WordPress dashboard and maximizes the WordPress capabilities for speed, functionality and reliability.', $this -> plugin_name); ?></p>
 			</div>
 			<div class="col-2">
 				<img src="<?php echo $this -> url(); ?>/images/about/feature-2.jpg">
 				<h4><?php _e('Multilingual', $this -> plugin_name); ?></h4>
 				<p><?php _e('This version of the Slideshow Gallery plugin is fully integrated with (m)qTranslate. It now supports internationalization and multilanguage through (m)qTranslate.', $this -> plugin_name); ?></p>
- <?php /* _e('Easier Editing Tools', $this -> plugin_name); ?></h4>
-				<p><?php _e('Improved visual editing of themes and several other areas throughout the plugin to help you see better what the end-product will look like without having to necessarily go into code.', $this -> plugin_name); */?></p>
 			</div>
 			<div class="col-3 last-feature">
 				<img src="<?php echo $this -> url(); ?>/images/about/feature-3.jpg">
@@ -46,9 +44,7 @@ require_once( ABSPATH . 'wp-admin/admin-header.php' );
 		<div class="col-1">
 			<img src="<?php echo $this -> url(); ?>/images/about/feature-4.jpg">			
 			<h4><?php _e('Compatibility with Thickbox', $this -> plugin_name); ?></h4> 
-			<p><?php _e(' Slideshows in this version is compatibile with Thickbox/Lightbox to show slide images in an overlay.', $this -> plugin_name); ?>
-			<?php /* _e('Spam Score', $this -> plugin_name); ?></h4>
-			<p><?php _e('Prevent your emails from ending up in spam/junk folder unnecessarily. The spam score utility will show on each newsletter you create to give the newsletter a score, taking all it\'s aspects and factors in consideration.', $this -> plugin_name); */?></p>
+			<p><?php _e(' Slideshows in this version is compatibile with Thickbox/Lightbox to show slide images in an overlay.', $this -> plugin_name); ?></p>
 		</div>
 		<div class="col-2 last-feature">
 						<img src="<?php echo $this -> url(); ?>/images/about/feature-5.jpg">
@@ -89,7 +85,7 @@ require_once( ABSPATH . 'wp-admin/admin-header.php' );
 		<hr>
 		
 		<div class="return-to-dashboard">
-		<a href="<?php echo admin_url('admin.php'); ?>?page=slideshow"><?php _e('Go to Slideshow Gallery overview', $this -> plugin_name); ?></a>
+		<a href="<?php echo admin_url('admin.php'); ?>?page=slideshow-gallery"><?php _e('Go to Slideshow Gallery overview', $this -> plugin_name); ?></a>
 		</div>
 	
 	</div>
