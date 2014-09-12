@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.4.8
+Version: 1.4.9
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
@@ -52,6 +52,8 @@ if (!class_exists('Gallery')) {
 			$this -> add_filter('mce_buttons');
 			$this -> add_filter('mce_external_plugins');
 			$this -> add_filter("plugin_action_links_" . $this -> plugin_file, 'plugin_settings_link', 10, 1);
+			
+			$this -> add_action('slideshow_ratereviewhook', 'ratereview_hook');
 			
 			if (!is_admin()) { 
 				add_shortcode('slideshow', array($this, 'embed')); 
@@ -118,6 +120,20 @@ if (!class_exists('Gallery')) {
 				$msg_type = (!empty($_GET[$this -> pre . 'updated'])) ? 'msg' : 'err';
 				call_user_func(array($this, 'render_' . $msg_type), $_GET[$this -> pre . 'message']);
 			}
+			
+			$showmessage_ratereview = $this -> get_option('showmessage_ratereview');
+			if (!empty($showmessage_ratereview)) {
+				$message = sprintf(__('You have been using the %s for %s days. Please consider to %s it or say it %s on %s.', $this -> plugin_name), 
+				'<a href="https://wordpress.org/plugins/slideshow-gallery/" target="_blank">Tribulant Slideshow Gallery plugin</a>',
+				$showmessage_ratereview,
+				'<a class="button" href="http://wordpress.org/support/view/plugin-reviews/slideshow-gallery?rate=5#postform" target="_blank">Rate</a>',
+				'<a class="button" href="http://wordpress.org/plugins/slideshow-gallery/?compatibility[version]=' . get_bloginfo('version') . '&compatibility[topic_version]=' . $this -> version . '&compatibility[compatible]=1" target="_blank">Works</a>',
+				'<a href="https://wordpress.org/plugins/slideshow-gallery/" target="_blank">WordPress.org</a>');
+				
+				$message .= '<a href="' . admin_url('admin.php?page=' . $this -> sections -> settings . '&slideshow_method=hidemessage&message=ratereview') . '" class="slideshow-icon-delete"></a>';
+				
+				$this -> render_msg($message);
+			}
 		}
 		
 		function mce_buttons($buttons) {
@@ -182,7 +198,8 @@ if (!class_exists('Gallery')) {
 				'thumbsborder'			=>	($styles['thumbactive']),
 				'thumbsspeed'			=>	($this -> get_option('thumbscrollspeed')),
 				'thumbsspacing'			=>	($this -> get_option('thumbspacing')),
-				'post_id' 				=> 	null, 
+				'post_id' 				=> 	null,
+				'numberposts'			=>	"-1",
 				'exclude' 				=> 	null, 
 				'custom' 				=> 	null,
 			);
@@ -308,7 +325,7 @@ if (!class_exists('Gallery')) {
 			
 				if (!empty($pid) && $post = get_post($pid)) {
 					$children_attributes = array(
-						'numberposts'					=>	false,
+						'numberposts'					=>	$numberposts,
 						'post_parent'					=>	$post -> ID,
 						'post_type'						=>	"attachment",
 						'post_status'					=>	"any",
@@ -601,24 +618,28 @@ if (!class_exists('Gallery')) {
 			}
 		}
 		
-		function update_plugin_complete_actions($upgrade_actions = null, $plugin = null) {
-			$this_plugin = plugin_basename(__FILE__);
-			
-			if (!empty($plugin) && $plugin == $this_plugin) {
-				$this -> add_option('activation_redirect', true);
-			}
-			
-			return $upgrade_actions;
-		}
-		
 		function activation_hook() {
 			$this -> add_option('activation_redirect', true);
-			wp_redirect(admin_url('index.php') . "?page=slideshow-gallery-about");
 		}
 		
 		function custom_redirect() {
-			$activation_redirect = $this -> get_option('activation_redirect');
+		
+			if (!empty($_GET['slideshow_method'])) {
+				switch ($_GET['slideshow_method']) {
+					case 'hidemessage'					:
+						if (!empty($_GET['message'])) {
+							switch ($_GET['message']) {
+								case 'ratereview'				:
+									$this -> delete_option('showmessage_ratereview');
+									$this -> redirect($this -> referer);
+									break;
+							}
+						}
+						break;
+				}
+			}
 			
+			$activation_redirect = $this -> get_option('activation_redirect');
 			if (is_admin() && !empty($activation_redirect)) {
 				$this -> delete_option('activation_redirect');
 				wp_redirect(admin_url('index.php') . "?page=slideshow-gallery-about");
@@ -631,7 +652,6 @@ if (!class_exists('Gallery')) {
 $Gallery = new Gallery();
 register_activation_hook(plugin_basename(__FILE__), array($Gallery, 'initialize_options'));
 register_activation_hook(plugin_basename(__FILE__), array($Gallery, 'activation_hook'));
-add_filter('update_plugin_complete_actions', array($Gallery, 'update_plugin_complete_actions'), 10, 2);
 
 if (!function_exists('slideshow')) {
 	function slideshow($output = true, $gallery_id = null, $post_id = null, $params = array()) {

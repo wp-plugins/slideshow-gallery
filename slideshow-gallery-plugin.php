@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.4.8';
+	var $version = '1.4.9';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -147,6 +147,11 @@ class GalleryPlugin {
 				
 				$version = "1.4.8";
 			}
+			
+			if (version_compare($cur_version, "1.4.9") < 0) {
+				$this -> initialize_options();
+				$version = "1.4.9";
+			}
 		
 			//the current version is older.
 			//lets update the database
@@ -195,8 +200,22 @@ class GalleryPlugin {
 		$this -> add_option('alwaysauto', "true");
 		$this -> add_option('imagesthickbox', "N");
 		
+		$ratereview_scheduled = $this -> get_option('ratereview_scheduled');
+		if (empty($ratereview_scheduled)) {
+			wp_schedule_single_event(strtotime("+1 minutes"), 'slideshow_ratereviewhook', array(2));
+			wp_schedule_single_event(strtotime("+7 days"), 'slideshow_ratereviewhook', array(7));
+			wp_schedule_single_event(strtotime("+14 days"), 'slideshow_ratereviewhook', array(14));
+			wp_schedule_single_event(strtotime("+30 days"), 'slideshow_ratereviewhook', array(30));
+			wp_schedule_single_event(strtotime("+60 days"), 'slideshow_ratereviewhook', array(60));
+			$this -> update_option('ratereview_scheduled', true);
+		}
+		
 		return;
 	}
+	
+	function ratereview_hook($days = 7) {
+		$this -> update_option('showmessage_ratereview', $days);
+	} 
 	
 	function check_roles() {
 		global $wp_roles;
@@ -421,7 +440,7 @@ class GalleryPlugin {
 					wp_enqueue_script('common');
 					wp_enqueue_script('wp-lists');
 					wp_enqueue_script('postbox');
-					
+					wp_enqueue_script('plugin-install');
 					wp_enqueue_script('settings-editor', plugins_url() . '/' . $this -> plugin_name . '/js/settings-editor.js', array('jquery'), '1.0');
 				}
 				

@@ -216,8 +216,8 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	$cssattr['height'] = $options['height'];
 	$cssattr['autoheight'] = $options['autoheight'];
 	$cssattr['thumbwidth'] = $this -> get_option('thumbwidth');
-	$cssattr['thumbheight'] = $this -> get_option('thumbheight');
-	$cssattr['sliderwidth'] = ((($cssattr['thumbwidth'] + ($options['thumbsspacing'] * 2) + 5) * count($slides)) + 50);
+	$cssattr['thumbheight'] = $this -> get_option('thumbheight');	
+	$cssattr['sliderwidth'] = (($cssattr['thumbwidth'] + $options['thumbsspacing'] + 6) * count($slides));
 	$cssattr['infohideonmobile'] = $this -> get_option('infohideonmobile');
 	
 	?>

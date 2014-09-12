@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 4.0
-Stable tag: 1.4.8
+Stable tag: 1.4.9
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -22,7 +22,9 @@ Here are several ways to display a slideshow:
 
 = Shortcode for all slides =
 
-To embed a slideshow with all slides under **Slideshow > Manage Slides** in the plugin, simply insert `[tribulant_slideshow]` into the content of a post/page.
+To embed a slideshow with all slides under **Slideshow > Manage Slides** in the plugin, simply insert the shortcode below into the content of a post/page.
+
+`[tribulant_slideshow]`
 
 = Shortcode for featured posts =
 
@@ -34,29 +36,55 @@ Here is a sample shortcode that you can use for this:
 
 = Shortcode for a gallery's slides =
 
-To embed a slideshow with slides from a specific gallery under **Slideshow > Manage Galleries** in the plugin, simply insert `[tribulant_slideshow gallery_id="X"]` (where X is the ID value of the gallery) into the content of a post/page.
+To embed a slideshow with slides from a specific gallery under **Slideshow > Manage Galleries** in the plugin, simply insert the shortcode below (where X is the ID value of the gallery) into the content of a post/page.
+
+`[tribulant_slideshow gallery_id="X"]`
 
 = Shortcode for the images of a WordPress post/page =
 
-To embed a slideshow with the images uploaded to a WordPress post/page through it's media gallery, simply insert `[tribulant_slideshow post_id="X"]` (where X is the ID value of the post). Whether you want to display the images from a post or a page, the parameter remains `post_id`.
+To embed a slideshow with the images uploaded to a WordPress post/page through it's media gallery, simply insert the shortcode below (where X is the ID value of the post). Whether you want to display the images from a post or a page, the parameter remains `post_id`.
+
+`[tribulant_slideshow post_id="X"]`
 
 = Shortcode for latest/featured products =
 
-In order to display latest or featured products in a slideshow, you need the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin" title="WordPress Shopping Cart">Shopping Cart plugin</a> from Tribulant Software. Once you have this installed and activated, you can easily display recent or featured products. To display recent products use the shortcode `[tribulant_slideshow products="latest"]` and to display featured products, use `[tribulant_slideshow products="featured"]`. For both, you can use the `productsnumber` parameter to limit the number of products eg. `[tribulant_slideshow products="latest" productsnumber="5"]`
+In order to display latest or featured products in a slideshow, you need the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin" title="WordPress Shopping Cart">Shopping Cart plugin</a> from Tribulant Software. Once you have this installed and activated, you can easily display recent or featured products. To display recent products use the shortcode below. 
+
+`[tribulant_slideshow products="latest"]`
+
+And to display featured products, use the one below. 
+
+`[tribulant_slideshow products="featured"]`
+
+For both, you can use the `productsnumber` parameter to limit the number of products eg. 
+
+`[tribulant_slideshow products="latest" productsnumber="5"]`
 
 = Hardcode into any plugin/theme with PHP =
 
-To hardcode into any PHP file of your WordPress theme, simply use `<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>`.
+To hardcode into any PHP file of your WordPress theme, simply use 
+
+`<?php if (function_exists('slideshow')) { slideshow($output = true, $gallery_id = false, $post_id = false, $params = array()); } ?>`.
 
 = Parameters for shortcode/hardcode to customize each slideshow =
 
 You can use any of the following parameters with both the hardcoding and shortcode to customize each slideshow gallery:
 
-Shortcode Ex 1: `[tribulant_slideshow layout="responsive" gallery_id="3" auto="true" navopacity="0" showthumbs="true"]`
-Shortcode Ex 2: `[tribulant_slideshow layout="specific" post_id="379" width="600" height="300" auto="false" showinfo="false"]`
+Shortcode Ex 1: 
 
-Hardcode Ex 1: `<?php slideshow(true, 3, false, array('layout' => "responsive", 'auto' => "true", 'navopacity' => "0", 'showthumbs' => "true")); ?>`
-Hardcode Ex 2: `<?php slideshow(true, false, 379, array('layout' => "specific", 'width' => "600", 'height' => "300", 'auto' => "false", 'showinfo' => "false")); ?>`
+`[tribulant_slideshow layout="responsive" gallery_id="3" auto="true" navopacity="0" showthumbs="true"]`
+
+Shortcode Ex 2: 
+
+`[tribulant_slideshow layout="specific" post_id="379" width="600" height="300" auto="false" showinfo="false"]`
+
+Hardcode Ex 1: 
+
+`<?php slideshow(true, 3, false, array('layout' => "responsive", 'auto' => "true", 'navopacity' => "0", 'showthumbs' => "true")); ?>`
+
+Hardcode Ex 2: 
+
+`<?php slideshow(true, false, 379, array('layout' => "specific", 'width' => "600", 'height' => "300", 'auto' => "false", 'showinfo' => "false")); ?>`
 
 This way you can customize each slideshow you embed or hardcode, despite the settings you saved under **Slideshow > Configuration**.
 
@@ -67,6 +95,7 @@ This way you can customize each slideshow you embed or hardcode, despite the set
 * `featuredtype` [ post_type ] = A post type slug like 'post', 'page', etc. The default is 'post'
 * `gallery_id` [ gallery_id ] = Numeric/integer ID of a gallery to display images from.
 * `post_id` [ post_id ] = Numeric/integer ID of a post to take images from it, uploaded through it's "Add Media" button.
+* `numberposts` [ numberposts ] = Numeric value of the number of images to take from the post/page. "-1" for unlimited/all
 * `layout` [ responsive | specific ] = Set to 'responsive' for mobile/tablet compatible theme and 'specific' for fixed width/height.
 * `resizeimages` [ true | false ] = Set to 'true' to resize images to fit the slideshow dimensions.
 * `imagesoverlay` [ true | false ] (default: setting) = Set to 'true' to display links of slides that are images in a Colorbox overlay on the page.
@@ -133,6 +162,13 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.4.9 =
+* ADD: 'numberposts' shortcode attribute for post/page images as slides
+* ADD: Notice to rate/review the plugin
+* IMPROVE: Moved some files from plugin core to /assets/ folder
+* FIX: Post/page images gallery only shows 10 slides, no more
+* FIX: Extra space after thumbnails in thumbnail strip
 
 = 1.4.8 =
 * ADD: WordPress 4.0 compatibility

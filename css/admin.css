@@ -28,6 +28,18 @@ th.sorted.desc .sorting-indicator,th.asc:hover span.sorting-indicator{ display:b
   font-style: normal;
 }
 
+.slideshow-icon-deleete {
+	
+}
+
+.slideshow-icon-delete:before {
+	font-family: 'dashicons' !important;
+	content: "\f158";
+	font-size: 20px;
+	vertical-align: middle;
+	float: right;
+}
+
 .slideshow .ui-slider {
 	margin: 10px 0;
 	background: #CCCCCC;
