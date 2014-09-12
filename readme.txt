@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 4.0
-Stable tag: 1.4.9
+Stable tag: 1.4.9.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 

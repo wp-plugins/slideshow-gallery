@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.4.9';
+	var $version = '1.4.9.1';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -148,9 +148,9 @@ class GalleryPlugin {
 				$version = "1.4.8";
 			}
 			
-			if (version_compare($cur_version, "1.4.9") < 0) {
+			if (version_compare($cur_version, "1.4.9.1") < 0) {
 				$this -> initialize_options();
-				$version = "1.4.9";
+				$version = "1.4.9.1";
 			}
 		
 			//the current version is older.
@@ -202,7 +202,6 @@ class GalleryPlugin {
 		
 		$ratereview_scheduled = $this -> get_option('ratereview_scheduled');
 		if (empty($ratereview_scheduled)) {
-			wp_schedule_single_event(strtotime("+1 minutes"), 'slideshow_ratereviewhook', array(2));
 			wp_schedule_single_event(strtotime("+7 days"), 'slideshow_ratereviewhook', array(7));
 			wp_schedule_single_event(strtotime("+14 days"), 'slideshow_ratereviewhook', array(14));
 			wp_schedule_single_event(strtotime("+30 days"), 'slideshow_ratereviewhook', array(30));

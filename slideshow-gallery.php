@@ -6,7 +6,7 @@ Plugin URI: http://wpgallery.tribulant.net
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.4.9
+Version: 1.4.9.1
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
@@ -123,7 +123,7 @@ if (!class_exists('Gallery')) {
 			
 			$showmessage_ratereview = $this -> get_option('showmessage_ratereview');
 			if (!empty($showmessage_ratereview)) {
-				$message = sprintf(__('You have been using the %s for %s days. Please consider to %s it or say it %s on %s.', $this -> plugin_name), 
+				$message = sprintf(__('You have been using the %s for %s days or more. Please consider to %s it or say it %s on %s.', $this -> plugin_name), 
 				'<a href="https://wordpress.org/plugins/slideshow-gallery/" target="_blank">Tribulant Slideshow Gallery plugin</a>',
 				$showmessage_ratereview,
 				'<a class="button" href="http://wordpress.org/support/view/plugin-reviews/slideshow-gallery?rate=5#postform" target="_blank">Rate</a>',
