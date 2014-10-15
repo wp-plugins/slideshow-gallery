@@ -1,12 +1,3 @@
-.sorting-indicator{ display:block; visibility:hidden; width:7px;height:4px;margin-top:8px;margin-left:7px;background-image:url(../images/sort.gif);background-repeat:no-repeat}
-.fixed .column-comments .sorting-indicator{margin-top:3px}
-.widefat th.sortable,.widefat th.sorted{padding:0}
-th.sortable a,th.sorted a{ display:block; visibility:visible; overflow:hidden; padding:7px 7px 8px; }
-.fixed .column-comments.sortable a,.fixed .column-comments.sorted a{ padding:8px 0; }
-th.sortable a span,th.sorted a span{float:left;cursor:pointer}
-th.sorted.asc .sorting-indicator,th.desc:hover span.sorting-indicator{ display:block; visibility:visible; background-position:0 0}
-th.sorted.desc .sorting-indicator,th.asc:hover span.sorting-indicator{ display:block; visibility:visible; background-position:-7px 0}
-
 #adminmenu .toplevel_page_slideshow-slides div.wp-menu-image:before,
 .mce-i-gallery:before {
     font-family: 'slideshow_dashicons' !important;
@@ -115,7 +106,6 @@ a.colorbox img.slideshow {
 	-webkit-border-radius: 4px;
 }
 
-div.Gallery .error,
 .slideshow_error {
 	color: red;
 }
@@ -329,15 +319,33 @@ span.gallery_slides_convert_grid a:before {
 	width: 100%;
 	height: 100%;
 }
-.ui-tooltip {
-	padding: 8px;
-	position: absolute;
-	z-index: 9999;
-	max-width: 300px;
-	-webkit-box-shadow: 0 0 5px #aaa;
-	box-shadow: 0 0 5px #aaa;
-	background: white;
+
+.slideshow-ui-tooltip {
+    padding: 8px;
+    position: absolute;
+    z-index: 9999;
+    max-width: 300px;
+    -webkit-box-shadow: 0 0 5px #aaa;
+    box-shadow: 0 0 5px #aaa;
+    background: #000000;
+    opacity: .8;
+	filter: alpha(opacity=80);
+	zoom: 1;
+    border-width: 2px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
 }
+
+.slideshow-ui-tooltip .ui-tooltip-content {
+	color: #fff;
+	font-size: 12px;
+	background-color: #000;
+	color: #fff;
+	text-align: center;
+	white-space: normal;
+}
+
 body .ui-tooltip {
 	border-width: 2px;
 }

@@ -2,11 +2,11 @@
 
 /*
 Plugin Name: Slideshow Gallery
-Plugin URI: http://wpgallery.tribulant.net
+Plugin URI: http://tribulant.com/plugins/view/13/wordpress-slideshow-gallery
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.4.9.1
+Version: 1.5
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
@@ -34,6 +34,7 @@ if (!class_exists('Gallery')) {
 			
 			//WordPress action hooks
 			$this -> add_action('wp_head');
+			$this -> add_action('wp_footer');
 			$this -> add_action('admin_menu');
 			$this -> add_action('admin_head');
 			$this -> add_action('admin_notices');
@@ -70,13 +71,46 @@ if (!class_exists('Gallery')) {
 		}
 		
 		function init_textdomain() {		
-			if (function_exists('load_plugin_textdomain')) {
-				load_plugin_textdomain($this -> plugin_name, $this -> plugin_name . DS . 'languages', dirname(plugin_basename(__FILE__)) . DS . 'languages');
-			}	
+			$locale = get_locale();
+			
+			if (!empty($locale)) { 
+				if ($locale == "ja" || $locale == "ja_JP") { setlocale(LC_ALL, "ja_JP.UTF8"); }
+			} else { 
+				setlocale(LC_ALL, apply_filters('slideshow_setlocale', $locale)); 
+			}
+			
+			$mo_file = $this -> plugin_name . '-' . $locale . '.mo';
+			$language_external = $this -> get_option('language_external');
+		
+			if (!empty($language_external)) {
+				if (function_exists('load_textdomain')) {
+					load_textdomain($this -> plugin_name, WP_LANG_DIR . DS . $this -> plugin_name . DS . $mo_file);
+				}
+			} else {
+				if (function_exists('load_plugin_textdomain')) {
+					load_plugin_textdomain($this -> plugin_name, false, dirname(plugin_basename(__FILE__)) . DS . 'languages' . DS);
+				}
+			}			
 		}
 		
 		function wp_head() {
+			global $slideshow_javascript;
+			$slideshow_javascript = array();
+		}
+		
+		function wp_footer() {
+			global $slideshow_javascript;
+		
+			if (!empty($slideshow_javascript)) {
+				
+				?><!-- Slideshow Gallery Javascript BEG --><?php
 			
+				foreach ($slideshow_javascript as $javascript) {
+					echo stripslashes($javascript);
+				}
+				
+				?><!-- Slideshow Gallery Javascript END --><?php
+			}
 		}
 		
 		function admin_menu() {
@@ -88,8 +122,8 @@ if (!class_exists('Gallery')) {
 			
 			add_action('admin_head-' . $this -> menus['slideshow-settings'], array($this, 'admin_head_gallery_settings'));
 			
-			add_dashboard_page(sprintf('Slideshow Gallery %s', $this -> version), sprintf('Slideshow Gallery %s', $this -> version), 'read', 'slideshow-gallery-about', array($this, 'slideshow_gallery_about'));
-			remove_submenu_page('index.php', 'slideshow-gallery-about');
+			add_dashboard_page(sprintf('Slideshow Gallery %s', $this -> version), sprintf('Slideshow Gallery %s', $this -> version), 'read', $this -> sections -> about, array($this, 'slideshow_gallery_about'));
+			remove_submenu_page('index.php', $this -> sections -> about);
 		}
 		
 		function slideshow_gallery_about() {
@@ -126,8 +160,8 @@ if (!class_exists('Gallery')) {
 				$message = sprintf(__('You have been using the %s for %s days or more. Please consider to %s it or say it %s on %s.', $this -> plugin_name), 
 				'<a href="https://wordpress.org/plugins/slideshow-gallery/" target="_blank">Tribulant Slideshow Gallery plugin</a>',
 				$showmessage_ratereview,
-				'<a class="button" href="http://wordpress.org/support/view/plugin-reviews/slideshow-gallery?rate=5#postform" target="_blank">Rate</a>',
-				'<a class="button" href="http://wordpress.org/plugins/slideshow-gallery/?compatibility[version]=' . get_bloginfo('version') . '&compatibility[topic_version]=' . $this -> version . '&compatibility[compatible]=1" target="_blank">Works</a>',
+				'<a class="button" href="https://wordpress.org/support/view/plugin-reviews/slideshow-gallery?rate=5#postform" target="_blank">Rate</a>',
+				'<a class="button" href="https://wordpress.org/plugins/slideshow-gallery/?compatibility[version]=' . get_bloginfo('version') . '&compatibility[topic_version]=' . $this -> version . '&compatibility[compatible]=1" target="_blank">Works</a>',
 				'<a href="https://wordpress.org/plugins/slideshow-gallery/" target="_blank">WordPress.org</a>');
 				
 				$message .= '<a href="' . admin_url('admin.php?page=' . $this -> sections -> settings . '&slideshow_method=hidemessage&message=ratereview') . '" class="slideshow-icon-delete"></a>';
@@ -293,12 +327,8 @@ if (!class_exists('Gallery')) {
 				if (!empty($slides)) {				
 					$imagespath = $this -> get_option('imagespath');
 				
-					foreach ($slides as $skey => $slide) {
-						if (empty($imagespath)) {
-							$slides[$skey] -> image_path = $this -> Html -> uploads_path() . DS . 'slideshow-gallery' . DS . $slide -> image;
-						} else {
-							$slides[$skey] -> image_path = rtrim($imagespath, DS) . DS . $slide -> image;
-						}
+					foreach ($slides as $skey => $slide) {						
+						$slides[$skey] -> image_path = $this -> Html -> image_path($slide);
 					}
 				
 					if ($orderby == "random") { shuffle($slides); }
@@ -382,8 +412,14 @@ if (!class_exists('Gallery')) {
 					if (!empty($_POST)) {
 						if ($this -> Slide -> save($_POST, true)) {
 							$message = __('Slide has been saved', $this -> plugin_name);
-							$this -> redirect($this -> url, "message", $message);
+							
+							if (!empty($_POST['continueediting'])) {
+								$this -> redirect(admin_url('admin.php?page=' . $this -> sections -> slides . '&method=save&id=' . $this -> Slide -> insertid . '&continueediting=1'), 'message', $message);	
+							} else {
+								$this -> redirect($this -> url, "message", $message);
+							}
 						} else {
+							$this -> render_err(__('Slide could not be saved', $this -> plugin_name));
 							$this -> render('slides' . DS . 'save', false, true, 'admin');
 						}
 					} else {
@@ -391,6 +427,42 @@ if (!class_exists('Gallery')) {
 						$this -> Slide -> find(array('id' => $_GET['id']));
 						$this -> render('slides' . DS . 'save', false, true, 'admin');
 					}
+					break;
+				case 'save-multiple'	:
+					if (!empty($_POST)) {
+						$errors = array();
+						
+						if (!empty($_POST['Slide']['slides'])) {
+							$slides = $_POST['Slide']['slides'];
+							$galleries = $_POST['Slide']['galleries'];
+							
+							foreach ($slides as $attachment_id => $slide) {
+								$slide_data = array(
+									'title'				=>	$slide['title'],
+									'description'		=>	$slide['description'],
+									'image'				=>	basename($slide['url']),
+									'attachment_id'		=>	$attachment_id,
+									'type'				=>	'media',
+									'image_url'			=>	$slide['url'],
+									'media_file'		=>	$slide['url'],
+									'galleries'			=>	$galleries,
+								);
+								
+								if (!$this -> Slide -> save($slide_data)) {
+									$errors = array_merge($errors, $this -> Slide -> errors);	
+								}
+							}
+							
+							if (empty($errors)) {
+								$message = __('Slides have been saved', $this -> plugin_name);
+								$this -> redirect(admin_url('admin.php?page=' . $this -> sections -> slides), 'message', $message);
+							}
+						} else {
+							$errors[] = __('No slides were selected', $this -> plugin_name);
+						}
+					}
+					
+					$this -> render('slides' . DS . 'save-multiple', array('errors' => $errors), true, 'admin');
 					break;
 				case 'mass'				:
 					if (!empty($_POST['action'])) {
@@ -458,7 +530,12 @@ if (!class_exists('Gallery')) {
 					if (!empty($_POST)) {
 						if ($this -> Gallery -> save($_POST, true)) {
 							$message = __('Gallery has been saved', $this -> plugin_name);
-							$this -> redirect($this -> url, "message", $message);
+							
+							if (!empty($_POST['continueediting'])) {
+								$this -> redirect(admin_url('admin.php?page=' . $this -> sections -> galleries . '&method=save&id=' . $this -> Gallery -> insertid . '&continueediting=1'), 'message', $message);
+							} else {
+								$this -> redirect($this -> url, "message", $message);
+							}
 						} else {
 							$this -> render('galleries' . DS . 'save', false, true, 'admin');
 						}
@@ -537,6 +614,7 @@ if (!class_exists('Gallery')) {
 		}
 		
 		function admin_settings() {
+			global $wpdb;
 			//$this -> initialize_options();
 		
 			switch ($_GET['method']) {
@@ -546,6 +624,18 @@ if (!class_exists('Gallery')) {
 					}
 					
 					$this -> redirect($this -> referer);
+					break;
+				case 'checkdb'			:
+					$this -> check_tables();
+					
+					if (!empty($this -> models)) {
+						foreach ($this -> models as $model) {
+							$query = "OPTIMIZE TABLE `" . $this -> {$model} -> table . "`";
+							$wpdb -> query($query);
+						}
+					}
+				
+					$this -> redirect($this -> referer, 'message', __('Database tables have been checked and optimized', $this -> plugin_name));
 					break;
 				case 'reset'			:
 					global $wpdb;
@@ -570,6 +660,7 @@ if (!class_exists('Gallery')) {
 						delete_option('tridebugging');
 						$this -> delete_option('infohideonmobile');
 						$this -> delete_option('autoheight');
+						$this -> delete_option('language_external');
 					
 						foreach ($_POST as $pkey => $pval) {					
 							switch ($pkey) {
@@ -642,7 +733,7 @@ if (!class_exists('Gallery')) {
 			$activation_redirect = $this -> get_option('activation_redirect');
 			if (is_admin() && !empty($activation_redirect)) {
 				$this -> delete_option('activation_redirect');
-				wp_redirect(admin_url('index.php') . "?page=slideshow-gallery-about");
+				wp_redirect(admin_url('index.php') . "?page=" . $this -> sections -> about);
 			}
 		}
 	}

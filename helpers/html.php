@@ -2,6 +2,10 @@
 
 class GalleryHtmlHelper extends GalleryPlugin {
 
+	function GalleryHtmlHelper() {
+		$this -> plugin_name = basename(dirname(dirname(__FILE__)));
+	}
+
 	function help($help = null) {
 		if (!empty($help)) {
 			ob_start();
@@ -137,12 +141,37 @@ class GalleryHtmlHelper extends GalleryPlugin {
 	}
 	
 	function bfithumb_url() {
-		return plugins_url() . '/slideshow-gallery/vendors/bfithumb.php';
+		return plugins_url() . '/' . $this -> plugin_name . '/vendors/bfithumb.php';
 	}
 	
 	function image_url($filename = null) {
 		if (!empty($filename)) {
-			return GalleryHtmlHelper::uploads_url() . '/slideshow-gallery/' . $filename;
+			return GalleryHtmlHelper::uploads_url() . '/' . $this -> plugin_name . '/' . $filename;
+		}
+		
+		return false;
+	}
+	
+	function image_path($slide = null) {
+		$imagespath = $this -> get_option('imagespath');
+	
+		if (!empty($slide)) {
+			switch ($slide -> type) {
+				case 'media'				:
+					$image_path = $slide -> image_url;
+					break;
+				case 'file'					:
+				case 'url'					:
+				default						:
+					if (empty($imagespath)) {
+						$image_path = $this -> uploads_path() . DS . $this -> plugin_name . DS . $slide -> image;
+					} else {
+						$image_path = rtrim($imagespath, DS) . DS . $slide -> image;
+					}
+					break;
+			}
+			
+			return $image_path;
 		}
 		
 		return false;

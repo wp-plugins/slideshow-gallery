@@ -5,7 +5,6 @@ class GalleryGallerySlides extends GalleryDbHelper {
 	var $table;
 	var $model = 'GallerySlides';
 	var $controller = "galleriesslides";
-	var $plugin_name = 'slideshow-gallery';
 	
 	var $data = array();
 	var $errors = array();
@@ -17,11 +16,14 @@ class GalleryGallerySlides extends GalleryDbHelper {
 		'order'				=>	"INT(11) NOT NULL DEFAULT '0'",
 		'created'			=>	"DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'",
 		'modified'			=>	"DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'",
-		'key'				=>	"PRIMARY KEY (`id`)",
+		'key'				=>	"PRIMARY KEY (`id`), INDEX(`gallery_id`), INDEX(`slide_id`)",
 	);
+	
+	var $indexes = array('gallery_id', 'slide_id');
 
 	function GalleryGallerySlides($data = array()) {
 		global $wpdb;
+		$this -> plugin_name = basename(dirname(dirname(__FILE__)));
 		$this -> table = $wpdb -> prefix . strtolower($this -> pre) . "_" . $this -> controller;
 		if (is_admin()) { $this -> check_table($this -> model); }
 	

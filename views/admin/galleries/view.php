@@ -1,4 +1,4 @@
-<div class="wrap <?php echo $this -> pre; ?>">
+<div class="wrap <?php echo $this -> pre; ?> slideshow">
 	<h2><?php echo sprintf(__('View Gallery: %s', $this -> plugin_name), __($gallery -> title)); ?></h2>
 	
 	<div style="float:none;" class="subsubsub"><?php echo $this -> Html -> link(__('&larr; All Galleries', $this -> plugin_name), $this -> url, array('title' => __('All Galleries', $this -> plugin_name))); ?></div>

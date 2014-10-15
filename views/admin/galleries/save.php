@@ -48,6 +48,9 @@ $languages = $this -> language_getlanguages();
 	
 		<p class="submit">
 			<input type="submit" class="button-primary" value="<?php _e('Save Gallery', $this -> plugin_name); ?>" name="submit" />
+			<div class="slideshow_continueediting">
+				<label><input <?php echo (!empty($_REQUEST['continueediting'])) ? 'checked="checked"' : ''; ?> type="checkbox" name="continueediting" value="1" id="continueediting" /> <?php _e('Continue editing', $this -> plugin_name); ?></label>
+			</div>
 		</p>
 	</form>
 </div>

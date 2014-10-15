@@ -7,6 +7,7 @@ jQuery(document).ready(function() {
 	
 	if (jQuery.isFunction(jQuery.fn.tooltip)) {
 		jQuery(".galleryhelp a").tooltip({
+			tooltipClass: 'slideshow-ui-tooltip',
 			content: function () {
 	            return jQuery(this).prop('title');
 	        },

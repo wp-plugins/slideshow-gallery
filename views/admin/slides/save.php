@@ -7,7 +7,7 @@ $languages = $this -> language_getlanguages();
 
 ?>
 
-<div class="wrap <?php echo $this -> pre; ?> slideshow-gallery">
+<div class="wrap <?php echo $this -> pre; ?> slideshow-gallery slideshow">
 	<h2><?php _e('Save a Slide', $this -> plugin_name); ?></h2>
 	
 	<form action="<?php echo $this -> url; ?>&amp;method=save" method="post" enctype="multipart/form-data">
@@ -116,7 +116,7 @@ $languages = $this -> language_getlanguages();
 						<?php if ($galleries = $this -> Gallery -> select()) : ?>
 							<label style="font-weight:bold"><input onclick="jqCheckAll(this,'','Slide[galleries]');" type="checkbox" name="checkboxall" value="checkboxall" id="checkboxall" /> <?php _e('Select All', $this -> plugin_name); ?></label><br/>
 							<?php foreach ($galleries as $gallery_id => $gallery_title) : ?>
-								<label><input <?php echo (!empty($this -> Slide -> data -> galleries) && in_array($gallery_id, $this -> Slide -> data -> galleries)) ? 'checked="checked"' : ''; ?> type="checkbox" name="Slide[galleries][]" value="<?php echo $gallery_id; ?>" id="Slide_galleries_<?php echo $gallery_id; ?>" /> <?php echo $gallery_title; ?></label><br/>
+								<label><input <?php echo (!empty($this -> Slide -> data -> galleries) && in_array($gallery_id, $this -> Slide -> data -> galleries)) ? 'checked="checked"' : ''; ?> type="checkbox" name="Slide[galleries][]" value="<?php echo $gallery_id; ?>" id="Slide_galleries_<?php echo $gallery_id; ?>" /> <?php echo __($gallery_title); ?></label><br/>
 							<?php endforeach; ?>
 						<?php else : ?>
 							<span class="error"><?php _e('No galleries are available.', $this -> plugin_name); ?></span>
@@ -125,11 +125,12 @@ $languages = $this -> language_getlanguages();
 					</td>
 				</tr>
                 <tr>
-                	<th><label for="Slide.type.file"><?php _e('Image Type', $this -> plugin_name); ?></label>
+                	<th><label for="Slide.type.media"><?php _e('Image Type', $this -> plugin_name); ?></label>
                 	<?php echo $this -> Html -> help(__('Do you want to specify a URL to your image or upload the image file manually? Specifying a URL will still copy the image file remotely from the location to your server so uploading is recommended to prevent any restrictions or errors.', $this -> plugin_name)); ?></th>
                     <td>
-                    	<label><input onclick="jQuery('#typediv_file').show(); jQuery('#typediv_url').hide();" <?php echo (empty($this -> Slide -> data -> type) || $this -> Slide -> data -> type == "file") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="file" id="Slide.type.file" /> <?php _e('Upload File (recommended)', $this -> plugin_name); ?></label>
-                        <label><input onclick="jQuery('#typediv_url').show(); jQuery('#typediv_file').hide();" <?php echo ($this -> Slide -> data -> type == "url") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="url" id="Slide.type.url" /> <?php _e('Specify URL', $this -> plugin_name); ?></label>
+                    	<label><input onclick="jQuery('#typediv_media').show(); jQuery('#typediv_file').hide(); jQuery('#typediv_url').hide();" <?php echo (empty($this -> Slide -> data -> type) || $this -> Slide -> data -> type == "media") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="media" id="Slide.type.media" /> <?php _e('Media Upload', $this -> plugin_name); ?></label>
+                    	<label><input onclick="jQuery('#typediv_file').show(); jQuery('#typediv_media').hide(); jQuery('#typediv_url').hide();" <?php echo ($this -> Slide -> data -> type == "file") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="file" id="Slide.type.file" /> <?php _e('Upload File', $this -> plugin_name); ?></label>
+                        <label><input onclick="jQuery('#typediv_url').show(); jQuery('#typediv_media').hide(); jQuery('#typediv_file').hide();" <?php echo ($this -> Slide -> data -> type == "url") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="url" id="Slide.type.url" /> <?php _e('Specify URL', $this -> plugin_name); ?></label>
                         <?php echo (!empty($this -> Slide -> errors['type'])) ? '<div style="color:red;">' . $this -> Slide -> errors['type'] . '</div>' : ''; ?>
                         <span class="howto"><?php _e('Do you want to upload an image or specify a local/remote image URL?', $this -> plugin_name); ?></span>
                     </td>
@@ -137,7 +138,72 @@ $languages = $this -> language_getlanguages();
             </tbody>
         </table>
         
-        <div id="typediv_file" style="display:<?php echo (empty($this -> Slide -> data -> type) || $this -> Slide -> data -> type == "file") ? 'block' : 'none'; ?>;">
+        <!-- Choose/upload file with the WordPress media uploader -->
+        <div id="typediv_media" style="display:<?php echo (empty($this -> Slide -> data -> type) || $this -> Slide -> data -> type == "media") ? 'block' : 'none'; ?>;">
+        	<table class="form-table">
+        		<tbody>
+        			<tr>
+        				<th><label for=""><?php _e('Choose Image', $this -> plugin_name); ?></label></th>
+        				<td>
+        					<div id="Slide_mediaupload_image">
+                        		<!-- image goes here -->
+                        		<?php if (!empty($this -> Slide -> data -> image_url)) : ?>
+                        			<a href="<?php echo $this -> Slide -> data -> image_url; ?>" title="<?php echo __($this -> Slide -> data -> title); ?>" class="colorbox"><img class="slideshow_dropshadow" src="<?php echo $this -> Html -> bfithumb_image_src($this -> Slide -> data -> image_url, 100, 100, 100); ?>" /></a>
+                        		<?php endif; ?>
+                        	</div>
+                        
+                        	<input type="button" name="Slide_mediaupload" value="<?php _e('Choose File', $this -> plugin_name); ?>" id="Slide_mediaupload" class="button button-secondary" />
+                        	<input type="text" name="Slide[media_file]" style="width:50%;" id="Slide_image_file" value="<?php echo esc_attr(stripslashes($this -> Slide -> data -> image_url)); ?>" />
+                        	<input type="hidden" name="Slide[attachment_id]" value="<?php echo esc_attr(stripslashes($this -> Slide -> data -> attachment_id)); ?>" id="Slide_attachment_id" />
+                        	
+                        	<?php echo (!empty($this -> Slide -> errors['media_file'])) ? '<div class="slideshow_error">' . $this -> Slide -> errors['media_file'] . '</div>' : ''; ?>
+                        	
+                        	<script type="text/javascript">
+                        	jQuery(document).ready(function() {
+								var file_frame;
+								
+								jQuery('#Slide_mediaupload').live('click', function( event ){
+									event.preventDefault();
+									
+									// If the media frame already exists, reopen it.
+									if (file_frame) {
+										file_frame.open();
+										return;
+									}
+									
+									// Create the media frame.
+									file_frame = wp.media.frames.file_frame = wp.media({
+										title: '<?php _e('Upload a slide', $this -> plugin_name); ?>',
+										button: {
+											text: '<?php _e('Select as Slide Image', $this -> plugin_name); ?>',
+										},
+										multiple: false  // Set to true to allow multiple files to be selected
+									});
+										
+									// When an image is selected, run a callback.
+									file_frame.on( 'select', function() {
+										// We set multiple to false so only get one image from the uploader
+										attachment = file_frame.state().get('selection').first().toJSON();
+										
+										// Do something with attachment.id and/or attachment.url here
+										
+										jQuery('#Slide_attachment_id').val(attachment.id);
+										jQuery('#Slide_image_file').val(attachment.url);
+										jQuery('#Slide_mediaupload_image').html('<a href="' + attachment.url + '" class="colorbox" onclick="jQuery.colorbox({href:\'' + attachment.url + '\'}); return false;"><img class="slideshow_dropshadow" style="width:100px;" src="' + attachment.sizes.thumbnail.url + '" /></a>');
+									});
+									
+									// Finally, open the modal
+									file_frame.open();
+								});
+                        	});
+                        	</script>
+        				</td>
+        			</tr>
+        		</tbody>
+        	</table>
+        </div>
+        
+        <div id="typediv_file" style="display:<?php echo (!empty($this -> Slide -> data -> type) && $this -> Slide -> data -> type == "file") ? 'block' : 'none'; ?>;">
         	<table class="form-table">
             	<tbody>
                 	<tr>
@@ -160,13 +226,13 @@ $languages = $this -> language_getlanguages();
 									
 									$imagespath = $this -> get_option('imagespath');
 									if (empty($imagespath)) {
-										$image = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $this -> Slide -> data -> image;
+										$image = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS . $this -> Slide -> data -> image;
 									} else {
 										$image = rtrim($imagespath, DS) . DS . $this -> Slide -> data -> image;
 									}
 									
 									?>
-                                    <p><a title="<?php echo esc_attr($this -> Slide -> data -> title); ?>" class="colorbox" href="<?php echo $this -> Html -> image_url($this -> Slide -> data -> image); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($image, 100, 100, 100); ?>" alt="" class="slideshow" /></a></p>
+                                    <p><a title="<?php echo esc_attr($this -> Slide -> data -> title); ?>" class="colorbox" href="<?php echo $this -> Slide -> data -> image_path; ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($image, 100, 100, 100); ?>" alt="" class="slideshow" /></a></p>
                                     
                                     <?php	
 								}
@@ -235,6 +301,9 @@ $languages = $this -> language_getlanguages();
 		
 		<p class="submit">
 			<input class="button-primary" type="submit" name="submit" value="<?php _e('Save Slide', $this -> plugin_name); ?>" />
+			<div class="slideshow_continueediting">
+				<label><input <?php echo (!empty($_REQUEST['continueediting'])) ? 'checked="checked"' : ''; ?> type="checkbox" name="continueediting" value="1" id="continueediting" /> <?php _e('Continue editing', $this -> plugin_name); ?></label>
+			</div>
 		</p>
 	</form>
 </div>

@@ -5,7 +5,6 @@ class GallerySlide extends GalleryDbHelper {
 	var $table;
 	var $model = 'Slide';
 	var $controller = "slides";
-	var $plugin_name = 'slideshow-gallery';
 	
 	var $data = array();
 	var $errors = array();
@@ -17,19 +16,23 @@ class GallerySlide extends GalleryDbHelper {
 		'showinfo'			=>	"VARCHAR(50) NOT NULL DEFAULT 'both'",
 		'iopacity'			=>	"INT(11) NOT NULL DEFAULT '70'",
 		'image'				=>	"TEXT NOT NULL",
-		'type'				=>	"ENUM('file','url') NOT NULL DEFAULT 'file'",
+		'type'				=>	"ENUM('media','file','url') NOT NULL DEFAULT 'file'",
 		'image_url'			=>	"TEXT NOT NULL",
+		'attachment_id'		=>	"INT(11) NOT NULL DEFAULT '0'",
 		'uselink'			=>	"ENUM('Y','N') NOT NULL DEFAULT 'N'",
 		'linktarget'		=>	"ENUM('self','blank') NOT NULL DEFAULT 'self'",
 		'link'				=>	"VARCHAR(200) NOT NULL DEFAULT ''",
 		'order'				=>	"INT(11) NOT NULL DEFAULT '0'",
 		'created'			=>	"DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'",
 		'modified'			=>	"DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'",
-		'key'				=>	"PRIMARY KEY (`id`)",
+		'key'				=>	"PRIMARY KEY (`id`), INDEX(`type`)",
 	);
+	
+	var $indexes = array('type');
 
 	function GallerySlide($data = array()) {
 		global $wpdb;
+		$this -> plugin_name = basename(dirname(dirname(__FILE__)));
 		$this -> table = $wpdb -> prefix . strtolower($this -> pre) . "_" . $this -> controller;
 		if (is_admin()) { $this -> check_table($this -> model); }
 	
@@ -59,16 +62,10 @@ class GallerySlide extends GalleryDbHelper {
 							}
 						}
 						break;
-					case 'image'				:
-						$imagespath = $this -> get_option('imagespath');
-						if (empty($imagespath)) {
-							$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $dval;
-						} else {
-							$this -> image_path = rtrim($imagespath, DS) . DS . $dval;
-						}
-						break;
 				}
 			}
+			
+			$this -> image_path = GalleryHtmlHelper::image_path($data);
 		}
 		
 		return true;
@@ -97,19 +94,23 @@ class GallerySlide extends GalleryDbHelper {
 			if (empty($showinfo)) { $this -> data -> showinfo = "both"; }
 			
 			if (empty($type)) { $this -> errors['type'] = __('Please select an image type', $this -> plugin_name); }
-			elseif ($type == "file") {
+			elseif ($type == "media") {
+				if (!empty($media_file) && !empty($attachment_id)) {
+					$imagename = basename($media_file);
+					$this -> data -> image = $imagename;
+					$this -> data -> image_path = $media_file;
+					$this -> data -> image_url = $media_file;
+				} else {
+					$this -> errors['media_file'] = __('Choose an image', $this -> plugin_name);
+				}
+			} elseif ($type == "file") {
 				if (!empty($image_oldfile) && empty($_FILES['image_file']['name'])) {
 					$imagename = $image_oldfile;
 					$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
 					$imagefull = $imagepath . $imagename;
 					
-					$this -> data -> image = $imagename;					
-					$imagespath = $this -> get_option('imagespath');
-					if (empty($imagespath)) {
-						$this -> data -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;
-					} else {
-						$this -> data -> image_path = rtrim($imagespath, DS) . DS . $imagename;
-					}
+					$this -> data -> image = $imagename;
+					GalleryHtmlHelper::image_path($this -> data);					
 				} else {								
 					if ($_FILES['image_file']['error'] <= 0) {
 						$imagename = $_FILES['image_file']['name'];
@@ -117,7 +118,7 @@ class GallerySlide extends GalleryDbHelper {
 						$image_ext = GalleryHtmlHelper::strip_ext($imagename, "ext");
 						$imagename = GalleryHtmlHelper::sanitize($image_name) . '.' . $image_ext;
 						
-						$imagepath = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS;
+						$imagepath = GalleryHtmlHelper::uploads_path() . DS . $this -> plugin_name . DS;
 						$imagefull = $imagepath . $imagename;
 						
 						$issafe = false;
@@ -137,12 +138,7 @@ class GallerySlide extends GalleryDbHelper {
 								@chmod($imagefull, 0644);
 							
 								$this -> data -> image = $imagename;
-								$imagespath = $this -> get_option('imagespath');
-								if (empty($imagespath)) {
-									$this -> image_path = GalleryHtmlHelper::uploads_path() . DS . 'slideshow-gallery' . DS . $imagename;
-								} else {
-									$this -> image_path = rtrim($imagespath, DS) . DS . $imagename;
-								}
+								GalleryHtmlHelper::image_path($this -> data);
 							}	
 						}
 					} else {					

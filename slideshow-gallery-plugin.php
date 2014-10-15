@@ -2,13 +2,15 @@
 
 class GalleryPlugin {
 
-	var $version = '1.4.9.1';
+	var $version = '1.5';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
 	
 	var $menus = array();
 	var $sections = array(
+		'welcome'			=>	'slideshow-slides',
+		'about'				=>	'slideshow-gallery-about',
 		'slides'			=>	'slideshow-slides',
 		'galleries'			=>	'slideshow-galleries',
 		'settings'			=>	'slideshow-settings',
@@ -148,9 +150,13 @@ class GalleryPlugin {
 				$version = "1.4.8";
 			}
 			
-			if (version_compare($cur_version, "1.4.9.1") < 0) {
+			if (version_compare($cur_version, "1.5") < 0) {
 				$this -> initialize_options();
-				$version = "1.4.9.1";
+				
+				$query = "ALTER TABLE `" . $this -> Slide -> table . "` CHANGE `type` `type` ENUM('media','file','url') NOT NULL DEFAULT 'media'";
+				$wpdb -> query($query);
+				
+				$version = "1.5";
 			}
 		
 			//the current version is older.
@@ -178,7 +184,7 @@ class GalleryPlugin {
 		);
 		
 		$this -> add_option('resizeimagescrop', "Y");
-		$this -> update_option('imagespath', $this -> Html -> uploads_url() . '/slideshow-gallery/');
+		$this -> update_option('imagespath', $this -> Html -> uploads_url() . '/' . $this -> plugin_name . '/');
 		$this -> add_option('styles', $styles);
 		$this -> add_option('fadespeed', 10);
 		$this -> add_option('shownav', "Y");
@@ -447,6 +453,10 @@ class GalleryPlugin {
 					wp_enqueue_script('jquery-ui-sortable');
 				}
 				
+				if ($_GET['page'] == $this -> sections -> slides && ($_GET['method'] == "save" || $_GET['method'] == "save-multiple")) {
+					wp_enqueue_media();
+				}
+				
 				add_thickbox();
 			}
 			
@@ -553,6 +563,16 @@ class GalleryPlugin {
 		return false;
 	}
 	
+	function check_tables() {
+		if (!empty($this -> models)) {
+			foreach ($this -> models as $model) {
+				$this -> check_table($model);
+			}
+		}
+		
+		return;
+	}
+	
 	function check_table($model = null) {
 		global $wpdb;
 	
@@ -587,6 +607,16 @@ class GalleryPlugin {
 					foreach ($this -> fields as $field => $attributes) {					
 						if ($field != "key") {
 							$this -> add_field($this -> table, $field, $attributes);
+						}
+					}
+					
+					if (!empty($this -> indexes)) {
+						foreach ($this -> indexes as $index) {
+							$query = "SHOW INDEX FROM `" . $this -> table . "` WHERE `Key_name` = '" . $index . "'";
+							if (!$wpdb -> get_row($query)) {
+								$query = "ALTER TABLE `" . $this -> table . "` ADD INDEX(`" . $index . "`);";
+								$wpdb -> query($query);	
+							}
 						}
 					}
 				}
@@ -778,8 +808,10 @@ class GalleryPlugin {
 	
 	function render($file = null, $params = array(), $output = true, $folder = 'admin') {	
 		if (!empty($file)) {
-			$this -> plugin_name = 'slideshow-gallery';
+			$this -> plugin_name = basename(dirname(__FILE__));
 			$this -> plugin_base = rtrim(dirname(__FILE__), DS);
+			$this -> sections = (object) $this -> sections;
+			
 			$theme_serve = false;
 			$filename = $file . '.php';
 			$filepath = $this -> plugin_base() . DS . 'views' . DS . $folder . DS;

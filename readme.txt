@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 4.0
-Stable tag: 1.4.9.1
+Stable tag: 1.5
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -119,6 +119,13 @@ This way you can customize each slideshow you embed or hardcode, despite the set
 * `thumbsspeed` [ speed> ] (default: setting) = Speed of the thumbnail bar scrolling. Lower is slower. Between 1 and 20 is recommended.
 * `thumbsspacing` [ spacing ] (default: setting) = An integer value in pixels to space the thumbnails apart. Don’t include the 'px' part, just the number. Between 0 and 10 is recommended.
 
+= Languages =
+
+Thank you to these wonderful people who contributed to translating the Slideshow Gallery plugin:
+
+* Afrikaans (af_ZA) by <a href="http://tribulant.com">Antonie Potgieter | Tribulant Software</a>
+* Slovak (sk_SK) by Branco Radenovich
+
 == Installation ==
 
 Installing the WordPress slideshow gallery plugin is very easy. Simply follow the steps below.
@@ -162,6 +169,20 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.5 =
+* ADD: Add multiple slides at once from the media gallery/uploader
+* ADD: "Check/optimize database tables" feature under configuration
+* ADD: Load external language files from wp-content/languages/slideshow-gallery/
+* ADD: "Continue editing" checkboxes in admin sections
+* ADD: Indexes on MySQL database tables for performance
+* ADD: Use media library for slides
+* IMPROVE: Improvements to load_plugin_textdomain()
+* IMPROVE: Blank index.php file to prevent indexing/crawling of plugin files/folders
+* IMPROVE: Replace all 'slideshow-gallery' string instances dynamically
+* IMPROVE: New help tooltip design
+* IMPROVE: Move Javascript out of shortcode into head
+* IMPROVE: Add text to arrow buttons  
 
 = 1.4.9 =
 * ADD: 'numberposts' shortcode attribute for post/page images as slides

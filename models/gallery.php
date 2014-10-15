@@ -5,7 +5,6 @@ class GalleryGallery extends GalleryDbHelper {
 	var $table;
 	var $model = 'Gallery';
 	var $controller = "galleries";
-	var $plugin_name = 'slideshow-gallery';
 	
 	var $data = array();
 	var $errors = array();
@@ -20,6 +19,7 @@ class GalleryGallery extends GalleryDbHelper {
 
 	function GalleryGallery($data = array()) {
 		global $wpdb;
+		$this -> plugin_name = basename(dirname(dirname(__FILE__)));
 		$this -> table = $wpdb -> prefix . strtolower($this -> pre) . "_" . $this -> controller;
 		if (is_admin()) { $this -> check_table($this -> model); }
 	

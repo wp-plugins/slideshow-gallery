@@ -1,3 +1,25 @@
+<!-- WordPress Related Settings -->
+
+<?php
+
+$language_external = $this -> get_option('language_external');
+$locale = get_locale();
+
+?>
+
+<table class="form-table">
+	<tbody>
+		<tr>
+			<th><label for="language_external"><?php _e('Language External', $this -> plugin_name); ?></label>
+			<?php echo $this -> Html -> help(sprintf(__('By default, the plugin loads language file from %s. By turning this on, you can host your language file outside the plugin and place it inside %s. Name the language file %s', $this -> plugin_name), '<code>wp-content/plugins/' . $this -> plugin_name . '/languages/</code>', '<code>wp-content/languages/' . $this -> plugin_name . '/</code>', '<code>' . $this -> plugin_name . '-' . $locale . '.mo</code>')); ?></th>
+			<td>
+				<label><input <?php echo (!empty($language_external)) ? 'checked="checked"' : ''; ?> type="checkbox" name="language_external" value="1" id="language_external" /> <?php _e('Yes, load external language file', $this -> plugin_name); ?></label>
+				<span class="howto"><?php echo sprintf(__('Turn this on to load language file from %s named %s', $this -> plugin_name), '<code>wp-content/languages/' . $this -> plugin_name . '/</code>', '<code>' . $this -> plugin_name . '-' . $locale . '.mo</code>'); ?></span>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 <!-- Permissions -->
 
 <?php

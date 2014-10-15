@@ -244,7 +244,7 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 					<input class="widefat" style="width:45px;" type="text" name="thumbheight" value="<?php echo esc_attr(stripslashes($this -> get_option('thumbheight'))); ?>" id="thumbheight" />
 					<?php _e('px <!-- pixels -->', $this -> plugin_name); ?>
 					<span class="howto"><?php _e('Width and height of the thumbnails for the slides.', $this -> plugin_name); ?><br/>
-					<?php _e('You may leave the width empty (not the height) to crop proportionally.', $this -> plugin_name); ?></span>
+					<?php _e('You may leave the height empty (not the width) to crop proportionally.', $this -> plugin_name); ?></span>
 				</td>
 			</tr>
 			<tr>

@@ -94,7 +94,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 					<?php if ($options['layout'] != "responsive" && $options['resizeimages'] == "true" && $options['width'] != "auto") : ?>
 						<span><?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $options['width'], $options['height'], 100); ?></span>
 					<?php else : ?>
-						<span><?php echo $this -> Html -> image_url($slide -> image); ?></span>
+						<span><?php echo $slide -> image_path; ?></span>
 					<?php endif; ?>
 					<p><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "description")) ? __($slide -> description) : ''; ?></p>
 					<?php if ($options['showthumbs'] == "true") : ?>
@@ -135,12 +135,12 @@ $thumbopacity = $this -> get_option('thumbopacity');
 			<?php $navb = false; $navf = false; ?>
 			<?php if ($options['shownav'] == "true" && count($slides) > 1) : ?>
 				<?php $navb = "imgprev"; ?>
-				<div id="imgprev<?php echo $unique; ?>" class="slideshow-imgprev imgnav" title="<?php _e('Previous Image', $this -> plugin_name); ?>"></div>
+				<div id="imgprev<?php echo $unique; ?>" class="slideshow-imgprev imgnav" title="<?php _e('Previous Image', $this -> plugin_name); ?>"><?php _e('Previous Image', $this -> plugin_name); ?></div>
 			<?php endif; ?>
 			<div id="imglink<?php echo $unique; ?>" class="slideshow-imglink imglink"><!-- link --></div>
 			<?php if ($options['shownav'] == "true" && count($slides) > 1) : ?>
 				<?php $navf = "imgnext"; ?>
-				<div id="imgnext<?php echo $unique; ?>" class="slideshow-imgnext imgnav" title="<?php _e('Next Image', $this -> plugin_name); ?>"></div>
+				<div id="imgnext<?php echo $unique; ?>" class="slideshow-imgnext imgnav" title="<?php _e('Next Image', $this -> plugin_name); ?>"><?php _e('Next Image', $this -> plugin_name); ?></div>
 			<?php endif; ?>
 			<div id="image<?php echo $unique; ?>" class="slideshow-image"></div>
 			<?php if ($options['showinfo'] == "true") : ?>
@@ -162,6 +162,8 @@ $thumbopacity = $this -> get_option('thumbopacity');
 			</div>
 		<?php endif; ?>
 	</div>
+	
+	<?php ob_start(); ?>
 	
 	<script type="text/javascript">
 	jQuery.noConflict();
@@ -232,6 +234,14 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	.linkhover { display: none !important; }
 	</style>
 	<![endif]-->
+	
+	<?php 
+	
+	$javascript = ob_get_clean(); 
+	global $slideshow_javascript;
+	$slideshow_javascript[] = $javascript;
+	
+	?>
 <?php else : ?>
 	<?php _e('No slides are available.', $this -> plugin_name); ?>
 <?php endif; ?>
