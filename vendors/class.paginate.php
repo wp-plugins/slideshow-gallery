@@ -166,44 +166,59 @@ class GalleryPaginate extends GalleryPlugin {
 		
 		$records_count = count($records);
 		$allRecordsCount = $this -> allcount = $wpdb -> get_var($countquery);
-		$totalpagescount = round($records_count/$this -> per_page);
+		$totalpagescount = ceil($this -> allcount / $this -> per_page);
 		
 		$pageparam = (!empty($this -> sub) && $this -> sub == "N") ? '' : 'page=' . $this -> pre . $this -> sub . '&amp;';
 		$pageparam = '';
 		$search = (empty($this -> searchterm)) ? '' : '&amp;' . $this -> pre . 'searchterm=' . urlencode($this -> searchterm);
 		
-		if (count($records) < $allRecordsCount) {			
+		if (empty($this -> url_page)) {
+			$this -> url_page = $this -> sub;	
+		}
+		
+		list($ofield, $odir) = $this -> order;
+		
+		if (count($records) < $allRecordsCount) {	
+			
 			$p = 1;
 			$k = 1;
 			$n = $this -> page;
+			$search = (empty($this -> searchterm)) ? '' : '&' . $this -> pre . 'searchterm=' . urlencode($this -> searchterm);
+			$orderby = (empty($ofield)) ? '' : '&orderby=' . $ofield;
+			$order = (empty($odir)) ? '' : '&order=' . strtolower($odir);
+			$this -> pagination .= '<span class="displaying-num">' . sprintf(__('%s items', $this -> plugin_name), $this -> allcount) . '</span>';
+			$this -> pagination .= '<span class="pagination-links">';
+			$this -> pagination .= '<a href="?page=' . $this -> url_page . '&amp;' . $this -> pre . 'page=1' . $search . $orderby . $order . $this -> after . '" class="first-page' . (($this -> page == 1) ? ' disabled" onclick="return false;' : '') . '">&laquo;</a>';
+			$this -> pagination .= '<a class="prev-page' . (($this -> page == 1) ? ' disabled" onclick="return false;' : '') . '" href="?page=' . $this -> url_page . '&amp;' . $this -> pre . 'page=' . ($this -> page - 1) . $search . $orderby . $order . $this -> after . '" title="' . __('Previous Page', $this -> plugin_name) . '">&#8249;</a>';
+			$this -> pagination .= '<span class="paging-input">';
+			$this -> pagination .= '<input class="newsletters-paged-input current-page" type="text" name="paged" id="paged-input" value="' . $this -> page . '" size="1"> ';
+			$this -> pagination .= __('of', $this -> plugin_name); 
+			$this -> pagination .= ' <span class="total-pages">' . $totalpagescount . '</span>';
+			$this -> pagination .= '</span>';
+			$this -> pagination .= '<a class="next-page' . (($this -> page == $totalpagescount) ? ' disabled" onclick="return false;' : '') . '" href="?page=' . $this -> url_page . '&amp;' . $this -> pre . 'page=' . ($this -> page + 1) . $search . $orderby . $order . $this -> after . '" title="' . __('Next Page', $this -> plugin_name) . '">&#8250;</a>';
+			$this -> pagination .= '<a href="?page=' . $this -> url_page . '&amp;' . $this -> pre . 'page=' . $totalpagescount . $search . $orderby . $order . $this -> after . '" class="last-page' . (($this -> page == $totalpagescount) ? ' disabled" onclick="return false;' : '') . '">&raquo;</a>';
+			$this -> pagination .= '</span>';
 			
-			$add_prev = $pageparam . $this -> pre . 'page=' . ($this -> page - 1) . $search . '';
-			$add_next = $pageparam . $this -> pre . 'page=' . ($this -> page + 1) . $search . '';
+			ob_start();
 			
-			$this -> pagination .= '<span class="displaying-num">' . __('Displaying', $this -> plugin_name) . ' ' . ($this -> begRecord + 1) . ' - ' . ($this -> begRecord + count($records)) . ' ' . __('of', $this -> plugin_name) . ' ' . $allRecordsCount . '</span>';
-		
-			if ($this -> page > 1) {
-				$this -> pagination .= '<a class="prev page-numbers" href="' . GalleryHtmlHelper::retainquery($add_prev) . '" title="' . __('Previous Page', $this -> plugin_name) . '">&laquo;</a>';
-			}
+			?>
 			
-			while ($p <= $allRecordsCount) {
-				$add_numbers = $pageparam . $this -> pre . 'page=' . ($k) . $search . '';
-					
-				if ($k >= ($this -> page - 5) && $k <= ($this -> page + 5)) {
-					if ($k != $this -> page) {
-						$this -> pagination .= '<a class="page-numbers" href="' . GalleryHtmlHelper::retainquery($add_numbers) . '" title="' . __('Page', $this -> plugin_name) . ' ' . $k . '">' . $k . '</a>';
-					} else {
-						$this -> pagination .= '<a class="page-numbers current">' . $k . '</span>';
-					}
-				}
-				
-				$p = $p + $this -> per_page;
-				$k++;
-			}
+			<script type="text/javascript">
+			jQuery(document).ready(function() {
+				jQuery('.newsletters-paged-input').keypress(function(e) {
+					code = (e.keyCode ? e.keyCode : e.which);
+		            if (code == 13) {
+		            	window.location = '?page=<?php echo $this -> url_page; ?>&<?php echo $this -> pre; ?>page=' + jQuery(this).val() + '<?php echo $search . $orderby . $order . $this -> after; ?>';
+		            	e.preventDefault();
+		            }
+				});
+			});
+			</script>
 			
-			if ((count($records) + $this -> begRecord) < $allRecordsCount) {
-				$this -> pagination .= '<a class="next page-numbers" href="' . GalleryHtmlHelper::retainquery($add_next) . '" title="' . __('Next Page', $this -> plugin_name) . '">&raquo;</a>';
-			}
+			<?php
+			
+			$script = ob_get_clean();
+			$this -> pagination .= $script;
 		}
 		
 		return $records;

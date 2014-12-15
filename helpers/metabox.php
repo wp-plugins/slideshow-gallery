@@ -36,6 +36,10 @@ class GalleryMetaboxHelper extends GalleryPlugin {
 	function settings_styles() {
 		$this -> render('metaboxes' . DS . 'settings-styles', false, true, 'admin');
 	}
+	
+	function settings_tech() {
+		$this -> render('metaboxes' . DS . 'settings-tech', false, true, 'admin');
+	}
 }
 
 ?>

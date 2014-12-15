@@ -41,7 +41,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 			<?php foreach ($slides as $slide) : ?>
 				<?php setup_postdata($slide); ?>
 				<li>
-					<h3 style="opacity:70;"><a href="<?php echo get_permalink($slide -> ID); ?>"><?php echo stripslashes(__($slide -> post_title)); ?></a></h3>
+					<h3 style="opacity:70;"><a target="_self" href="<?php echo get_permalink($slide -> ID); ?>"><?php echo stripslashes(__($slide -> post_title)); ?></a></h3>
 					<?php $full_image_href = wp_get_attachment_image_src(get_post_thumbnail_id($slide -> ID), 'full', false); ?>
 					<?php $full_image_path = get_attached_file(get_post_thumbnail_id($slide -> ID)); ?>
 					<?php $full_image_url = wp_get_attachment_url(get_post_thumbnail_id($slide -> ID)); ?>										
@@ -59,7 +59,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
-						<a href="<?php echo $slide -> guid; ?>" title="<?php echo __($slide -> post_title); ?>"></a>
+						<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo __($slide -> post_title); ?>"></a>
 					<?php endif; ?>
 				</li>
 				<?php wp_reset_postdata(); ?>
@@ -245,6 +245,13 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	$javascript = ob_get_clean(); 
 	global $slideshow_javascript;
 	$slideshow_javascript[] = $javascript;
+	
+	$jsoutput = $this -> get_option('jsoutput');
+	if (empty($jsoutput) || $jsoutput == "perslideshow") {
+		echo '<!-- Slideshow Gallery Javascript BEG -->';
+		echo stripslashes($javascript);
+		echo '<!-- Slideshow Gallery Javascript END -->';
+	}
 	
 	?>
 <?php else : ?>

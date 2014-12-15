@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.5';
+	var $version = '1.5.1';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -150,13 +150,13 @@ class GalleryPlugin {
 				$version = "1.4.8";
 			}
 			
-			if (version_compare($cur_version, "1.5") < 0) {
+			if (version_compare($cur_version, "1.5.1") < 0) {
 				$this -> initialize_options();
 				
 				$query = "ALTER TABLE `" . $this -> Slide -> table . "` CHANGE `type` `type` ENUM('media','file','url') NOT NULL DEFAULT 'media'";
 				$wpdb -> query($query);
 				
-				$version = "1.5";
+				$version = "1.5.1";
 			}
 		
 			//the current version is older.
@@ -208,6 +208,7 @@ class GalleryPlugin {
 		$this -> add_option('autospeed', 10);
 		$this -> add_option('alwaysauto', "true");
 		$this -> add_option('imagesthickbox', "N");
+		$this -> add_option('jsoutput', "perslideshow");
 		
 		$ratereview_scheduled = $this -> get_option('ratereview_scheduled');
 		if (empty($ratereview_scheduled)) {
@@ -329,7 +330,7 @@ class GalleryPlugin {
 			global $paginate;
 			$paginate = $this -> vendor('Paginate');
 			$paginate -> table = $this -> {$model} -> table;
-			$paginate -> sub = (empty($sub)) ? $this -> {$model} -> controller : $sub;
+			$paginate -> sub = (empty($sub)) ? $this -> sections -> {$this -> {$model} -> controller} : $sub;
 			$paginate -> fields = (empty($fields)) ? '*' : $fields;
 			$paginate -> where = (empty($conditions)) ? false : $conditions;
 			$paginate -> searchterm = (empty($searchterm)) ? false : $searchterm;
@@ -511,6 +512,8 @@ class GalleryPlugin {
 		
 		$colorbox_src = plugins_url() . '/' . $this -> plugin_name . '/css/colorbox.css';
 		wp_enqueue_style('colorbox', $colorbox_src, null, "1.3.19", "all");
+		$font_src = plugins_url() . '/' . $this -> plugin_name . '/views/default/css/font.css';
+		wp_enqueue_style('slideshow-font', $font_src, null, null, "all");
 	
 		return true;
 	}
@@ -570,10 +573,15 @@ class GalleryPlugin {
 	}
 	
 	function check_tables() {
+		global $wpdb;
+		
 		if (!empty($this -> models)) {
 			foreach ($this -> models as $model) {
 				$this -> check_table($model);
 			}
+			
+			$query = "ALTER TABLE `" . $this -> Slide -> table . "` CHANGE `type` `type` ENUM('media','file','url') NOT NULL DEFAULT 'media'";
+			$wpdb -> query($query);
 		}
 		
 		return;

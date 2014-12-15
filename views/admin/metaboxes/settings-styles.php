@@ -32,6 +32,12 @@ $resizeimagescrop = $this -> get_option('resizeimagescrop');
 				<span class="howto"><?php _e('Choose whether you want a responsive or fixed/specific layout for the slideshow.', $this -> plugin_name); ?></span>
 			</td>
 		</tr>
+		<tr>
+			<th><label for="autoheight"><?php _e('Auto Height', $this -> plugin_name); ?></label></th>
+			<td>
+				<label><input onclick="if (jQuery(this).is(':checked')) { jQuery('#styles_height').attr('disabled', 'disabled'); } else { jQuery('#styles_height').removeAttr('disabled'); }" <?php echo (!empty($autoheight)) ? 'checked="checked"' : ''; ?> type="checkbox" name="autoheight" value="1" id="autoheight" /> <?php _e('Yes, automatically adjust the slideshow height for each slide', $this -> plugin_name); ?></label>
+			</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -95,10 +101,10 @@ $resizeimagescrop = $this -> get_option('resizeimagescrop');
 				</td>
 			</tr>
 			<tr>
-				<th><label for="styles.height"><?php _e('Gallery Height', $this -> plugin_name); ?></label>
+				<th><label for="styles_height"><?php _e('Gallery Height', $this -> plugin_name); ?></label>
 				<?php echo $this -> Html -> help(__('The height of the slideshow in pixels.', $this -> plugin_name)); ?></th>
 				<td>
-					<input style="width:45px;" id="styles.height" type="text" name="styles[height]" value="<?php echo $styles['height']; ?>" /> <?php _e('px', $this -> plugin_name); ?>
+					<input <?php echo (!empty($autoheight)) ? 'disabled="disabled"' : ''; ?> style="width:45px;" id="styles_height" type="text" name="styles[height]" value="<?php echo esc_attr(stripslashes($styles['height'])); ?>" /> <?php _e('px', $this -> plugin_name); ?>
 					<span class="howto"><?php _e('Height of the slideshow gallery', $this -> plugin_name); ?></span>
 				</td>
 			</tr>
@@ -108,12 +114,6 @@ $resizeimagescrop = $this -> get_option('resizeimagescrop');
 
 <table class="form-table">
 	<tbody>
-		<tr>
-			<th><label for="autoheight"><?php _e('Auto Height', $this -> plugin_name); ?></label></th>
-			<td>
-				<label><input <?php echo (!empty($autoheight)) ? 'checked="checked"' : ''; ?> type="checkbox" name="autoheight" value="1" id="autoheight" /> <?php _e('Yes, automatically adjust the slideshow height for each slide', $this -> plugin_name); ?></label>
-			</td>
-		</tr>
 		<tr>
 			<th><label for="styles.border"><?php _e('Slideshow Border', $this -> plugin_name); ?></label>
 			<?php echo $this -> Html -> help(__('This is a CSS style for the border around the entire slideshow. You can use a value such as "1px #FFFFFF solid" to display a 1 pixel, white, solid border or even a value such as "none" for no border at all.', $this -> plugin_name)); ?></th>

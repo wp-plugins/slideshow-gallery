@@ -21,8 +21,8 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 		<tr>
 			<th><label for="effect_fade"><?php _e('Effect', $this -> plugin_name); ?></label></th>
 			<td>
-				<label><input <?php echo (empty($effect) || (!empty($effect) && $effect == "fade")) ? 'checked="checked"' : ''; ?> type="radio" name="effect" value="fade" id="effect_fade" /> <?php _e('Fade', $this -> plugin_name); ?></label>
-				<label><input <?php echo (!empty($effect) && $effect == "slide") ? 'checked="checked"' : ''; ?> type="radio" name="effect" value="slide" id="effect_slide" /> <?php _e('Slide', $this -> plugin_name); ?></label>
+				<label><input onclick="jQuery('#effect_slide_div').hide();" <?php echo (empty($effect) || (!empty($effect) && $effect == "fade")) ? 'checked="checked"' : ''; ?> type="radio" name="effect" value="fade" id="effect_fade" /> <?php _e('Fade', $this -> plugin_name); ?></label>
+				<label><input onclick="jQuery('#effect_slide_div').show();" <?php echo (!empty($effect) && $effect == "slide") ? 'checked="checked"' : ''; ?> type="radio" name="effect" value="slide" id="effect_slide" /> <?php _e('Slide', $this -> plugin_name); ?></label>
 				<span class="howto"><?php _e('Choose the type of effect/transition you want for slides', $this -> plugin_name); ?></span>
 			</td>
 		</tr>

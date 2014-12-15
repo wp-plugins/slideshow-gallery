@@ -3,8 +3,8 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 4.0
-Stable tag: 1.5
+Tested up to: 4.0.1
+Stable tag: 1.5.1
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -88,6 +88,9 @@ Hardcode Ex 2:
 
 This way you can customize each slideshow you embed or hardcode, despite the settings you saved under **Slideshow > Configuration**.
 
+* `effect` [ fade | slide ] = Choose the transition effect of the slideshow. Either fade or slide
+* `slide_direction` [ lr | tb ] = If you're using `slide` for the `effect`, you can choose left/right or top/bottom sliding
+* `easing` [ swing ] = Choose the easing effect you'd like. The default is `swing`
 * `products` [ latest | featured ] = String "latest" or "featured" to display products from the <a href="http://tribulant.com/plugins/view/10/wordpress-shopping-cart-plugin">Checkout plugin</a>.
 * `productsnumber` [ productsnumber ] = Numeric/integer to limit the number of products to display.
 * `featured` [ true | false ] = Show posts with their featured images 
@@ -169,6 +172,23 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.5.1 =
+* ADD: Setting to output Javascript per slideshow or globally in footer
+* ADD: Detection of wp_head/wp_footer functions in theme which are required
+* ADD: Left/right and top/bottom sliding effect
+* ADD: Effect/transition setting to choose between fade/slide
+* ADD: jQuery easing effects  
+* IMPROVE: Open featured posts slides in the same window
+* IMPROVE: Make prev/next buttons/elements unselectable
+* IMPROVE: Animation for auto height of images
+* IMPROVE: Cross-fading of images for a better effect
+* IMPROVE: Image fade speed setting up to 50
+* IMPROVE: New, improved paging in admin sections  
+* FIX: Slide 'type' database column/field not created or updated to support media
+* FIX: Fix drag/drop sorting open- and closed hand cursors
+* FIX: Erratic timing between slides
+* FIX: Auto height setting doesn't work on fixed layout slideshow  
 
 = 1.5 =
 * ADD: Add multiple slides at once from the media gallery/uploader

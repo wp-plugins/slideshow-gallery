@@ -22,9 +22,9 @@ $unique = $styles['unique'];
 	#<?php echo $styles['wrapperid']; ?> #information<?php echo $unique; ?> p { color:<?php echo $styles['infocolor']; ?>; padding:0 8px 8px; margin:0 !important; font-size: 14px; font-weight:normal; }
 	#<?php echo $styles['wrapperid']; ?> #image<?php echo $unique; ?> { width:<?php echo ($styles['width'] != "auto") ? ((int) $styles['width']) . 'px' : 'auto'; ?>; no-repeat; }
 	#<?php echo $styles['wrapperid']; ?> #image<?php echo $unique; ?> img { border:none; border-radius:0; box-shadow:none; position:absolute; height:auto; max-width:100%; margin:0 auto; display:block; }
-	#<?php echo $styles['wrapperid']; ?> .imgnav { position:absolute; width:25%; height:<?php echo ((int) $styles['height'] + 8); ?>px; cursor:pointer; z-index:250; }
-	#<?php echo $styles['wrapperid']; ?> #imgprev<?php echo $unique; ?> { left:0; background:url('images/left.gif') left center no-repeat; text-indent:-9999px; }
-	#<?php echo $styles['wrapperid']; ?> #imgnext<?php echo $unique; ?> { right:0; background:url('images/right.gif') right center no-repeat; text-indent:-9999px; }
+	#<?php echo $styles['wrapperid']; ?> .imgnav { position:absolute; width:25%; height:100%; cursor:pointer; z-index:250; }
+	#<?php echo $styles['wrapperid']; ?> #imgprev<?php echo $unique; ?> { -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; left:0; background:url('images/left.gif') left center no-repeat; text-indent:-9999px; }
+	#<?php echo $styles['wrapperid']; ?> #imgnext<?php echo $unique; ?> { -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; right:0; background:url('images/right.gif') right center no-repeat; text-indent:-9999px; }
 	#<?php echo $styles['wrapperid']; ?> #imglink<?php echo $unique; ?> { position:absolute; zoom:1; background-color:#ffffff; height:<?php echo ((int) $styles['height'] + 8); ?>px; <?php if (!empty($styles['shownav']) && $styles['shownav'] == "true") : ?>width:50%; left:25%; right:20%;<?php else : ?>width:100%; left:0;<?php endif; ?> z-index:149; opacity:0; filter:alpha(opacity=0); }
 	#<?php echo $styles['wrapperid']; ?> .linkhover { background:transparent url('images/link.gif') center center no-repeat !important; text-indent:-9999px; opacity:.4 !important; filter:alpha(opacity=40) !important; }
 	#<?php echo $styles['wrapperid']; ?> #thumbnails<?php echo $unique; ?> { background:<?php echo $styles['background']; ?>; }

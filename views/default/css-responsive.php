@@ -23,8 +23,8 @@ $unique = $styles['unique'];
 	#<?php echo $styles['wrapperid']; ?> #image<?php echo $unique; ?> { width:100%; }
 	#<?php echo $styles['wrapperid']; ?> #image<?php echo $unique; ?> img { border:none; border-radius:0; box-shadow:none; position:absolute; height:auto; width:100%; margin:0 auto; display:block; }
 	#<?php echo $styles['wrapperid']; ?> .imgnav { position:absolute; width:25%; height:100%; cursor:pointer; z-index:250; }
-	#<?php echo $styles['wrapperid']; ?> #imgprev<?php echo $unique; ?> { left:0; background:url('images/left.gif') left center no-repeat; text-indent:-9999px; }
-	#<?php echo $styles['wrapperid']; ?> #imgnext<?php echo $unique; ?> { right:0; background:url('images/right.gif') right center no-repeat; text-indent:-9999px; }
+	#<?php echo $styles['wrapperid']; ?> #imgprev<?php echo $unique; ?> { -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; left:0; background:url('images/left.gif') left center no-repeat; text-indent:-9999px; }
+	#<?php echo $styles['wrapperid']; ?> #imgnext<?php echo $unique; ?> { -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; right:0; background:url('images/right.gif') right center no-repeat; text-indent:-9999px; }
 	#<?php echo $styles['wrapperid']; ?> #imglink<?php echo $unique; ?> { position:absolute; zoom:1; background-color:#ffffff; height:100%; <?php if (!empty($styles['shownav']) && $styles['shownav'] == "true") : ?>width:50%; left:25%; right:20%;<?php else : ?>width:100%; left:0;<?php endif; ?> z-index:149; opacity:0; filter:alpha(opacity=0); }
 	#<?php echo $styles['wrapperid']; ?> .linkhover { background:transparent url('images/link.gif') center center no-repeat !important; text-indent:-9999px; opacity:.4 !important; filter:alpha(opacity=40) !important; }
 	#<?php echo $styles['wrapperid']; ?> #thumbnails<?php echo $unique; ?> { background:<?php echo $styles['background']; ?>; height:<?php echo $sliderheight; ?>px; }
