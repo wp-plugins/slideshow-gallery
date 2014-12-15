@@ -1,5 +1,5 @@
 <div class="wrap <?php echo $this -> pre; ?> slideshow">	
-	<h2><?php _e('Manage Galleries', $this -> plugin_name); ?> <?php echo $this -> Html -> link(__('Add New'), $this -> url . '&amp;method=save', array('class' => "add-new-h2")); ?></h2>
+	<h2><?php _e('Manage Galleries', $this -> plugin_name); ?> <?php echo $this -> Html -> link(__('Add New', $this -> plugin_name), $this -> url . '&amp;method=save', array('class' => "add-new-h2")); ?></h2>
 	
 	<?php if (!empty($galleries)) : ?>
 		<form id="posts-filter" action="<?php echo $this -> url; ?>" method="post">
@@ -112,6 +112,6 @@
 			</div>
 		</form>
 	<?php else : ?>
-		<p class="error"><?php _e('No galleries are available.', $this -> plugin_name); ?></p>
+		<p class="slideshow_error"><?php _e('No galleries are available.', $this -> plugin_name); ?></p>
 	<?php endif; ?>
 </div>

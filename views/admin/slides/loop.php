@@ -160,5 +160,5 @@
 			</div>
 		</form>
 	<?php else : ?>
-		<p style="color:red;"><?php _e('No slides found', $this -> plugin_name); ?></p>
+		<p class="slideshow_error"><?php _e('No slides found', $this -> plugin_name); ?></p>
 	<?php endif; ?>

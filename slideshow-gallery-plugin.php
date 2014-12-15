@@ -174,22 +174,24 @@ class GalleryPlugin {
 			'layout'			=>	"responsive",
 			'width'				=>	"450",
 			'height'			=>	"250",
-			'resheight'			=>	"30",
+			'resheight'			=>	"50",
 			'resheighttype' 	=>  "%",
 			'border'			=>	"1px solid #CCCCCC",
 			'background'		=>	"#000000",
 			'infobackground'	=>	"#000000",
 			'infocolor'			=>	"#FFFFFF",
-			'resizeimages'		=>	"N",
+			'resizeimages'		=>	"Y",
 		);
 		
 		$this -> add_option('resizeimagescrop', "Y");
 		$this -> update_option('imagespath', $this -> Html -> uploads_url() . '/' . $this -> plugin_name . '/');
 		$this -> add_option('styles', $styles);
-		$this -> add_option('fadespeed', 10);
+		$this -> add_option('effect', "fade");
+		$this -> add_option('easing', "swing");
+		$this -> add_option('fadespeed', 20);
 		$this -> add_option('shownav', "Y");
 		$this -> add_option('navopacity', 25);
-		$this -> add_option('navhover', 70);
+		$this -> add_option('navhover', 75);
 		$this -> add_option('information', "Y");
 		$this -> add_option('infospeed', 10);
 		$this -> add_option('infohideonmobile', 1);
@@ -212,6 +214,8 @@ class GalleryPlugin {
 			wp_schedule_single_event(strtotime("+14 days"), 'slideshow_ratereviewhook', array(14));
 			wp_schedule_single_event(strtotime("+30 days"), 'slideshow_ratereviewhook', array(30));
 			wp_schedule_single_event(strtotime("+60 days"), 'slideshow_ratereviewhook', array(60));
+			wp_schedule_single_event(strtotime("+60 days"), 'slideshow_ratereviewhook', array(180));
+			wp_schedule_single_event(strtotime("+60 days"), 'slideshow_ratereviewhook', array(360));
 			$this -> update_option('ratereview_scheduled', true);
 		}
 		
@@ -465,6 +469,7 @@ class GalleryPlugin {
 		} else {
 			wp_enqueue_script($this -> plugin_name, plugins_url() . '/' . $this -> plugin_name . '/js/gallery.js', null, '1.0');
 			wp_enqueue_script('colorbox', plugins_url() . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
+			wp_enqueue_script('jquery-effects-core');
 		}
 		
 		return true;

@@ -2,6 +2,8 @@
 
 <?php
 
+$effect = $this -> get_option('effect');
+$easing = $this -> get_option('easing');
 $autospeed = $this -> get_option('autospeed');
 $fadespeed = $this -> get_option('fadespeed');
 $navopacity = $this -> get_option('navopacity');
@@ -12,6 +14,67 @@ $thumbopacity = $this -> get_option('thumbopacity');
 $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 
 ?>
+
+<table class="form-table">
+	<tbody>
+		<tr>
+			<th><label for="effect_fade"><?php _e('Effect', $this -> plugin_name); ?></label></th>
+			<td>
+				<label><input <?php echo (empty($effect) || (!empty($effect) && $effect == "fade")) ? 'checked="checked"' : ''; ?> type="radio" name="effect" value="fade" id="effect_fade" /> <?php _e('Fade', $this -> plugin_name); ?></label>
+				<label><input <?php echo (!empty($effect) && $effect == "slide") ? 'checked="checked"' : ''; ?> type="radio" name="effect" value="slide" id="effect_slide" /> <?php _e('Slide', $this -> plugin_name); ?></label>
+				<span class="howto"><?php _e('Choose the type of effect/transition you want for slides', $this -> plugin_name); ?></span>
+			</td>
+		</tr>
+		<tr>
+			<th><label for="easing"><?php _e('Easing', $this -> plugin_name); ?></label>
+			<?php echo $this -> Html -> help(sprintf(__('Choose the type of easing effect. See the %s available.', $this -> plugin_name), '<a href="http://api.jqueryui.com/easings/" target="_blank">' . __('list of easings', $this -> plugin_name) . '</a>')); ?></th>
+			<td>					
+				<select name="easing" id="easing">
+					<option value="swing">swing</option>
+					<option value="linear">linear</option>
+					<option value="easeInQuad">easeInQuad</option>
+					<option value="easeOutQuad">easeOutQuad</option>
+					<option value="easeInOutQuad">easeInOutQuad</option>
+					<option value="easeInCubic">easeInCubic</option>
+					<option value="easeOutCubic">easeOutCubic</option>
+					<option value="easeInOutCubic">easeInOutCubic</option>
+					<option value="easeInQuart">easeInQuart</option>
+					<option value="easeOutQuart">easeOutQuart</option>
+					<option value="easeInOutQuart">easeInOutQuart</option>
+					<option value="easeInQuint">easeInQuint</option>
+					<option value="easeOutQuint">easeOutQuint</option>
+					<option value="easeInOutQuint">easeInOutQuint</option>
+					<option value="easeInSine">easeInSine</option>
+					<option value="easeOutSine">easeOutSine</option>
+					<option value="easeInOutSine">easeInOutSine</option>
+					<option value="easeInExpo">easeInExpo</option>
+					<option value="easeOutExpo">easeOutExpo</option>
+					<option value="easeInOutExpo">easeInOutExpo</option>
+					<option value="easeInCirc">easeInCirc</option>
+					<option value="easeOutCirc">easeOutCirc</option>
+					<option value="easeInOutCirc">easeInOutCirc</option>
+					<option value="easeInElastic">easeInElastic</option>
+					<option value="easeOutElastic">easeOutElastic</option>
+					<option value="easeInOutElastic">easeInOutElastic</option>
+					<option value="easeInBack">easeInBack</option>
+					<option value="easeOutBack">easeOutBack</option>
+					<option value="easeInOutBack">easeInOutBack</option>
+					<option value="easeInBounce">easeInBounce</option>
+					<option value="easeOutBounce">easeOutBounce</option>
+					<option value="easeInOutBounce">easeInOutBounce</option>
+				</select>
+				
+				<script type="text/javascript">
+					jQuery(document).ready(function() {
+						jQuery('#easing').val('<?php echo $easing; ?>');
+					});
+				</script>
+				
+				<span class="howto"><?php _e('Choose the desired easing effect', $this -> plugin_name); ?></span>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 <table class="form-table">
 	<tbody>
@@ -69,8 +132,8 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 <table class="form-table">
 	<tbody>
 		<tr>
-			<th><label for="fadespeed"><?php _e('Image Fading Speed', $this -> plugin_name); ?></label>
-			<?php echo $this -> Html -> help(__('Choose the speed at which images fade in and out. The default is 10 and a number between 1 and 20 is recommended. Use a low number for quick fading and a higher number for slower fading.', $this -> plugin_name)); ?></th>
+			<th><label for="fadespeed"><?php _e('Transition Speed', $this -> plugin_name); ?></label>
+			<?php echo $this -> Html -> help(__('Choose the speed at which images fade in and out. The default is 20 and a number between 1 and 50 is recommended. Use a low number for quick fading and a higher number for slower fading.', $this -> plugin_name)); ?></th>
 			<td>
 				<input style="width:45px;" type="hidden" name="fadespeed" value="<?php echo $fadespeed; ?>" id="fadespeed" />
 				<div id="fadespeed_slider"></div>
@@ -79,7 +142,7 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 				jQuery(document).ready(function() {
 					jQuery('#fadespeed_slider').slider({
 						min: 1, 
-						max: 20,
+						max: 50,
 						value: <?php echo (empty($fadespeed)) ? 0 : $fadespeed; ?>,
 						slide: function(event, ui) {
 							jQuery('#fadespeed').val(ui.value);

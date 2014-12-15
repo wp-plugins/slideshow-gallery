@@ -177,12 +177,16 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	jQuery(document).ready(function() {
 		<?php if (empty($options['auto']) || (!empty($options['auto']) && $options['auto'] == "true")) : ?>slideshow<?php echo $unique; ?>.auto = true;<?php else : ?>slideshow<?php echo $unique; ?>.auto = false;<?php endif; ?>
 		slideshow<?php echo $unique; ?>.speed = <?php echo $options['autospeed']; ?>;
+		slideshow<?php echo $unique; ?>.effect = "<?php echo $options['effect']; ?>";
+		slideshow<?php echo $unique; ?>.easing = "<?php echo $options['easing']; ?>";
 		slideshow<?php echo $unique; ?>.alwaysauto = <?php echo $options['alwaysauto']; ?>;
+		slideshow<?php echo $unique; ?>.autoheight = <?php echo $options['autoheight']; ?>;
 		slideshow<?php echo $unique; ?>.imgSpeed = <?php echo $options['fadespeed']; ?>;
 		slideshow<?php echo $unique; ?>.navOpacity = <?php echo (empty($options['navopacity'])) ? 0 : $options['navopacity']; ?>;
 		slideshow<?php echo $unique; ?>.navHover = <?php echo (empty($options['navhoveropacity'])) ? 0 : $options['navhoveropacity']; ?>;
 		slideshow<?php echo $unique; ?>.letterbox = "#000000";
 		slideshow<?php echo $unique; ?>.linkclass = "linkhover";
+		slideshow<?php echo $unique; ?>.imagesid = "images<?php echo $unique; ?>";
 		slideshow<?php echo $unique; ?>.info = "<?php echo ($options['showinfo'] == "true") ? 'information' . $unique : ''; ?>";
 		slideshow<?php echo $unique; ?>.infoSpeed = <?php echo $options['infospeed']; ?>;
 		slideshow<?php echo $unique; ?>.thumbs = "<?php echo ($options['showthumbs'] == "true") ? 'slider' . $unique : ''; ?>";

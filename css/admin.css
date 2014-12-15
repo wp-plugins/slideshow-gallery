@@ -183,7 +183,7 @@ span.gallery_slides_convert_grid a:before {
 }
 
 .sortable-form-table-element, .ui-sortable li.gallerylineitem {
-	cursor: url(https://mail.google.com/mail/images/2/openhand.cur), default !important;
+	cursor: url('https://www.google.com/intl/en_ALL/mapfiles/openhand.cur'), default !important;
 	background-color: #F1F1F1;
 	background-image: -ms-linear-gradient(top,#F9F9F9,#ECECEC);
 	background-image: -moz-linear-gradient(top,#F9F9F9,#ECECEC);
@@ -195,6 +195,12 @@ span.gallery_slides_convert_grid a:before {
 	-webkit-border-radius:3px;
 	border-radius:3px;
 	border:1px solid #DFDFDF;
+}
+
+.ui-sortable-helper, .ui-sortable li.ui-sortable-helper {
+	cursor: url('https://www.google.com/intl/en_ALL/mapfiles/closedhand.cur'), default !important;
+	cursor: -moz-grabbing;
+	cursor: -webkit-grabbing;
 }
 
 #slidelist .sortable-form-table-element table, #slidelist .sortable-form-table-headings table, #slidelist.ui-sortable {
@@ -297,12 +303,6 @@ span.gallery_slides_convert_grid a:before {
 	width: 80% !important;
 }
 
-.ui-sortable-helper, .ui-sortable li.ui-sortable-helper {
-	cursor: url(https://mail.google.com/mail/images/2/closedhand.cur), default !important;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
-}
-
 /** jQuery UI **/
 
 .ui-corner-all {
@@ -338,12 +338,15 @@ span.gallery_slides_convert_grid a:before {
 }
 
 .slideshow-ui-tooltip .ui-tooltip-content {
-	color: #fff;
 	font-size: 12px;
 	background-color: #000;
-	color: #fff;
+	color: #fff !important;
 	text-align: center;
 	white-space: normal;
+}
+
+.slideshow-ui-tooltip .ui-tooltip-content a {
+	color: #fff;
 }
 
 body .ui-tooltip {

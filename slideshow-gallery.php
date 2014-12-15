@@ -198,6 +198,8 @@ if (!class_exists('Gallery')) {
 			global $wpdb;
 			$styles = $this -> get_option('styles');
 			
+			$effect = $this -> get_option('effect');
+			$easing = $this -> get_option('easing');
 			$autoheight = $this -> get_option('autoheight');
 		
 			// default shortcode parameters
@@ -219,6 +221,8 @@ if (!class_exists('Gallery')) {
 				'resheight'				=>	($styles['resheight']),
 				'resheighttype'			=>	($styles['resheighttype']),
 				'auto'					=>	(($this -> get_option('autoslide') == "Y") ? "true" : "false"),
+				'effect'				=>	((empty($effect) || (!empty($effect) && $effect == "fade")) ? 'fade' : 'slide'),
+				'easing'				=>	((empty($easing)) ? 'swing' : $easing),
 				'autospeed'				=>	($this -> get_option('autospeed')),
 				'alwaysauto'			=>	($this -> get_option('alwaysauto')),
 				'fadespeed'				=>	($this -> get_option('fadespeed')),
@@ -517,7 +521,7 @@ if (!class_exists('Gallery')) {
 					$orderfield = (empty($_GET['orderby'])) ? 'modified' : $_GET['orderby'];
 					$orderdirection = (empty($_GET['order'])) ? 'DESC' : strtoupper($_GET['order']);
 					$order = array($orderfield, $orderdirection);
-					$data = $this -> paginate('Slide', false, false, false, false, 10, $order);				
+					$data = $this -> paginate('Slide', false, false, false, false, 100, $order);				
 					$this -> render('slides' . DS . 'index', array('slides' => $data[$this -> Slide -> model], 'paginate' => $data['Paginate']), true, 'admin');
 					break;
 			}
