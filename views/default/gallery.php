@@ -178,6 +178,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 		<?php if (empty($options['auto']) || (!empty($options['auto']) && $options['auto'] == "true")) : ?>slideshow<?php echo $unique; ?>.auto = true;<?php else : ?>slideshow<?php echo $unique; ?>.auto = false;<?php endif; ?>
 		slideshow<?php echo $unique; ?>.speed = <?php echo $options['autospeed']; ?>;
 		slideshow<?php echo $unique; ?>.effect = "<?php echo $options['effect']; ?>";
+		slideshow<?php echo $unique; ?>.slide_direction = "<?php echo $options['slide_direction']; ?>";
 		slideshow<?php echo $unique; ?>.easing = "<?php echo $options['easing']; ?>";
 		slideshow<?php echo $unique; ?>.alwaysauto = <?php echo $options['alwaysauto']; ?>;
 		slideshow<?php echo $unique; ?>.autoheight = <?php echo $options['autoheight']; ?>;

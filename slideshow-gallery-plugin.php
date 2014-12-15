@@ -188,6 +188,7 @@ class GalleryPlugin {
 		$this -> add_option('styles', $styles);
 		$this -> add_option('effect', "fade");
 		$this -> add_option('easing', "swing");
+		$this -> add_option('slide_direction', "lr");
 		$this -> add_option('fadespeed', 20);
 		$this -> add_option('shownav', "Y");
 		$this -> add_option('navopacity', 25);

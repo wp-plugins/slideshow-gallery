@@ -3,6 +3,7 @@
 <?php
 
 $effect = $this -> get_option('effect');
+$slide_direction = $this -> get_option('slide_direction');
 $easing = $this -> get_option('easing');
 $autospeed = $this -> get_option('autospeed');
 $fadespeed = $this -> get_option('fadespeed');
@@ -25,6 +26,25 @@ $thumbscrollspeed = $this -> get_option('thumbscrollspeed');
 				<span class="howto"><?php _e('Choose the type of effect/transition you want for slides', $this -> plugin_name); ?></span>
 			</td>
 		</tr>
+	</tbody>
+</table>
+
+<div id="effect_slide_div" style="display:<?php echo (!empty($effect) && $effect == "slide") ? 'block' : 'none'; ?>;">
+	<table class="form-table">
+		<tbody>
+			<tr>
+				<th><label for="slide_direction_lr"><?php _e('Slide Direction', $this -> plugin_name); ?></label></th>
+				<td>
+					<label><input <?php echo (!empty($slide_direction) && $slide_direction == "lr") ? 'checked="checked"' : ''; ?> type="radio" name="slide_direction" value="lr" id="slide_direction_lr" /> <?php _e('Left/Right', $this -> plugin_name); ?></label>
+					<label><input <?php echo (!empty($slide_direction) && $slide_direction == "tb") ? 'checked="checked"' : ''; ?> type="radio" name="slide_direction" value="tb" id="slide_direction_tb" /> <?php _e('Top/Bottom', $this -> plugin_name); ?></label>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<table class="form-table">
+	<tbody>
 		<tr>
 			<th><label for="easing"><?php _e('Easing', $this -> plugin_name); ?></label>
 			<?php echo $this -> Html -> help(sprintf(__('Choose the type of easing effect. See the %s available.', $this -> plugin_name), '<a href="http://api.jqueryui.com/easings/" target="_blank">' . __('list of easings', $this -> plugin_name) . '</a>')); ?></th>

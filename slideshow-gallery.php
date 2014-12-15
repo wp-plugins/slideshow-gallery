@@ -199,6 +199,7 @@ if (!class_exists('Gallery')) {
 			$styles = $this -> get_option('styles');
 			
 			$effect = $this -> get_option('effect');
+			$slide_direction = $this -> get_option('slide_direction');
 			$easing = $this -> get_option('easing');
 			$autoheight = $this -> get_option('autoheight');
 		
@@ -222,6 +223,7 @@ if (!class_exists('Gallery')) {
 				'resheighttype'			=>	($styles['resheighttype']),
 				'auto'					=>	(($this -> get_option('autoslide') == "Y") ? "true" : "false"),
 				'effect'				=>	((empty($effect) || (!empty($effect) && $effect == "fade")) ? 'fade' : 'slide'),
+				'slide_direction'		=>	((empty($slide_direction) || (!empty($slide_direction) && $slide_direction == "lr")) ? 'lr' : 'tb'),
 				'easing'				=>	((empty($easing)) ? 'swing' : $easing),
 				'autospeed'				=>	($this -> get_option('autospeed')),
 				'alwaysauto'			=>	($this -> get_option('alwaysauto')),

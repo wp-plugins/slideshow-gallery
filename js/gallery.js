@@ -115,32 +115,59 @@ TINY.slideshow.prototype={
 	mi:function(oi, i) {		
 		opos = jQuery(oi).position();
 		oposl = opos.left;
+		opost = opos.top;
 		ow = jQuery(oi).width();
+		oh = jQuery(oi).height();
 		
 		pos = jQuery(i).position();
 		posl = pos.left;
+		post = pos.top;
 		w = jQuery(i).width();
+		h = jQuery(i).height();
 		
 		speed = (this.imgSpeed * 100);
 			
 		if (jQuery(oi).attr('src') != jQuery(i).attr('src')) {
 			if (this.direction == "f") {	
-				jQuery(i).css('left', (w + oposl)).animate({"left": "0px"}, {
-					duration: speed,
-					easing: this.easing,
-					step: function(now, fx) {
-						jQuery(oi).css('left', '-' + (ow - now) + 'px');
-					}
-				});
+				if (this.slide_direction == "tb") {
+					jQuery(i).css('top', (h + opost)).animate({
+					"top": "0px"
+					}, {
+						duration: speed,
+						easing: this.easing,
+						step: function(now, fx) {
+							jQuery(oi).css('top', '-' + (oh - now) + 'px');
+						}
+					});
+				} else {
+					jQuery(i).css('left', (w + oposl)).animate({"left": "0px"}, {
+						duration: speed,
+						easing: this.easing,
+						step: function(now, fx) {
+							jQuery(oi).css('left', '-' + (ow - now) + 'px');
+						}
+					});	
+				}
 			} else if (this.direction == "b") {	
-				newpos = -(w - oposl);							
-				jQuery(i).css('left', newpos).animate({"left": "0px"}, {
-					duration: speed,
-					easing: this.easing,
-					step: function(now, fx) {
-						jQuery(oi).css('left', '+' + (ow + now) + 'px');
-					}
-				});
+				if (this.slide_direction == "tb") {
+					newpos = -(w - opost);							
+					jQuery(i).css('top', newpos).animate({"top": "0px"}, {
+						duration: speed,
+						easing: this.easing,
+						step: function(now, fx) {
+							jQuery(oi).css('top', '+' + (oh + now) + 'px');
+						}
+					});
+				} else {
+					newpos = -(w - oposl);							
+					jQuery(i).css('left', newpos).animate({"left": "0px"}, {
+						duration: speed,
+						easing: this.easing,
+						step: function(now, fx) {
+							jQuery(oi).css('left', '+' + (ow + now) + 'px');
+						}
+					});
+				}
 			}
 		}
 	},
