@@ -41,6 +41,14 @@ $resizeimagescrop = $this -> get_option('resizeimagescrop');
 	</tbody>
 </table>
 
+<div id="autoheight_div" style="display:<?php echo (!empty($autoheight)) ? 'block' : ''; ?>;">
+	<table class="form-table">
+		<tbody>
+			
+		</tbody>
+	</table>
+</div>
+
 <div id="layout_responsive_div" style="display:<?php echo (!empty($styles['layout']) && $styles['layout'] == "responsive") ? 'block' : 'none'; ?>;">
 	<table class="form-table">
 		<tbody>

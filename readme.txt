@@ -3,8 +3,8 @@ Contributors: contrid
 Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
-Tested up to: 4.0.1
-Stable tag: 1.5.1
+Tested up to: 4.1
+Stable tag: 1.5.2
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -129,6 +129,8 @@ Thank you to these wonderful people who contributed to translating the Slideshow
 * Afrikaans (af_ZA) by <a href="http://tribulant.com">Antonie Potgieter | Tribulant Software</a>
 * Slovak (sk_SK) by Branco Radenovich
 
+<a href="http://tribulant.com/support/">Contact us</a> to submit your language file and be mentioned here!
+
 == Installation ==
 
 Installing the WordPress slideshow gallery plugin is very easy. Simply follow the steps below.
@@ -172,6 +174,13 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.5.2 =
+* ADD: Navigate between images in overlay
+* IMPROVE: Ability to hide wp_head/wp_footer notifications in admin
+* IMPROVE: HTML validation  
+* IMPROVE: WordPress 4.1 compatibility
+* FIX: Remove unnecessary flush()
 
 = 1.5.1 =
 * ADD: Setting to output Javascript per slideshow or globally in footer

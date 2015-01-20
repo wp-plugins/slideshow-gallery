@@ -23,6 +23,18 @@ class GalleryHtmlHelper extends GalleryPlugin {
 		}
 	}
 	
+	function is_image($filename = null) {
+		if (!empty($filename)) {
+			if ($filetype = wp_check_filetype($filename)) {
+				if (!empty($filetype['ext']) && ($filetype['ext'] == "bmp" || $filetype['ext'] == "png" || $filetype['ext'] == "jpg" || $filetype['ext'] == "jpeg")) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public static function uploads_path() {
 		if ($upload_dir = wp_upload_dir()) {		
 			return str_replace("\\", "/", $upload_dir['basedir']);

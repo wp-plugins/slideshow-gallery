@@ -2,7 +2,7 @@
 
 class GalleryPlugin {
 
-	var $version = '1.5.1';
+	var $version = '1.5.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -150,13 +150,13 @@ class GalleryPlugin {
 				$version = "1.4.8";
 			}
 			
-			if (version_compare($cur_version, "1.5.1") < 0) {
+			if (version_compare($cur_version, "1.5.2") < 0) {
 				$this -> initialize_options();
 				
 				$query = "ALTER TABLE `" . $this -> Slide -> table . "` CHANGE `type` `type` ENUM('media','file','url') NOT NULL DEFAULT 'media'";
 				$wpdb -> query($query);
 				
-				$version = "1.5.1";
+				$version = "1.5.2";
 			}
 		
 			//the current version is older.
@@ -183,6 +183,7 @@ class GalleryPlugin {
 			'resizeimages'		=>	"Y",
 		);
 		
+		$this -> add_option('existing', 1);		
 		$this -> add_option('resizeimagescrop', "Y");
 		$this -> update_option('imagespath', $this -> Html -> uploads_url() . '/' . $this -> plugin_name . '/');
 		$this -> add_option('styles', $styles);
@@ -216,8 +217,8 @@ class GalleryPlugin {
 			wp_schedule_single_event(strtotime("+14 days"), 'slideshow_ratereviewhook', array(14));
 			wp_schedule_single_event(strtotime("+30 days"), 'slideshow_ratereviewhook', array(30));
 			wp_schedule_single_event(strtotime("+60 days"), 'slideshow_ratereviewhook', array(60));
-			wp_schedule_single_event(strtotime("+60 days"), 'slideshow_ratereviewhook', array(180));
-			wp_schedule_single_event(strtotime("+60 days"), 'slideshow_ratereviewhook', array(360));
+			wp_schedule_single_event(strtotime("+180 days"), 'slideshow_ratereviewhook', array(180));
+			wp_schedule_single_event(strtotime("+360 days"), 'slideshow_ratereviewhook', array(360));
 			$this -> update_option('ratereview_scheduled', true);
 		}
 		
@@ -319,8 +320,6 @@ class GalleryPlugin {
 		</script>
 		
 		<?php
-		
-		flush();
 	}
 	
 	function paginate($model = null, $fields = '*', $sub = null, $conditions = null, $searchterm = null, $per_page = 10, $order = array('modified', "DESC")) {
@@ -867,7 +866,6 @@ class GalleryPlugin {
 					$data = ob_get_clean();					
 					return $data;
 				} else {
-					flush();
 					return true;
 				}
 			}
