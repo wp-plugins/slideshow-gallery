@@ -19,8 +19,8 @@
   font-style: normal;
 }
 
-.slideshow-icon-deleete {
-	
+.slideshow-icon-delete {
+	text-decoration: none !important;
 }
 
 .slideshow-icon-delete:before {
@@ -28,7 +28,7 @@
 	content: "\f158";
 	font-size: 20px;
 	vertical-align: middle;
-	float: right;
+	/*float: right;*/
 }
 
 .slideshow .ui-slider {

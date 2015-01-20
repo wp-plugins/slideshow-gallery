@@ -94,8 +94,9 @@ if (!class_exists('Gallery')) {
 		}
 		
 		function wp_head() {
-			global $slideshow_javascript;
+			global $slideshow_javascript, $slideshow_css;
 			$slideshow_javascript = array();
+			$slideshow_css = array();
 			
 			if (!empty($_GET['test-head'])) {
 				echo '<!-- wp_head -->';
@@ -103,7 +104,7 @@ if (!class_exists('Gallery')) {
 		}
 		
 		function wp_footer() {
-			global $slideshow_javascript;
+			global $slideshow_javascript, $slideshow_css;
 			$jsoutput = $this -> get_option('jsoutput');
 		
 			if (!empty($slideshow_javascript)) {
@@ -115,6 +116,18 @@ if (!class_exists('Gallery')) {
 					}
 					
 					?><!-- Slideshow Gallery Javascript END --><?php
+				}
+			}
+			
+			if (!empty($slideshow_css)) {
+				if (!empty($jsoutput) && $jsoutput == "footerglobal") {
+					?><!-- Slideshow Gallery CSS BEG --><?php
+						
+					foreach ($slideshow_css as $css) {
+						echo stripslashes($css);
+					}
+					
+					?><!-- Slideshow Gallery CSS END --><?php
 				}
 			}
 			
@@ -185,13 +198,21 @@ if (!class_exists('Gallery')) {
 			if ($response = wp_remote_request($url)) {
 				if (!is_wp_error($response)) {
 					$html = $response['body'];
+					$showmessage_wphead = $this -> get_option('showmessage_wphead');
+					$showmessage_wpfoot = $this -> get_option('showmessage_wpfoot');
 					
 					if (!strstr($html, '<!-- wp_head -->')) {
-						$this -> render_err(sprintf(__('Slideshow Gallery: It seems like your theme is missing the wp_head() function. See %s', $this -> plugin_name), '<a href="http://codex.wordpress.org/Function_Reference/wp_head" target="_blank">' . __('documentation', $this -> plugin_name) . '</a>'));
+						if (empty($showmessage_wphead) || (!empty($showmessage_wphead) && $showmessage_wphead != "hidden")) {
+							$this -> update_option('showmessage_wphead', 1);
+							$this -> render_err(sprintf(__('Slideshow Gallery: It seems like your theme is missing the wp_head() function. See %s. %s', $this -> plugin_name), '<a href="http://codex.wordpress.org/Function_Reference/wp_head" target="_blank">' . __('documentation', $this -> plugin_name) . '</a>', '<a href="' . admin_url('admin.php?page=' . $this -> sections -> settings . '&slideshow_method=hidemessage&message=wphead') . '" class="slideshow-icon-delete"></a>'));
+						}
 					}
 					
 					if (!strstr($html, '<!-- wp_footer -->')) {
-						$this -> render_err(sprintf(__('Slideshow Gallery: It seems like your theme is missing the wp_footer() function. See %s', $this -> plugin_name), '<a href="http://codex.wordpress.org/Function_Reference/wp_footer" target="_blank">' . __('documentation', $this -> plugin_name) . '</a>'));
+						if (empty($showmessage_wpfoot) || (!empty($showmessage_wpfoot) && $showmessage_wpfoot != "hidden")) {
+							$this -> update_option('showmessage_wpfoot', 1);
+							$this -> render_err(sprintf(__('Slideshow Gallery: It seems like your theme is missing the wp_footer() function. See %s . %s', $this -> plugin_name), '<a href="http://codex.wordpress.org/Function_Reference/wp_footer" target="_blank">' . __('documentation', $this -> plugin_name) . '</a>', '<a href="' . admin_url('admin.php?page=' . $this -> sections -> settings . '&slideshow_method=hidemessage&message=wpfoot') . '" class="slideshow-icon-delete"></a>'));
+						}
 					}
 				} else {
 					$error_string = $response -> get_error_message();
@@ -759,6 +780,12 @@ if (!class_exists('Gallery')) {
 							switch ($_GET['message']) {
 								case 'ratereview'				:
 									$this -> delete_option('showmessage_ratereview');
+									$this -> redirect($this -> referer);
+									break;
+								case 'wphead'					:
+								case 'wpfoot'					:
+									$this -> update_option('showmessage_wphead', 'hidden');
+									$this -> update_option('showmessage_wpfoot', 'hidden');
 									$this -> redirect($this -> referer);
 									break;
 							}

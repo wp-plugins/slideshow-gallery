@@ -145,8 +145,8 @@ $thumbopacity = $this -> get_option('thumbopacity');
 			<div id="image<?php echo $unique; ?>" class="slideshow-image"></div>
 			<?php if ($options['showinfo'] == "true") : ?>
 				<div class="slideshow-information" id="information<?php echo $unique; ?>">
-					<h3 class="slideshow-info-heading"></h3>
-					<p class="slideshow-info-content"></p>
+					<h3 class="slideshow-info-heading">info heading</h3>
+					<p class="slideshow-info-content">info content</p>
 				</div>
 			<?php endif; ?>
 		</div>
@@ -227,11 +227,19 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	$cssattr['sliderwidth'] = (($cssattr['thumbwidth'] + $options['thumbsspacing'] + 6) * count($slides));
 	$cssattr['infohideonmobile'] = $this -> get_option('infohideonmobile');
 	
+	$javascript = ob_get_clean(); 
+	global $slideshow_javascript;
+	$slideshow_javascript[] = $javascript;
+	
+	ob_start();
+	
 	?>
 	
-	<style type="text/css">
+	<?php /*<style type="text/css">
 	@import url('<?php echo $this -> get_css_url($cssattr, $options['layout']); ?>');
-	</style>
+	</style>*/ ?>
+	
+	<link rel="stylesheet" property="stylesheet" href="<?php echo $this -> get_css_url($cssattr, $options['layout']); ?>" type="text/css" media="all" />
 	
 	<!--[if IE 6]>
 	<style type="text/css">
@@ -240,17 +248,21 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	</style>
 	<![endif]-->
 	
-	<?php 
-	
-	$javascript = ob_get_clean(); 
-	global $slideshow_javascript;
-	$slideshow_javascript[] = $javascript;
+	<?php
+		
+	$css = ob_get_clean();
+	global $slideshow_css;
+	$slideshow_css[] = $css;
 	
 	$jsoutput = $this -> get_option('jsoutput');
 	if (empty($jsoutput) || $jsoutput == "perslideshow") {
 		echo '<!-- Slideshow Gallery Javascript BEG -->';
 		echo stripslashes($javascript);
 		echo '<!-- Slideshow Gallery Javascript END -->';
+		
+		echo '<!-- Slideshow Gallery CSS BEG -->';
+		echo stripslashes($slideshow_css);
+		echo '<!-- Slideshow Gallery CSS END -->';
 	}
 	
 	?>

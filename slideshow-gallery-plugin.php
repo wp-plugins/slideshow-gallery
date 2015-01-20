@@ -489,7 +489,7 @@ class GalleryPlugin {
 			
 			foreach ($styles as $skey => $sval) {			
 				$css_url .= $skey . '=' . urlencode($sval);
-				if ($s < count($styles)) { $css_url .= '&'; }
+				if ($s < count($styles)) { $css_url .= '&amp;'; }
 				$s++;
 			}
 		}
