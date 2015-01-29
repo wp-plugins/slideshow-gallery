@@ -1,8 +1,8 @@
 <?php
 
-class GalleryPlugin {
+class GalleryPlugin extends GalleryCheckinit {
 
-	var $version = '1.5.2';
+	var $version = '1.5.3';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -44,6 +44,8 @@ class GalleryPlugin {
 			error_reporting(0);
 			@ini_set('display_errors', 0);
 		}
+		
+		$this -> ci_initialize();
 		
 		return true;
 	}
@@ -150,13 +152,13 @@ class GalleryPlugin {
 				$version = "1.4.8";
 			}
 			
-			if (version_compare($cur_version, "1.5.2") < 0) {
+			if (version_compare($cur_version, "1.5.3") < 0) {
 				$this -> initialize_options();
 				
 				$query = "ALTER TABLE `" . $this -> Slide -> table . "` CHANGE `type` `type` ENUM('media','file','url') NOT NULL DEFAULT 'media'";
 				$wpdb -> query($query);
 				
-				$version = "1.5.2";
+				$version = "1.5.3";
 			}
 		
 			//the current version is older.

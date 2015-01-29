@@ -5,6 +5,9 @@
 		<a href="<?php echo $this -> url; ?>"><?php _e('&larr; Manage All Slides', $this -> plugin_name); ?></a>
 	</div>
 	
+	<p class="howto"><?php echo sprintf(__('This page lets you order all slides shown with %s.', $this -> plugin_name), '<code>[tribulant_slideshow]</code>'); ?><br/>
+	<?php echo __('To order slides per gallery, go to Slideshow > Manage Galleries and order for that specific gallery.', $this -> plugin_name); ?></p>
+	
 	<?php if (!empty($slides)) : ?>
 		<div id="slidemessage" class="updated fade" style="display:none; width:31%;"><!-- message will go here --></div>
 		<div class="gallery_slides_list">

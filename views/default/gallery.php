@@ -258,15 +258,11 @@ $thumbopacity = $this -> get_option('thumbopacity');
 	$jsoutput = $this -> get_option('jsoutput');
 	if (empty($jsoutput) || $jsoutput == "perslideshow") {
 		echo '<!-- Slideshow Gallery Javascript BEG -->';
-		foreach ($slideshow_javascript as $javascript) {
-			echo stripslashes($javascript);
-		}
+		echo stripslashes($javascript);
 		echo '<!-- Slideshow Gallery Javascript END -->';
 		
 		echo '<!-- Slideshow Gallery CSS BEG -->';
-		foreach ($slideshow_css as $css) {
-			echo stripslashes($css);
-		}
+		echo stripslashes($css);
 		echo '<!-- Slideshow Gallery CSS END -->';
 	}
 	
