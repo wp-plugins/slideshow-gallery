@@ -22,7 +22,13 @@ $thumbopacity = $this -> get_option('thumbopacity');
 					<?php else : ?>
 						<span><?php echo $full_image_href[0]; ?></span>
 					<?php endif; ?>
-					<p><?php echo stripslashes(__(get_the_excerpt())); ?></p>
+					<?php /*<p><?php echo stripslashes(__(get_the_excerpt())); ?></p>*/ ?>
+					<?php
+						
+					$attachment = wp_get_attachment_metadata($slide -> ID);	
+						
+					?>
+					<p><?php echo $attachment['image_meta']['caption']; ?></p>
 					<?php $thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false); ?>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if (!empty($slide -> guid)) : ?>

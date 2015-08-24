@@ -158,6 +158,7 @@ class GalleryPlugin extends GalleryCheckinit {
 				$query = "ALTER TABLE `" . $this -> Slide -> table . "` CHANGE `type` `type` ENUM('media','file','url') NOT NULL DEFAULT 'media'";
 				$wpdb -> query($query);
 				
+				
 				$version = "1.5.3";
 			}
 		
@@ -428,21 +429,8 @@ class GalleryPlugin extends GalleryCheckinit {
 		
 		if (is_admin()) {
 			if (!empty($_GET['page']) && in_array($_GET['page'], (array) $this -> sections)) {
-				wp_enqueue_script(
-			        'iris',
-			        admin_url('js/iris.min.js'),
-			        array( 'jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch' ),
-			        false,
-			        1
-			    );
-			    
-			    wp_enqueue_script(
-			        'wp-color-picker',
-			        admin_url('js/color-picker.min.js'),
-			        array( 'iris' ),
-			        false,
-			        1
-			    );
+				wp_enqueue_script('iris', admin_url('js/iris.min.js'), array('jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch'), false, 1);
+			    wp_enqueue_script('wp-color-picker', admin_url('js/color-picker.min.js'), array( 'iris' ), false, 1);
 			
 				wp_enqueue_script('jquery-ui-tabs');
 				wp_enqueue_script('jquery-ui-tooltip');
@@ -453,7 +441,7 @@ class GalleryPlugin extends GalleryCheckinit {
 					wp_enqueue_script('wp-lists');
 					wp_enqueue_script('postbox');
 					wp_enqueue_script('plugin-install');
-					wp_enqueue_script('settings-editor', plugins_url() . '/' . $this -> plugin_name . '/js/settings-editor.js', array('jquery'), '1.0');
+					wp_enqueue_script('settings-editor', $this -> render_url('js/settings-editor.js', "admin"), array('jquery'), '1.0');
 				}
 				
 				if ($_GET['page'] == "slideshow-slides" && $_GET['method'] == "order") {
@@ -467,11 +455,11 @@ class GalleryPlugin extends GalleryCheckinit {
 				add_thickbox();
 			}
 			
-			wp_enqueue_script('colorbox', plugins_url() . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
-			wp_enqueue_script($this -> plugin_name . 'admin', plugins_url() . '/' . $this -> plugin_name . '/js/admin.js', null, '1.0');
+			wp_enqueue_script('colorbox', $this -> render_url('js/colorbox.js', "admin"), array('jquery'), '1.3.19');
+			wp_enqueue_script($this -> plugin_name . 'admin', $this -> render_url('js/admin.js', "admin"), null, '1.0');
 		} else {
-			wp_enqueue_script($this -> plugin_name, plugins_url() . '/' . $this -> plugin_name . '/js/gallery.js', null, '1.0');
-			wp_enqueue_script('colorbox', plugins_url() . '/' . $this -> plugin_name . '/js/colorbox.js', array('jquery'), '1.3.19');
+			wp_enqueue_script($this -> plugin_name, $this -> render_url('js/gallery.js', "default"), null, '1.0');
+			wp_enqueue_script('colorbox', $this -> render_url('js/colorbox.js', "default"), array('jquery'), '1.3.19');
 			wp_enqueue_script('jquery-effects-core');
 		}
 		
@@ -480,7 +468,8 @@ class GalleryPlugin extends GalleryCheckinit {
 	
 	function get_css_url($attr = null, $layout = null) {
 		$file = (empty($layout) || $layout == "specific") ? 'css' : 'css-responsive';
-		$css_url = plugins_url() . '/' . $this -> plugin_name . '/views/default/' . $file . '.php?';
+		//$css_url = plugins_url() . '/' . $this -> plugin_name . '/views/default/' . $file . '.php?';
+		$css_url = $this -> render_url($file . '.php', 'default') . '?';
 		
 		$default_attr = $this -> get_option('styles');
 		$styles = wp_parse_args($attr, $default_attr);
@@ -504,17 +493,15 @@ class GalleryPlugin extends GalleryCheckinit {
 	
 	function enqueue_styles() {
 		if (is_admin()) {
-			$src = plugins_url() . '/' . $this -> plugin_name . '/css/admin.css';			
-			wp_enqueue_style($this -> plugin_name, $src, null, "1.0", "all");
+			wp_enqueue_style($this -> plugin_name, $this -> render_url('css/admin.css', "admin"), null, "1.0", "all");
 			wp_enqueue_style('wp-color-picker');
-			$jquery_ui_src = plugins_url() . '/' . $this -> plugin_name . '/css/jquery-ui.css';
-			wp_enqueue_style('jquery-ui', $jquery_ui_src, null, "1.0", "all");
+			wp_enqueue_style('jquery-ui', $this -> render_url('css/jquery-ui.css', "admin"), null, "1.0", "all");
+			wp_enqueue_style('colorbox', $this -> render_url('css/colorbox.css', "admin"), null, "1.3.19", "all");
+		} else {
+			wp_enqueue_style('colorbox', $this -> render_url('css/colorbox.css', "default"), null, "1.3.19", "all");
 		}
 		
-		$colorbox_src = plugins_url() . '/' . $this -> plugin_name . '/css/colorbox.css';
-		wp_enqueue_style('colorbox', $colorbox_src, null, "1.3.19", "all");
-		$font_src = plugins_url() . '/' . $this -> plugin_name . '/views/default/css/font.css';
-		wp_enqueue_style('slideshow-font', $font_src, null, null, "all");
+		wp_enqueue_style('slideshow-font', $this -> render_url('css/font.css', "default"), null, null, "all");
 	
 		return true;
 	}
@@ -816,6 +803,33 @@ class GalleryPlugin extends GalleryCheckinit {
 		
 		if (file_exists($full_path)) {
 			return true;
+		}
+		
+		return false;
+	}
+	
+	function render_url($file = null, $folder = 'admin', $extension = null) {	
+		$this -> plugin_name = basename(dirname(__FILE__));
+	
+		if (!empty($file)) {		
+			if (!empty($folder) && $folder != "admin") {
+				$theme_folder = $this -> get_option('theme_folder');
+				$folder = (!empty($theme_folder)) ? $theme_folder : $folder;
+				$folderurl = plugins_url() . '/' . $this -> plugin_name . '/views/' . $folder . '/';
+			
+				$template_url = get_stylesheet_directory_uri();
+				$theme_path = get_stylesheet_directory();
+				$full_path = $theme_path . DS . 'slideshow' . DS . $file;
+				
+				if (!empty($theme_path) && file_exists($full_path)) {
+					$folderurl = $template_url . '/slideshow/';
+				}
+			} else {
+				$folderurl = plugins_url() . '/' . $this -> plugin_name . '/';
+			}
+			
+			$url = $folderurl . $file;			
+			return $url;
 		}
 		
 		return false;
