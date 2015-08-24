@@ -221,7 +221,7 @@ TINY.slideshow.prototype={
 				//this.q.onclick = new Function('jQuery.colorbox({href:"' + this.a[s].l + '",maxWidth:"90%",maxHeight:"90%",title:"' + this.a[s].t + '"})');
 				this.q.onmouseover = new Function('this.className="' + this.linkclass + '"; this.href = "' + this.a[s].l + '";');
 				var uniqueimglinkid = jQuery('a[href="' + this.a[s].l + '"]').attr('id');
-				this.q.onclick = new Function('jQuery(".colorbox").colorbox({rel:"' + unique + 'overlay", maxWidth:"90%", maxHeight:"90%"}); jQuery("#' + uniqueimglinkid + '").click(); return false;');
+				this.q.onclick = new Function('jQuery(".colorbox' + unique + '").colorbox({rel:"' + unique + 'overlay", maxWidth:"90%", maxHeight:"90%"}); jQuery("#' + uniqueimglinkid + '").click(); return false;');
 			} else {
 				this.q.onmouseover = new Function('this.className="' + this.linkclass + '";');
 				this.q.onclick = new Function('window.open("' + this.a[s].l + '","' + this.a[s].tg + '"); return false;');

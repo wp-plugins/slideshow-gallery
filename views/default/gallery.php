@@ -26,12 +26,12 @@ $thumbopacity = $this -> get_option('thumbopacity');
 					<?php $thumbnail_link = wp_get_attachment_image_src($slide -> ID, 'thumbnail', false); ?>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if (!empty($slide -> guid)) : ?>
-							<a href="<?php echo $slide -> guid; ?>" id="<?php echo $unique; ?>imglink<?php echo $slide -> ID; ?>" <?php if ($this -> Html -> is_image($slide -> guid)) : ?>class="colorbox" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> target="_self" title="<?php echo esc_attr(__($slide -> post_title)); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
+							<a href="<?php echo $slide -> guid; ?>" id="<?php echo $unique; ?>imglink<?php echo $slide -> ID; ?>" <?php if ($this -> Html -> is_image($slide -> guid)) : ?>class="colorboxslideshow<?php echo $unique; ?>" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> target="_self" title="<?php echo esc_attr(__($slide -> post_title)); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
 						<?php else : ?>
-							<a id="<?php echo $unique; ?>imglink<?php echo $slide -> ID; ?>" <?php if ($this -> Html -> is_image($full_image_url)) : ?>class="colorbox" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?>><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
+							<a id="<?php echo $unique; ?>imglink<?php echo $slide -> ID; ?>" <?php if ($this -> Html -> is_image($full_image_url)) : ?>class="colorboxslideshow<?php echo $unique; ?>" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?>><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
-						<a id="<?php echo $unique; ?>imglink<?php echo $slide -> ID; ?>" <?php if ($this -> Html -> is_image($slide -> guid)) : ?>class="colorbox" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> href="<?php echo $slide -> guid; ?>" title="<?php echo __($slide -> post_title); ?>"></a>
+						<a id="<?php echo $unique; ?>imglink<?php echo $slide -> ID; ?>" <?php if ($this -> Html -> is_image($slide -> guid)) : ?>class="colorboxslideshow<?php echo $unique; ?>" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> href="<?php echo $slide -> guid; ?>" title="<?php echo __($slide -> post_title); ?>"></a>
 					<?php endif; ?>
 				</li>
 				<?php wp_reset_postdata(); ?>
@@ -56,7 +56,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 						<?php if (!empty($slide -> guid)) : ?>
 							<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo esc_attr(__($slide -> post_title)); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
 						<?php else : ?>
-							<a id="<?php echo $unique; ?>imglink<?php echo $slide -> ID; ?>" <?php if ($this -> Html -> is_image($full_image_url)) : ?>class="colorbox" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?>><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
+							<a id="<?php echo $unique; ?>imglink<?php echo $slide -> ID; ?>" <?php if ($this -> Html -> is_image($full_image_url)) : ?>class="colorboxslideshow<?php echo $unique; ?>" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?>><img src="<?php echo $this -> Html -> bfithumb_image_src($full_image_url, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> post_title)); ?>" /></a>
 						<?php endif; ?>
 					<?php else : ?>
 						<a href="<?php echo $slide -> guid; ?>" target="_self" title="<?php echo __($slide -> post_title); ?>"></a>
@@ -101,7 +101,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
 							<a href="<?php echo $slide -> link; ?>" title="<?php echo esc_attr(__($slide -> title)); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 						<?php elseif ($options['imagesoverlay'] == "true") : ?>
-							<a href="<?php echo $slide -> image_path; ?>" id="<?php echo $unique; ?>imglink<?php echo $slide -> id; ?>" <?php if ($this -> Html -> is_image($slide -> image_path)) : ?>class="colorbox" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
+							<a href="<?php echo $slide -> image_path; ?>" id="<?php echo $unique; ?>imglink<?php echo $slide -> id; ?>" <?php if ($this -> Html -> is_image($slide -> image_path)) : ?>class="colorboxslideshow<?php echo $unique; ?>" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 						<?php else : ?>
 							<a><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 						<?php endif; ?>
@@ -109,7 +109,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
 							<a href="<?php echo $slide -> link; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"></a>
 						<?php elseif ($options['imagesoverlay'] == "true") : ?>
-							<a href="<?php echo $slide -> image_path; ?>" id="<?php echo $unique; ?>imglink<?php echo $slide -> id; ?>" <?php if ($this -> Html -> is_image($slide -> image_path)) : ?>class="colorbox" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> class="colorbox" rel="slideshow<?php echo $unique; ?>overlay" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"></a>
+							<a href="<?php echo $slide -> image_path; ?>" id="<?php echo $unique; ?>imglink<?php echo $slide -> id; ?>" <?php if ($this -> Html -> is_image($slide -> image_path)) : ?>class="colorboxslideshow<?php echo $unique; ?>" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> rel="slideshow<?php echo $unique; ?>overlay" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"></a>
 						<?php else : ?>
 							<a></a>
 						<?php endif; ?>

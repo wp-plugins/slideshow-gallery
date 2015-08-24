@@ -303,6 +303,7 @@ if (!class_exists('Gallery')) {
 			// if this is an RSS/Atom feed, it should not continue...
 			if (is_feed()) { return false; }
 			
+			// Shopping Cart plugin products
 			if (!empty($products)) {
 				include_once(ABSPATH . 'wp-admin/includes/plugin.php');			
 				if (is_plugin_active('wp-checkout' . DS . 'wp-checkout.php')) {
@@ -336,6 +337,7 @@ if (!class_exists('Gallery')) {
 					$content .= stripslashes($error);
 					$content .= '</p>';
 				}
+			// Featured images
 			} elseif (!empty($featured)) {
 				global $post;
 			
@@ -358,6 +360,7 @@ if (!class_exists('Gallery')) {
 					$content .= stripslashes($error);
 					$content .= '</p>';
 				}
+			// Slides of a gallery
 			} elseif (!empty($gallery_id)) {
 				if (!is_array($orderby) || $orderby == "random") {
 					$orderbystring = "ORDER BY RAND()";
@@ -391,8 +394,9 @@ if (!class_exists('Gallery')) {
 					}
 				
 					if ($orderby == "random") { shuffle($slides); }
-					$content = $this -> render('gallery', array('slides' => $slides, 'unique' => 'gallery' . $gallery_id, 'options' => $s, 'frompost' => false), false, 'default');	
+					$content = $this -> render('gallery', array('slides' => $slides, 'unique' => 'gallery' . $gallery_id . rand(1, 999), 'options' => $s, 'frompost' => false), false, 'default');	
 				}
+			// All slides
 			} elseif (!empty($custom) || empty($post_id)) {
 				$slides = $this -> Slide -> find_all(null, null, $orderby);
 				
@@ -408,6 +412,7 @@ if (!class_exists('Gallery')) {
 				
 				if ($orderby == "random") { shuffle($slides); }
 				$content = $this -> render('gallery', array('slides' => $slides, 'unique' => "custom", 'options' => $s, 'frompost' => false), false, 'default');
+			// Images of a post/page
 			} else {
 				global $post;
 				$pid = (empty($post_id)) ? $post -> ID : $post_id;
@@ -607,7 +612,7 @@ if (!class_exists('Gallery')) {
 				case 'view'						:
 					$this -> Db -> model = $this -> Gallery -> model;
 					$gallery = $this -> Gallery -> find(array('id' => $_GET['id']));
-					$data = $this -> paginate('GallerySlides', "*", false, array('gallery_id' => $gallery -> id));
+					$data = $this -> paginate('GallerySlides', "*", $this -> sections -> galleries . '&method=view&id=' . $gallery -> id, array('gallery_id' => $gallery -> id));
 					
 					$data['Slide'] = array();
 					if (!empty($data[$this -> GallerySlides -> model])) {

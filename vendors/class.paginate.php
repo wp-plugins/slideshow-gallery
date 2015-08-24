@@ -50,7 +50,7 @@ class GalleryPaginate extends GalleryPlugin {
 	
 	var $pagination = '';
 	
-	function GalleryPaginate($table = '', $fields = '', $sub = '', $parent = '') {
+	function GalleryPaginate($table = null, $fields = null, $sub = null, $parent = null) {
 		$this -> sub = $sub;
 		$this -> parentd = $parent;
 	
@@ -63,7 +63,7 @@ class GalleryPaginate extends GalleryPlugin {
 		}
 	}
 	
-	function start_paging($page = '') {
+	function start_paging($page = null) {
 		global $wpdb;
 	
 		$page = (empty($page)) ? 1 : $page;
