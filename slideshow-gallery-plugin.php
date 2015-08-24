@@ -2,7 +2,7 @@
 
 class GalleryPlugin extends GalleryCheckinit {
 
-	var $version = '1.5.3';
+	var $version = '1.5.3.1';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
