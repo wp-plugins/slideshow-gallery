@@ -1,6 +1,8 @@
 <!-- WordPress Related Settings -->
 
 <?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 $language_external = $this -> get_option('language_external');
 $locale = get_locale();

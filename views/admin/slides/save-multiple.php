@@ -1,3 +1,9 @@
+<?php
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+
+?>
+
 <div class="wrap <?php echo $this -> pre; ?> slideshow">
 	<h2><?php _e('Save Multiple Slides', $this -> plugin_name); ?></h2>
 	
@@ -12,6 +18,9 @@
 	<?php endif; ?>
 	
 	<form action="" method="post">
+		
+		<?php wp_nonce_field($this -> sections -> slides . '-save-multiple'); ?>
+		
 		<table class="form-table">
 			<tbody>
 				<tr>

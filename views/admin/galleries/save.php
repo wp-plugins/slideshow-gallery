@@ -1,5 +1,6 @@
 <?php
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 $languages = $this -> language_getlanguages();
 
 ?>
@@ -8,6 +9,9 @@ $languages = $this -> language_getlanguages();
 	<h2><?php _e('Save a Gallery', $this -> plugin_name); ?></h2>
 	
 	<form action="<?php echo $this -> url; ?>&amp;method=save" method="post">
+		
+		<?php wp_nonce_field('slideshow-galleries-save_' . $this -> Gallery -> data -> id); ?>
+		
 		<input type="hidden" name="Gallery[id]" value="<?php echo $this -> Gallery -> data -> id; ?>" />
 	
 		<table class="form-table">

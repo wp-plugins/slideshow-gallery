@@ -1,3 +1,9 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 <div class="wrap">
 	<h2><?php _e('Order Slides', $this -> plugin_name); ?><?php echo (!empty($gallery)) ? ': ' . __($gallery -> title) : ''; ?></h2>
 	

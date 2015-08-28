@@ -1,3 +1,9 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 <script type="text/javascript">
 var GalleryAjax = "<?php echo $this -> url(); ?>/<?php echo $this -> plugin_name; ?>-ajax.php";
 var slideshowajax = "<?php echo admin_url('admin-ajax.php'); ?>";

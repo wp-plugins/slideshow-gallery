@@ -6,13 +6,15 @@ Plugin URI: http://tribulant.com/plugins/view/13/wordpress-slideshow-gallery
 Author: Tribulant Software
 Author URI: http://tribulant.com
 Description: Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website. The slideshow is flexible and all aspects can easily be configured. Embedding or hardcoding the slideshow gallery is a breeze. To embed into a post/page, simply insert <code>[tribulant_slideshow]</code> into its content with an optional <code>post_id</code> parameter. To hardcode into any PHP file of your WordPress theme, simply use <code>&lt;?php if (function_exists('slideshow')) { slideshow($output = true, $post_id = false, $gallery_id = false, $params = array()); } ?&gt;</code>.
-Version: 1.5.3.1
+Version: 1.5.3.2
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: slideshow gallery, slideshow, gallery, slider, jquery, bfithumb, galleries, photos, images
 Text Domain: slideshow-gallery
 Domain Path: /languages
 */
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
 
@@ -175,7 +177,7 @@ if (!class_exists('Gallery')) {
 		function admin_notices() {
 			$this -> check_uploaddir();
 		
-			if (!empty($_GET[$this -> pre . 'message'])) {		
+			if (!empty($_GET[$this -> pre . 'message'])) {						
 				$msg_type = (!empty($_GET[$this -> pre . 'updated'])) ? 'msg' : 'err';
 				call_user_func(array($this, 'render_' . $msg_type), $_GET[$this -> pre . 'message']);
 			}
@@ -472,8 +474,11 @@ if (!class_exists('Gallery')) {
 					
 					$this -> redirect($this -> referer, $msg_type, $message);
 					break;
-				case 'save'				:
+				case 'save'				:				
 					if (!empty($_POST)) {
+						
+						check_admin_referer('slideshow-slides-save_' . $_POST['Slide']['id']);
+						
 						if ($this -> Slide -> save($_POST, true)) {
 							$message = __('Slide has been saved', $this -> plugin_name);
 							
@@ -494,6 +499,9 @@ if (!class_exists('Gallery')) {
 					break;
 				case 'save-multiple'	:
 					if (!empty($_POST)) {
+						
+						check_admin_referer($this -> sections -> slides . '-save-multiple');
+						
 						$errors = array();
 						
 						if (!empty($_POST['Slide']['slides'])) {
@@ -529,6 +537,9 @@ if (!class_exists('Gallery')) {
 					$this -> render('slides' . DS . 'save-multiple', array('errors' => $errors), true, 'admin');
 					break;
 				case 'mass'				:
+				
+					check_admin_referer($this -> sections -> slides . '-bulkaction');
+				
 					if (!empty($_POST['action'])) {
 						if (!empty($_POST['Slide']['checklist'])) {						
 							switch ($_POST['action']) {
@@ -592,6 +603,9 @@ if (!class_exists('Gallery')) {
 			switch ($_GET['method']) {
 				case 'save'						:
 					if (!empty($_POST)) {
+						
+						check_admin_referer('slideshow-galleries-save_' . $_POST['Gallery']['id']);
+						
 						if ($this -> Gallery -> save($_POST, true)) {
 							$message = __('Gallery has been saved', $this -> plugin_name);
 							
@@ -646,6 +660,9 @@ if (!class_exists('Gallery')) {
 					$this -> redirect($this -> referer, $msg_type, $message);
 					break;
 				case 'mass'				:
+				
+					check_admin_referer($this -> sections -> galleries . '-bulkaction');
+				
 					if (!empty($_POST['action'])) {
 						if (!empty($_POST['Gallery']['checklist'])) {						
 							switch ($_POST['action']) {
@@ -721,6 +738,9 @@ if (!class_exists('Gallery')) {
 					break;
 				default					:
 					if (!empty($_POST)) {
+						
+						check_admin_referer($this -> sections -> settings);
+						
 						delete_option('tridebugging');
 						$this -> delete_option('infohideonmobile');
 						$this -> delete_option('autoheight');

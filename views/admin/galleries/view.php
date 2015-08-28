@@ -1,3 +1,9 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 <div class="wrap <?php echo $this -> pre; ?> slideshow">
 	<h2><?php echo sprintf(__('View Gallery: %s', $this -> plugin_name), __($gallery -> title)); ?></h2>
 	

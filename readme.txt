@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 4.3
-Stable tag: 1.5.3.1
+Stable tag: 1.5.3.2
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -174,6 +174,16 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.5.3.2 =
+* IMPROVE: Prevent plugin files from being accessed directly for security
+* IMPROVE: Check file mime and type of image URL on slide for security
+* IMPROVE: Validate, sanitize and escape data for security purposes
+* IMPROVE: Implement WordPress nonces throughout for security 
+* FIX: CSS and JS files don't work with child theme folder
+* FIX: Setting to only hide title
+* FIX: Multiple slideshows, overlay shows all images
+* FIX: Broken permissions page when paging gallery 
 
 = 1.5.3 =
 * FIX: Link not showing with auto height on

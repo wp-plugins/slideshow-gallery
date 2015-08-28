@@ -2,6 +2,8 @@
 
 <?php
 	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+	
 $jsoutput = $this -> get_option('jsoutput');	
 	
 ?>

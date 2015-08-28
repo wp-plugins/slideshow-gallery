@@ -1,3 +1,9 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 <table class="form-table">
 	<tbody>
     	<tr>

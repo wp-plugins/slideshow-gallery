@@ -1,3 +1,9 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 <div class="submitbox">
 	<div id="minor-publishing">
 		<div id="misc-publishing-actions">

@@ -1,6 +1,8 @@
 <!-- Save a Slide -->
 
 <?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 $showinfo = $this -> Slide -> data -> showinfo;
 $languages = $this -> language_getlanguages();
@@ -11,6 +13,9 @@ $languages = $this -> language_getlanguages();
 	<h2><?php _e('Save a Slide', $this -> plugin_name); ?></h2>
 	
 	<form action="<?php echo $this -> url; ?>&amp;method=save" method="post" enctype="multipart/form-data">
+		
+		<?php wp_nonce_field('slideshow-slides-save_' . $this -> Slide -> data -> id); ?>
+		
 		<input type="hidden" name="Slide[id]" value="<?php echo $this -> Slide -> data -> id; ?>" />
 		<input type="hidden" name="Slide[order]" value="<?php echo $this -> Slide -> data -> order; ?>" />
 	

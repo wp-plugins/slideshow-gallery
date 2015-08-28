@@ -1,6 +1,8 @@
 <!-- Styles Settings -->
 
 <?php 
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 $styles = $this -> get_option('styles'); 
 $autoheight = $this -> get_option('autoheight');

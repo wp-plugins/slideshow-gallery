@@ -1,7 +1,13 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 <div style="text-align:center;">
 	<h4><a href="https://wordpress.org/plugins/newsletters-lite/" target="_blank">WordPress Newsletter plugin LITE</a></h4>
 	<p>
-		<a href="https://wordpress.org/plugins/newsletters-lite/" target="_blank"><img src="<?php echo $this -> url(); ?>/images/plugins/newsletters.png" alt="newsletters" /></a>
+		<a href="https://wordpress.org/plugins/newsletters-lite/" target="_blank"><img style="width:200px; height:auto;" width="200" src="<?php echo $this -> url(); ?>/images/plugins/newsletters.png" alt="newsletters" /></a>
 	</p>
 	<p>
 		Get the WordPress Newsletter plugin LITE today. It is a FREE plugin which can be installed by clicking the button below.

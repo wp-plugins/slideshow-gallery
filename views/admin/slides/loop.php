@@ -1,5 +1,14 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 	<?php if (!empty($slides)) : ?>
 		<form onsubmit="if (!confirm('<?php _e('Are you sure you wish to execute this action on the selected slides?', $this -> plugin_name); ?>')) { return false; }" action="<?php echo $this -> url; ?>&amp;method=mass" method="post">
+			
+			<?php wp_nonce_field($this -> sections -> slides . '-bulkaction'); ?>
+			
 			<div class="tablenav">
 				<div class="alignleft actions">
 					<?php if (!empty($_GET['page']) && $_GET['page'] == $this -> sections -> galleries) : ?>

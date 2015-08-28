@@ -1,3 +1,9 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 <?php if (!empty($message)) : ?>
 	<div class="updated fade">
 		<p><?php echo $message; ?></p>

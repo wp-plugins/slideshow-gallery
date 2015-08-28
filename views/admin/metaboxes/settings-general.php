@@ -1,6 +1,8 @@
 <!-- General Settings -->
 
 <?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 $effect = $this -> get_option('effect');
 $slide_direction = $this -> get_option('slide_direction');

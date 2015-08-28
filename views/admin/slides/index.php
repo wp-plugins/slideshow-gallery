@@ -1,3 +1,9 @@
+<?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+	
+?>
+
 <div class="wrap <?php echo $this -> pre; ?> slideshow">
 	<h2><?php _e('Manage Slides', $this -> plugin_name); ?> 
 	<?php echo $this -> Html -> link(__('Add New', $this -> plugin_name), $this -> url . '&amp;method=save', array('class' => "add-new-h2")); ?> 

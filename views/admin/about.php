@@ -1,4 +1,7 @@
 <?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly	
+
 /**
  * Slideshow Gallery About Dashboard v1.4.4.3
  */

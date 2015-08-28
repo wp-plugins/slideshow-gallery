@@ -1,6 +1,8 @@
 <!-- Settings Submit -->
 
 <?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 $debugging = get_option('tridebugging');
 

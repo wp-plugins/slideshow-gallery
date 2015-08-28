@@ -1,8 +1,10 @@
 <?php
+	
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 class GalleryPlugin extends GalleryCheckinit {
 
-	var $version = '1.5.3.1';
+	var $version = '1.5.3.2';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -161,6 +163,13 @@ class GalleryPlugin extends GalleryCheckinit {
 				
 				$version = "1.5.3";
 			}
+			
+			if (version_compare($cur_version, "1.5.3.2") < 0) {
+				
+				$this -> initialize_options();
+				
+				$version = "1.5.3.2";
+			}
 		
 			//the current version is older.
 			//lets update the database
@@ -296,14 +305,16 @@ class GalleryPlugin extends GalleryCheckinit {
 	}
 	
 	function render_msg($message = null) {
+		$message = esc_html($message);
 		$this -> render('msg-top', array('message' => $message), true, 'admin');
 	}
 	
 	function render_err($message = null) {
+		$message = esc_html($message);
 		$this -> render('err-top', array('message' => $message), true, 'admin');
 	}
 	
-	function redirect($location = null, $msgtype = null, $message = null) {
+	function redirect($location = null, $msgtype = null, $message = null, $action = null) {
 		$url = $location;
 		
 		if ($msgtype == "message") {
@@ -314,6 +325,10 @@ class GalleryPlugin extends GalleryCheckinit {
 		
 		if (!empty($message)) {
 			$url .= '&' . $this -> pre . 'message=' . urlencode($message);
+		}
+		
+		if (!empty($action)) {
+			$url = wp_nonce_url($url, $action);
 		}
 		
 		?>
@@ -836,6 +851,7 @@ class GalleryPlugin extends GalleryCheckinit {
 	}
 	
 	function render($file = null, $params = array(), $output = true, $folder = 'admin') {	
+		
 		if (!empty($file)) {
 			$this -> plugin_name = basename(dirname(__FILE__));
 			$this -> plugin_base = rtrim(dirname(__FILE__), DS);
