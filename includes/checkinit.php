@@ -57,7 +57,7 @@ if (!class_exists('GalleryCheckinit')) {
 			$result = false;
 			
 			$existing = $this -> get_option('existing');
-			//if (!empty($existing)) return true;
+			if (!empty($existing)) return true;
 			
 			if (preg_match("/^(www\.)(.*)/si", $host, $matches)) {
 				$wwwhost = $host;

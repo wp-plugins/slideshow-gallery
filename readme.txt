@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 4.3
-Stable tag: 1.5.3.3
+Stable tag: 1.5.3.4
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -175,7 +175,7 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 
 == Changelog ==
 
-= 1.5.3.3 =
+= 1.5.3.4 =
 * ADD: FontAwesome icons throughout
 * ADD: WPML multilingual support
 * ADD: qTranslate X multilingual support 

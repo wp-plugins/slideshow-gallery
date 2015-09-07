@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 class GalleryPlugin extends GalleryCheckinit {
 
-	var $version = '1.5.3.3';
+	var $version = '1.5.3.4';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -277,11 +277,11 @@ class GalleryPlugin extends GalleryCheckinit {
 				$version = "1.5.3";
 			}
 			
-			if (version_compare($cur_version, "1.5.3.3") < 0) {
+			if (version_compare($cur_version, "1.5.3.4") < 0) {
 				
 				$this -> initialize_options();
 				
-				$version = "1.5.3.3";
+				$version = "1.5.3.4";
 			}
 		
 			//the current version is older.
