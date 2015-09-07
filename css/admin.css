@@ -66,10 +66,12 @@
 img.slideshow_dropshadow,
 .slideshow img.dropshadow,
 a.thickbox img.slideshow, 
-a.colorbox img.slideshow {
-	box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-	-webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-	-moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+a.colorbox img.slideshow,
+.slideshow .img-rounded {
+    /*border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;*/
+    border-radius: 6px;
 }
 
 .galleryhelp a,

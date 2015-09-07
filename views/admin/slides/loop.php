@@ -38,7 +38,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 			<table class="widefat">
 				<thead>
 					<tr>
-						<th class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></th>
+						<td class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></td>
 						<th class="column-id <?php echo ($orderby == "id") ? 'sorted ' . $order : 'sortable desc'; ?>">
 							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=id&order=' . (($orderby == "id") ? $otherorder : "asc")); ?>">
 								<span><?php _e('ID', $this -> plugin_name); ?></span>
@@ -80,7 +80,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 				</thead>
 				<tfoot>
 					<tr>
-						<th class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></th>
+						<td class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></td>
 						<th class="column-id <?php echo ($orderby == "id") ? 'sorted ' . $order : 'sortable desc'; ?>">
 							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=id&order=' . (($orderby == "id") ? $otherorder : "asc")); ?>">
 								<span><?php _e('ID', $this -> plugin_name); ?></span>
@@ -127,7 +127,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 							<td><?php echo $slide -> id; ?></td>
 							<td style="width:75px;">
 								<?php $image = $slide -> image; ?>
-								<a href="<?php echo $slide -> image_path; ?>" title="<?php echo __($slide -> title); ?>" class="colorbox" rel="slides"><img class="dropshadow" src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 50, 50, 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
+								<a href="<?php echo $slide -> image_path; ?>" title="<?php echo __($slide -> title); ?>" class="colorbox" rel="slides"><img class="img-rounded" src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, 50, 50, 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 							</td>
 							<td>
                             	<a class="row-title" href="<?php echo $this -> url; ?>&amp;method=save&amp;id=<?php echo $slide -> id; ?>" title=""><?php echo __($slide -> title); ?></a>

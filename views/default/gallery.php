@@ -105,7 +105,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 					<p><?php echo (!empty($slide -> showinfo) && ($slide -> showinfo == "both" || $slide -> showinfo == "description")) ? __($slide -> description) : ''; ?></p>
 					<?php if ($options['showthumbs'] == "true") : ?>
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
-							<a href="<?php echo $slide -> link; ?>" title="<?php echo esc_attr(__($slide -> title)); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
+							<a href="<?php echo __($slide -> link); ?>" title="<?php echo esc_attr(__($slide -> title)); ?>" target="_<?php echo $slide -> linktarget; ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 						<?php elseif ($options['imagesoverlay'] == "true") : ?>
 							<a href="<?php echo $slide -> image_path; ?>" id="<?php echo $unique; ?>imglink<?php echo $slide -> id; ?>" <?php if ($this -> Html -> is_image($slide -> image_path)) : ?>class="colorboxslideshow<?php echo $unique; ?>" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"><img src="<?php echo $this -> Html -> bfithumb_image_src($slide -> image_path, $this -> get_option('thumbwidth'), $this -> get_option('thumbheight'), 100); ?>" alt="<?php echo $this -> Html -> sanitize(__($slide -> title)); ?>" /></a>
 						<?php else : ?>
@@ -113,7 +113,7 @@ $thumbopacity = $this -> get_option('thumbopacity');
 						<?php endif; ?>
 					<?php else : ?>
 						<?php if ($slide -> uselink == "Y" && !empty($slide -> link)) : ?>
-							<a href="<?php echo $slide -> link; ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"></a>
+							<a href="<?php echo __($slide -> link); ?>" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"></a>
 						<?php elseif ($options['imagesoverlay'] == "true") : ?>
 							<a href="<?php echo $slide -> image_path; ?>" id="<?php echo $unique; ?>imglink<?php echo $slide -> id; ?>" <?php if ($this -> Html -> is_image($slide -> image_path)) : ?>class="colorboxslideshow<?php echo $unique; ?>" rel="slideshow<?php echo $unique; ?>overlay"<?php endif; ?> rel="slideshow<?php echo $unique; ?>overlay" target="_<?php echo $slide -> linktarget; ?>" title="<?php echo __($slide -> title); ?>"></a>
 						<?php else : ?>

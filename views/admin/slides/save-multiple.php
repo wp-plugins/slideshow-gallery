@@ -93,7 +93,7 @@ jQuery(document).ready(function() {
 				attachment = attachment.toJSON();
 				
 				var attachment_html = '<tr id="Slide_mediaupload_row_' + attachment.id + '">';
-				attachment_html += '<th style="width:100px; vertical-align:top;"><a href="" class="colorbox" onclick="jQuery.colorbox({href:\'' + attachment.url + '\'}); return false;"><img style="width:100px;" class="dropshadow" src="' + attachment.sizes.thumbnail.url + '" /></th>';
+				attachment_html += '<th style="width:100px; vertical-align:top;"><a href="" class="colorbox" onclick="jQuery.colorbox({href:\'' + attachment.url + '\'}); return false;"><img style="width:100px;" class="img-rounded" src="' + attachment.sizes.thumbnail.url + '" /></th>';
 				attachment_html += '<td>';
 				attachment_html += '<label><?php _e('Title:', $this -> plugin_name); ?> <input class="widefat" type="text" value="' + attachment.title + '" name="Slide[slides][' + attachment.id + '][title]" /></label>';
 				attachment_html += '<label><?php _e('Description:', $this -> plugin_name); ?> <textarea class="widefat" rows="3" cols="100%" name="Slide[slides][' + attachment.id + '][description]" /></label>';

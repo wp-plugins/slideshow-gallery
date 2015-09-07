@@ -64,6 +64,10 @@ if (!class_exists('Gallery')) {
 				add_shortcode('tribulant_slideshow', array($this, 'embed'));
 			}
 			
+			if ($this -> language_do()) {
+	        	add_filter('gettext', array($this, 'language_useordefault'), 0);
+	        }
+			
 			$this -> updating_plugin();
 		}
 		

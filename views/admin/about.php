@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 			<div class="col-2">
 				<img src="<?php echo $this -> url(); ?>/images/about/feature-2.jpg">
 				<h4><?php echo 'Multilingual'; ?></h4>
-				<p><?php echo 'This version of the Slideshow Gallery plugin is fully integrated with (m)qTranslate. It now supports internationalization and multilanguage through (m)qTranslate.'; ?></p>
+				<p><?php echo 'This version of the Slideshow Gallery plugin is fully integrated with qTranslate-X and WPML. It now supports internationalization and multilanguage.'; ?></p>
 			</div>
 			<div class="col-3 last-feature">
 				<img src="<?php echo $this -> url(); ?>/images/about/feature-3.jpg">

@@ -5,7 +5,10 @@
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 $showinfo = $this -> Slide -> data -> showinfo;
-$languages = $this -> language_getlanguages();
+
+if ($this -> language_do()) {
+	$languages = $this -> language_getlanguages();
+}
 
 ?>
 
@@ -26,7 +29,7 @@ $languages = $this -> language_getlanguages();
 					<?php echo $this -> Html -> help(__('This title is for your reference in management and it will also be used to display the title of the slide in the information bar if you have that turned on.', $this -> plugin_name)); ?></th>
 					<td>
 						<?php if ($this -> language_do()) : ?>
-							<?php $titles = qtrans_split($this -> Slide -> data -> title); ?>
+							<?php $titles = $this -> language_split($this -> Slide -> data -> title); ?>
 							<div id="slide-title-tabs">
 								<ul>
 									<?php foreach ($languages as $language) : ?>
@@ -57,7 +60,7 @@ $languages = $this -> language_getlanguages();
 					<?php echo $this -> Html -> help(__('The description is specifically used for the information bar if you have that turned on.', $this -> plugin_name)); ?></th>
 					<td>
 						<?php if ($this -> language_do()) : ?>
-							<?php $descriptions = qtrans_split($this -> Slide -> data -> description); ?>
+							<?php $descriptions = $this -> language_split($this -> Slide -> data -> description); ?>
 							<div id="slide-description-tabs">
 								<ul>
 									<?php foreach ($languages as $language) : ?>
@@ -153,7 +156,7 @@ $languages = $this -> language_getlanguages();
         					<div id="Slide_mediaupload_image">
                         		<!-- image goes here -->
                         		<?php if (!empty($this -> Slide -> data -> image_url)) : ?>
-                        			<a href="<?php echo $this -> Slide -> data -> image_url; ?>" title="<?php echo __($this -> Slide -> data -> title); ?>" class="colorbox"><img class="slideshow_dropshadow" src="<?php echo $this -> Html -> bfithumb_image_src($this -> Slide -> data -> image_url, 100, 100, 100); ?>" /></a>
+                        			<a href="<?php echo $this -> Slide -> data -> image_url; ?>" title="<?php echo __($this -> Slide -> data -> title); ?>" class="colorbox"><img class="img-rounded" src="<?php echo $this -> Html -> bfithumb_image_src($this -> Slide -> data -> image_url, 100, 100, 100); ?>" /></a>
                         		<?php endif; ?>
                         	</div>
                         
@@ -194,7 +197,7 @@ $languages = $this -> language_getlanguages();
 										
 										jQuery('#Slide_attachment_id').val(attachment.id);
 										jQuery('#Slide_image_file').val(attachment.url);
-										jQuery('#Slide_mediaupload_image').html('<a href="' + attachment.url + '" class="colorbox" onclick="jQuery.colorbox({href:\'' + attachment.url + '\'}); return false;"><img class="slideshow_dropshadow" style="width:100px;" src="' + attachment.sizes.thumbnail.url + '" /></a>');
+										jQuery('#Slide_mediaupload_image').html('<a href="' + attachment.url + '" class="colorbox" onclick="jQuery.colorbox({href:\'' + attachment.url + '\'}); return false;"><img class="img-rounded" style="width:100px;" src="' + attachment.sizes.thumbnail.url + '" /></a>');
 									});
 									
 									// Finally, open the modal
@@ -287,7 +290,30 @@ $languages = $this -> language_getlanguages();
 						<th><label for="Slide.link"><?php _e('Link To', $this -> plugin_name); ?></label>
 						<?php echo $this -> Html -> help(__('The absolute URL to take the user to when the slide is clicked.', $this -> plugin_name)); ?></th>
 						<td>
-                        	<input class="widefat" type="text" name="Slide[link]" value="<?php echo esc_attr($this -> Slide -> data -> link); ?>" id="Slide.link" />
+							<?php if ($this -> language_do()) : ?>
+								<?php $links = $this -> language_split($this -> Slide -> data -> link); ?>
+								<div id="slide-link-tabs">
+									<ul>
+										<?php foreach ($languages as $language) : ?>
+											<li><a href="#slide-link-tabs-<?php echo $language; ?>"><?php echo $this -> language_flag($language); ?></a></li>
+										<?php endforeach; ?>
+									</ul>
+									<?php foreach ($languages as $language) : ?>
+										<div id="slide-link-tabs-<?php echo $language; ?>">
+											<input type="text" name="Slide[link][<?php echo $language; ?>]" id="Slide_link_<?php echo $language; ?>" value="<?php echo esc_attr(stripslashes($links[$language])); ?>" class="widefat" />
+										</div>
+									<?php endforeach; ?>
+								</div>
+								
+								<script type="text/javascript">
+								jQuery(document).ready(function() {
+									jQuery('#slide-link-tabs').tabs();
+								});
+								</script>
+							<?php else : ?>
+								<input class="widefat" type="text" name="Slide[link]" value="<?php echo esc_attr($this -> Slide -> data -> link); ?>" id="Slide.link" />
+							<?php endif; ?>
+							
                             <span class="howto"><?php _e('Link/URL to go to when a user clicks the slide eg. http://www.domain.com/mypage/', $this -> plugin_name); ?></span>
                         </td>
 					</tr>

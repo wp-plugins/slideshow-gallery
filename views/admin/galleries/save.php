@@ -21,7 +21,7 @@ $languages = $this -> language_getlanguages();
 					<?php echo $this -> Html -> help(__('Give this gallery a title/name for your own reference.', $this -> plugin_name)); ?></th>
 					<td>
 						<?php if ($this -> language_do()) : ?>
-							<?php $titles = qtrans_split($this -> Gallery -> data -> title); ?>
+							<?php $titles = $this -> language_split($this -> Gallery -> data -> title); ?>
 							<div id="gallery-title-tabs">
 								<ul>
 									<?php foreach ($languages as $language) : ?>

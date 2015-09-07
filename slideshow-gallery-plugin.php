@@ -730,11 +730,450 @@ class GalleryPlugin extends GalleryCheckinit {
 		return false;
 	}
 	
-	function language_do() {
+	function language_useordefault($content) {				
+			$text = $content;
+			
+			if (!empty($text)) {
+				$current_language = $this -> language_current();
+				$language = (empty($current_language)) ? $this -> language_default() : $current_language;
+				$text = $this -> language_use($language, $content, false);
+			}
+			
+			return $text;
+		}
+		
+		function language_use($lang = null, $text = null, $show_available = false) {
+		
+			if (!$this -> language_isenabled($lang)) { 
+				return $text;
+			}
+			
+			if (is_array($text) || is_object($text)) {				
+				// handle arrays recursively
+				if (is_array($text)) {
+					foreach($text as $key => $t) {
+						$text[$key] = $this -> language_use($lang, $text[$key], $show_available);
+					}
+				} elseif (is_object($text)) {
+					foreach($text as $key => $t) {
+						$text -> {$key} = $this -> language_use($lang, $text -> {$key}, $show_available);
+					}
+				}
+				
+				return $text;
+			}
+			
+			if(is_object($text) && get_class($text) == '__PHP_Incomplete_Class') {
+				foreach(get_object_vars($text) as $key => $t) {
+					$text->$key = $this -> language_use($lang,$text -> $key,$show_available);
+				}
+				return $text;
+			}
+			
+			// prevent filtering weird data types and save some resources
+			if(!is_string($text) || $text == '') {
+				return $text;
+			}
+			
+			// get content
+			$content = $this -> language_split($text);
+			
+			if (!is_array($content)) {
+				return $content;
+			}
+			
+			// find available languages
+			$available_languages = array();
+			foreach($content as $language => $lang_text) {
+				$lang_text = trim($lang_text);
+				if(!empty($lang_text)) $available_languages[] = $language;
+			}
+			
+			// if no languages available show full text
+			if(sizeof($available_languages)==0) return $text;
+			// if content is available show the content in the requested language
+			if(!empty($content[$lang])) {
+				return $content[$lang];
+			}
+			// content not available in requested language (bad!!) what now?
+			if(!$show_available){
+				// check if content is available in default language, if not return first language found. (prevent empty result)
+				if($lang != $this -> language_default()) {
+					//if (!is_admin()) {
+						$str = $this -> language_use($this -> language_default(), $text, $show_available);
+					//}
+					
+					if ($q_config['show_displayed_language_prefix'])
+						$str = "(". $this -> language_name($this -> language_default()) .") " . $str;
+					return $str;
+				}
+				foreach($content as $language => $lang_text) {
+					$lang_text = trim($lang_text);
+					if (!empty($lang_text)) {
+						$str = $lang_text;
+						if ($q_config['show_displayed_language_prefix'])
+							$str = "(". $this -> language_name($language) .") " . $str;
+						return $str;
+					}
+				}
+			}
+			// display selection for available languages
+			$available_languages = array_unique($available_languages);
+			$language_list = "";
+			if(preg_match('/%LANG:([^:]*):([^%]*)%/',$q_config['not_available'][$lang],$match)) {
+				$normal_seperator = $match[1];
+				$end_seperator = $match[2];
+				// build available languages string backward
+				$i = 0;
+				foreach($available_languages as $language) {
+					if($i==1) $language_list  = $end_seperator.$language_list;
+					if($i>1) $language_list  = $normal_seperator.$language_list;
+					$language_list = "<a href=\"". $this -> language_converturl('', $language)."\">". $this -> language_name($language) ."</a>".$language_list;
+					$i++;
+				}
+			}
+			return "<p>".preg_replace('/%LANG:([^:]*):([^%]*)%/', $language_list, $q_config['not_available'][$lang])."</p>";
+		}
+		
+		function language_converturl($url = null, $language = null) {
+			global $slideshow_languageplugin;
+		
+			if (!empty($url) && !empty($language)) {
+				switch ($slideshow_languageplugin) {
+					case 'qtranslate'				:
+						$url = qtrans_convertURL($url, $language);
+						break;
+					case 'qtranslate-x'				:
+						$url = qtranxf_convertURL($url, $language);
+						break;
+					case 'wpml'						:
+						if (function_exists('icl_get_languages')) {
+							$languages = icl_get_languages();
+							$language = $this -> language_current();
+							
+							if (!empty($languages[$language]['url'])) {
+								//$url = $languages[$language]['url'];
+							}
+						}
+						break;
+				}
+			}
+			
+			return $url;
+		}
+		
+		function language_default() {		
+			global $slideshow_languageplugin, $slideshow_languagedefault;
+			$default = false;
+			
+			if (!empty($slideshow_languagedefault)) {
+				return $slideshow_languagedefault;
+			}
+			
+			switch ($slideshow_languageplugin) {
+				case 'qtranslate'				:
+				case 'qtranslate-x'				:
+					global $q_config;
+					$default = $q_config['default_language'];
+					break;
+				case 'wpml'						:
+					global $sitepress;
+					$default = $sitepress -> get_default_language();
+					break;
+			}
+			
+			$slideshow_languagedefault = $default;
+			return $default;
+		}
+		
+		function language_name($language = null) {
+			$name = false;
+		
+			if (!empty($language)) {
+				global $slideshow_languageplugin, ${'newsletters_languagename_' . $language};
+				
+				if (!empty(${'newsletters_languagename_' . $language})) {
+					return ${'newsletters_languagename_' . $language};
+				}
+				
+				switch ($slideshow_languageplugin) {
+					case 'qtranslate'				:
+					case 'qtranslate-x'				:
+						global $q_config;
+						$name = $q_config['language_name'][$language];
+						break;
+					case 'wpml'						:
+						if (function_exists('icl_get_languages')) {
+							$languages = icl_get_languages();
+							if (!empty($languages[$language]['translated_name'])) {
+								$name = $languages[$language]['translated_name'];
+							}
+						}
+						break;
+				}
+			}
+			
+			${'newsletters_languagename_' . $language} = $name;
+			return $name;
+		}
+		
+		function language_do() {
+			global $slideshow_languageplugin;
+		
+			if (empty($slideshow_languageplugin)) {			
+				if ($this -> is_plugin_active('qtranslate')) {
+					$slideshow_languageplugin = "qtranslate";
+					return true;
+				} elseif ($this -> is_plugin_active('qtranslate-x')) {
+					$slideshow_languageplugin = 'qtranslate-x';
+					return true;
+				} elseif ($this -> is_plugin_active('wpml')) {
+					if (!empty($_GET['lang']) && $_GET['lang'] == "all") {
+						return false;
+					}
+				
+					$slideshow_languageplugin = "wpml";
+					return true;
+				}
+			} else {
+				return true;
+			}
+			
+			return false;
+		}
+		
+		function language_current() {
+			global $slideshow_languageplugin, $slideshow_languagecurrent;
+			$current = false;
+			
+			if (!empty($slideshow_languagecurrent)) {
+				return $slideshow_languagecurrent;
+			}
+			
+			switch ($slideshow_languageplugin) {
+				case 'qtranslate'			:
+					if (function_exists('qtrans_getLanguage')) {
+						$current = qtrans_getLanguage();
+					}
+					break;
+				case 'qtranslate-x'			:
+					if (function_exists('qtranxf_getLanguage')) {
+						$current = qtranxf_getLanguage();
+					}
+					break;
+				case 'wpml'					:
+					$current = ICL_LANGUAGE_CODE;
+					break;
+			}
+			
+			$slideshow_languagecurrent = $current;
+			return $current;
+		}
+		
+		function language_flag($language = null) {
+			global $slideshow_languageplugin, ${'newsletters_languageflag_' . $language};
+			$flag = false;
+			
+			if (!empty(${'newsletters_languageflag_' . $language})) {
+				return ${'newsletters_languageflag_' . $language};
+			}
+		
+			switch ($slideshow_languageplugin) {
+				case 'qtranslate'			:
+				case 'qtranslate-x'			:
+					global $q_config;
+					$flag = '<img src="' . content_url() . '/' . $q_config['flag_location'] . '/' . $q_config['flag'][$language] . '" alt="' . $language . '" />';
+					break;
+				case 'wpml'					:
+					if (function_exists('icl_get_languages')) {
+						$languages = icl_get_languages();
+						$flag = '<img src="' . $languages[$language]['country_flag_url'] . '" alt="' . $language . '" />';
+					}
+					break;
+			}
+			
+			${'newsletters_languageflag_' . $language} = $flag;
+			return $flag;
+		}
+		
+		function language_isenabled($language = null) {
+			$enabled = false;
+		
+			if (!empty($language)) {
+				global $slideshow_languageplugin, ${'newsletters_languageenabled_' . $language};
+				
+				if (!empty(${'newsletters_languageenabled_' . $language})) {
+					return ${'newsletters_languageenabled_' . $language};
+				}
+			
+				switch ($slideshow_languageplugin) {
+					case 'qtranslate'				:
+						$enabled = qtrans_isEnabled($language);
+						break;
+					case 'qtranslate-x'				:
+						$enabled = qtranxf_isEnabled($language);
+						break;
+					case 'wpml'						:
+						if (function_exists('icl_get_languages')) {
+							$languages = icl_get_languages();
+							if (!empty($languages[$language])) {
+								$enabled = true;
+							}
+						}
+						break;
+				}
+			}
+			
+			${'newsletters_languageenabled_' . $language} = $enabled;
+			return $enabled;
+		}
+		
+		function language_join($texts = array(), $tagTypeMap = array(), $strip_tags = false) {
+			if(!is_array($texts)) $texts = $this -> language_split($texts, false);
+			$split_regex = "#<!--more-->#ism";
+			$max = 0;
+			$text = "";
+			$languages = $this -> language_getlanguages();
+			
+			foreach ($languages as $language) {
+				$tagTypeMap[$language] = true;
+			}
+			
+			foreach($languages as $language) {
+				if (!empty($texts[$language])) {
+					$texts[$language] = preg_split($split_regex, $texts[$language]);
+					if(sizeof($texts[$language]) > $max) $max = sizeof($texts[$language]);
+				}
+			}
+			
+			for ($i = 0; $i < $max; $i++) {
+				if($i>=1) {
+					$text .= '<!--more-->';
+				}
+				foreach($languages as $language) {
+					if (isset($texts[$language][$i]) && $texts[$language][$i] !== '') {
+						
+						if ($strip_tags) {
+							$texts[$language][$i] = strip_tags($texts[$language][$i]);
+						}
+						
+						if (empty($tagTypeMap[$language]))
+							$text .= '<!--:'.$language.'-->'.$texts[$language][$i].'<!--:-->';
+						else
+							$text .= "[:{$language}]{$texts[$language][$i]}";
+					}
+				}
+			}
+			
+			return $text;
+		}
+		
+		function language_split($text, $quicktags = true, array $languageMap = NULL) {
+			$array = false;
+			
+			if (!empty($text)) {	
+				//init vars
+				$split_regex = "#(<!--[^-]*-->|\[:[a-z-]{2,10}\])#ism";
+				$current_language = "";
+				$result = array();
+				
+				$languages = $this -> language_getlanguages();
+				foreach ($languages as $language) {
+					$result[$language] = "";
+				}
+				
+				// split text at all xml comments
+				$blocks = preg_split($split_regex, $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+				
+				foreach($blocks as $block) {
+					# detect language tags
+					if(preg_match("#^<!--:([a-z-]{2,10})-->$#ism", $block, $matches)) {
+						if($this -> language_isenabled($matches[1])) {
+							$current_language = $matches[1];
+							$languageMap[$current_language] = false;
+						} else {
+							$current_language = "invalid";
+						}						
+						continue;
+					// detect quicktags
+					} elseif($quicktags && preg_match("#^\[:([a-z-]{2,10})\]$#ism", $block, $matches)) {						
+						if($this -> language_isenabled($matches[1])) {
+							$current_language = $matches[1];
+							$languageMap[$current_language] = true;
+						} else {
+							$current_language = "invalid";
+						}
+						
+						continue;
+					} elseif(preg_match("#^<!--:-->$#ism", $block, $matches)) {
+						$current_language = "";
+						continue;
+					} elseif(preg_match("#^<!--more-->$#ism", $block, $matches)) {
+						foreach($languages as $language) {
+							$result[$language] .= $block;
+						}
+						
+						continue;
+					}
+					
+					if($current_language == "") {
+						foreach($languages as $language) {
+							$result[$language] .= $block;
+						}
+					} elseif($current_language != "invalid") {
+						$result[$current_language] .= $block;
+					}
+				}
+				
+				foreach($result as $lang => $lang_content) {
+					$result[$lang] = str_replace('[:]', '', preg_replace("#(<!--more-->|<!--nextpage-->)+$#ism", "", $lang_content));
+				}
+				
+				return $result;
+			}
+			
+			return $array;
+		}
+		
+		function language_getlanguages() {
+			global $slideshow_languageplugin, $slideshow_languagelanguages;
+			$languages = false;
+			
+			if (!empty($slideshow_languagelanguages)) {
+				return $slideshow_languagelanguages;
+			}
+		
+			switch ($slideshow_languageplugin) {
+				case 'qtranslate'					:
+					if (function_exists('qtrans_getSortedLanguages')) {
+						$languages = qtrans_getSortedLanguages();
+					}
+					break;
+				case 'qtranslate-x'					:
+					if (function_exists('qtranxf_getSortedLanguages')) {
+						$languages = qtranxf_getSortedLanguages();
+					}
+					break;
+				case 'wpml'							:				
+					if (function_exists('icl_get_languages')) {
+						$icl_languages = icl_get_languages();
+						$languages = array();
+						foreach ($icl_languages as $lang => $icl_language) {
+							$languages[] = $lang;
+						}
+					}
+					break;
+			}
+			
+			$slideshow_languagelanguages = $languages;
+			return $languages;
+		}
+	
+	/*function language_do() {
 		
 		if ($this -> is_plugin_active('qtranslate')) {
 			return true;
-		}
+		} 
 		
 		return false;
 	}
@@ -760,7 +1199,7 @@ class GalleryPlugin extends GalleryCheckinit {
 		}
 		
 		return $flag;
-	}
+	}*/
 	
 	function is_plugin_active($name = null, $orinactive = false) {
 		if (!empty($name)) {		
@@ -768,10 +1207,16 @@ class GalleryPlugin extends GalleryCheckinit {
 			
 			if (empty($path)) {
 				switch ($name) {
-					case 'qtranslate'			:
+					case 'qtranslate'							:
 						$path = 'qtranslate' . DS . 'qtranslate.php';
 						break;
-					case 'captcha'				:
+					case 'qtranslate-x'							:
+						$path = 'qtranslate-x' . DS . 'qtranslate.php';
+						break;
+					case 'wpml'									:
+						$path = 'sitepress-multilingual-cms' . DS . 'sitepress.php';
+						break;
+					case 'captcha'								:
 						$path = 'really-simple-captcha' . DS . 'really-simple-captcha.php';
 						break;
 					default						:

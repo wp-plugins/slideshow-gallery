@@ -40,7 +40,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 			<table class="widefat">
 				<thead>
 					<tr>
-						<th class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></th>
+						<td class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></td>
 						<th class="column-id <?php echo ($orderby == "id") ? 'sorted ' . $order : 'sortable desc'; ?>">
 							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=id&order=' . (($orderby == "id") ? $otherorder : "asc")); ?>">
 								<span><?php _e('ID', $this -> plugin_name); ?></span>
@@ -65,7 +65,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 				</thead>
 				<tfoot>
 					<tr>
-						<th class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></th>
+						<td class="check-column"><input type="checkbox" name="checkboxall" id="checkboxall" value="checkboxall" /></td>
 						<th class="column-id <?php echo ($orderby == "id") ? 'sorted ' . $order : 'sortable desc'; ?>">
 							<a href="<?php echo GalleryHtmlHelper::retainquery('orderby=id&order=' . (($orderby == "id") ? $otherorder : "asc")); ?>">
 								<span><?php _e('ID', $this -> plugin_name); ?></span>

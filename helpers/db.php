@@ -152,13 +152,14 @@ class GalleryDbHelper extends GalleryPlugin {
 		switch ($this -> model) {
 			case 'Slide'				:
 				if ($this -> language_do()) {
-					$this -> data -> title = qtrans_join($this -> data -> title);
-					$this -> data -> description = qtrans_join($this -> data -> description);
+					$this -> data -> title = $this -> language_join($this -> data -> title);
+					$this -> data -> description = $this -> language_join($this -> data -> description);
+					$this -> data -> link = $this -> language_join($this -> data -> link);
 				}
 				break;
 			case 'Gallery'				:
 				if ($this -> language_do()) {
-					$this -> data -> title = qtrans_join($this -> data -> title);
+					$this -> data -> title = $this -> language_join($this -> data -> title);
 				}
 				break;
 		}
