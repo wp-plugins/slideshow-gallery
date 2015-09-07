@@ -1,34 +1,90 @@
+.fa {
+    font: normal normal normal 16px/1.5 FontAwesome !important;
+}
+
 #adminmenu .toplevel_page_slideshow-slides div.wp-menu-image:before,
 .mce-i-gallery:before {
-    font-family: 'slideshow_dashicons' !important;
-	content: '\f233';
-	font-size: 20px;
+    font-family: 'FontAwesome' !important;
+    content: "\f03e";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    top: 3px;
 }
 
-@font-face {
-  font-family: 'slideshow_dashicons';
-  src: url('../fonts/slideshow_dashicons.eot'); // this is for IE
+.slideshow-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #0074a2;
+    background-position: center 24px;
+    -webkit-background-size: 85px 85px;
+    background-size: 85px 85px;
+    color: #78c8e6;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 600;
+    margin: 5px 0 0;
+    padding: 15px 0;
+    display: inline-block;
+	width: 150px;
+    text-rendering: optimizeLegibility;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
 }
 
-@font-face {
-  font-family: 'slideshow_dashicons';
-  src: url('../fonts/slideshow_dashicons.woff') format('woff'), 
-    url('../fonts/slideshow_dashicons.ttf') format('truetype'), 
-    url('../fonts/slideshow_dashicons.svg') format('svg');
-  font-weight: normal;
-  font-style: normal;
+#wpadminbar .slideshow-lite {}
+
+#wpadminbar .slideshow-lite a {}
+
+#wpadminbar .slideshow-lite-listlimit {}
+
+#wpadminbar .slideshow-lite-listlimit a {}
+
+#wpadminbar .slideshow-lite-subscriberlimit {}
+
+#wpadminbar .slideshow-lite-subscriberlimit a {}
+
+#wpadminbar .slideshow-lite-emaillimit {}
+
+#wpadminbar .slideshow-lite-emaillimit a {}
+
+#wpadminbar .slideshow-lite-submitserial {}
+
+#wpadminbar .slideshow-lite-submitserial a:before {
+    content: '' !important;
+}
+
+#wpadminbar .slideshow-lite-submitserial a {
+    color: green !important;
+    background: white;
+    font-weight: bold;
+}
+
+#wpadminbar .slideshow-lite-upgrade {}
+
+#wpadminbar .slideshow-lite-upgrade a:before {
+    content: '' !important;
+}
+
+#wpadminbar .slideshow-lite-upgrade a {
+    color: red !important;
+    background: white;
+    font-weight: bold;
+}
+
+#message.slideshow.updated, 
+#message.slideshow.error {
+	padding-right: 38px;
+	position: relative;
+}
+
+.slideshow #message a {
+	text-decoration: none;
 }
 
 .slideshow-icon-delete {
 	text-decoration: none !important;
-}
-
-.slideshow-icon-delete:before {
-	font-family: 'dashicons' !important;
-	content: "\f158";
-	font-size: 20px;
-	vertical-align: middle;
-	/*float: right;*/
 }
 
 .slideshow .ui-slider {
@@ -81,19 +137,6 @@ a.colorbox img.slideshow,
 	color: #333;
 }
 
-.galleryhelp a:before {
-	font-family: 'slideshow_dashicons' !important;
-	content: '\f223';
-	font-weight: 400;
-	font-size: 20px;
-	vertical-align: top;
-	text-decoration: none;
-	line-height: 100%;
-	height: auto;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
 .ui-tooltip {
 	padding: 8px;
 	position: absolute;
@@ -126,20 +169,6 @@ ul.connectedSortable {
 span.gallery_slides_convert_list a,
 span.gallery_slides_convert_grid a{
 	text-decoration: none;
-}
-
-span.gallery_slides_convert_list a:before {
-	font-family: 'slideshow_dashicons' !important;
-	content: '\f228';
-	text-decoration: none;
-	font-size: 20px;
-}
-
-span.gallery_slides_convert_grid a:before {
-	font-family: 'slideshow_dashicons' !important;
-	content: '\f180';
-	text-decoration: none;
-	font-size: 20px;
 }
 
 .sortable-elements {
@@ -240,7 +269,7 @@ span.gallery_slides_convert_grid a:before {
 	overflow:hidden;
 }
 
-.gallery_slides_grid .wpml-placeholder, .gallery_slides_grid .gallery-placeholder { 
+.gallery_slides_grid .gallery-placeholder { 
 	float:left; 
 	width:88px !important;
 	min-width:88px !important;
@@ -282,7 +311,7 @@ span.gallery_slides_convert_grid a:before {
 	text-align:center;
 }
 
-.wpml-placeholder, .gallery-placeholder { 
+.gallery-placeholder { 
 	float:left; 
 	width:100%;
 	height:43px;

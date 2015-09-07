@@ -52,7 +52,7 @@ if ($this -> language_do()) {
 							<input class="widefat" type="text" name="Slide[title]" value="<?php echo esc_attr($this -> Slide -> data -> title); ?>" id="Slide.title" />
 						<?php endif; ?>
                         <span class="howto"><?php _e('Title/name of your slide as it will be displayed to your users.', $this -> plugin_name); ?></span>
-						<?php echo (!empty($this -> Slide -> errors['title'])) ? '<div style="color:red;">' . $this -> Slide -> errors['title'] . '</div>' : ''; ?>
+						<?php echo (!empty($this -> Slide -> errors['title'])) ? '<div class="slideshow_error">' . $this -> Slide -> errors['title'] . '</div>' : ''; ?>
 					</td>
 				</tr>
 				<tr>
@@ -83,7 +83,7 @@ if ($this -> language_do()) {
 							<textarea class="widefat" rows="5" cols="100%" name="Slide[description]"><?php echo esc_attr($this -> Slide -> data -> description); ?></textarea>
 						<?php endif; ?>
                         <span class="howto"><?php _e('Description of your slide as it will be displayed to your users below the title.', $this -> plugin_name); ?></span>
-						<?php echo (!empty($this -> Slide -> errors['description'])) ? '<div style="color:red;">' . $this -> Slide -> errors['description'] . '</div>' : ''; ?>
+						<?php echo (!empty($this -> Slide -> errors['description'])) ? '<div class="slideshow_error">' . $this -> Slide -> errors['description'] . '</div>' : ''; ?>
 					</td>
 				</tr>
 				<tr>
@@ -139,7 +139,7 @@ if ($this -> language_do()) {
                     	<label><input onclick="jQuery('#typediv_media').show(); jQuery('#typediv_file').hide(); jQuery('#typediv_url').hide();" <?php echo (empty($this -> Slide -> data -> type) || $this -> Slide -> data -> type == "media") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="media" id="Slide.type.media" /> <?php _e('Media Upload', $this -> plugin_name); ?></label>
                     	<label><input onclick="jQuery('#typediv_file').show(); jQuery('#typediv_media').hide(); jQuery('#typediv_url').hide();" <?php echo ($this -> Slide -> data -> type == "file") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="file" id="Slide.type.file" /> <?php _e('Upload File', $this -> plugin_name); ?></label>
                         <label><input onclick="jQuery('#typediv_url').show(); jQuery('#typediv_media').hide(); jQuery('#typediv_file').hide();" <?php echo ($this -> Slide -> data -> type == "url") ? 'checked="checked"' : ''; ?> type="radio" name="Slide[type]" value="url" id="Slide.type.url" /> <?php _e('Specify URL', $this -> plugin_name); ?></label>
-                        <?php echo (!empty($this -> Slide -> errors['type'])) ? '<div style="color:red;">' . $this -> Slide -> errors['type'] . '</div>' : ''; ?>
+                        <?php echo (!empty($this -> Slide -> errors['type'])) ? '<div class="slideshow_error">' . $this -> Slide -> errors['type'] . '</div>' : ''; ?>
                         <span class="howto"><?php _e('Do you want to upload an image or specify a local/remote image URL?', $this -> plugin_name); ?></span>
                     </td>
                 </tr>
@@ -220,7 +220,7 @@ if ($this -> language_do()) {
                         <td>
                         	<input type="file" name="image_file" value="" id="Slide.image_file" />
                             <span class="howto"><?php _e('Choose your image file from your computer. JPG, PNG, GIF are supported.', $this -> plugin_name); ?></span>
-                            <?php echo (!empty($this -> Slide -> errors['image_file'])) ? '<div style="color:red;">' . $this -> Slide -> errors['image_file'] . '</div>' : ''; ?>
+                            <?php echo (!empty($this -> Slide -> errors['image_file'])) ? '<div class="slideshow_error">' . $this -> Slide -> errors['image_file'] . '</div>' : ''; ?>
                             
                             <?php
 							
@@ -262,7 +262,7 @@ if ($this -> language_do()) {
                         <td>
                             <input class="widefat" type="text" name="Slide[image_url]" value="<?php echo esc_attr($this -> Slide -> data -> image_url); ?>" id="Slide.image_url" />
                             <span class="howto"><?php _e('Local or remote image location eg. http://domain.com/path/to/image.jpg', $this -> plugin_name); ?></span>
-                            <?php echo (!empty($this -> Slide -> errors['image_url'])) ? '<div style="color:red;">' . $this -> Slide -> errors['image_url'] . '</div>' : ''; ?>
+                            <?php echo (!empty($this -> Slide -> errors['image_url'])) ? '<div class="slideshow_error">' . $this -> Slide -> errors['image_url'] . '</div>' : ''; ?>
                         </td>
                     </tr>
                 </tbody>

@@ -17,8 +17,8 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 	<?php if (!empty($slides)) : ?>
 		<div id="slidemessage" class="updated fade" style="display:none; width:31%;"><!-- message will go here --></div>
 		<div class="gallery_slides_list">
-			<span class="gallery_slides_convert_list"><a href="#" id="gallery_convert_list"></a></span>
-			<span class="gallery_slides_convert_grid"><a href="#" id="gallery_convert_grid"></a></span>
+			<span class="gallery_slides_convert_list"><a href="#" id="gallery_convert_list"><i class="fa fa-reorder fa-fw"></i></a></span>
+			<span class="gallery_slides_convert_grid"><a href="#" id="gallery_convert_grid"><i class="fa fa-th-large fa-fw"></i></a></span>
 			<br class="clear" />
 			<ul id="slidelist">
 				<?php foreach ($slides as $slide) : ?>
@@ -62,6 +62,6 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 		});
 		</script>
 	<?php else : ?>
-		<p style="color:red;"><?php _e('No slides found', $this -> plugin_name); ?></p>
+		<p class="slideshow_error"><?php _e('No slides found', $this -> plugin_name); ?></p>
 	<?php endif; ?>
 </div>

@@ -4,7 +4,7 @@ Donate link: http://tribulant.com/
 Tags: wordpress plugins, wordpress slideshow gallery, slides, slideshow, image gallery, images, gallery, featured content, content gallery, javascript, javascript slideshow, slideshow gallery
 Requires at least: 3.1
 Tested up to: 4.3
-Stable tag: 1.5.3.2
+Stable tag: 1.5.3.3
 
 Feature content in a JavaScript powered slideshow gallery showcase on your WordPress website
 
@@ -174,6 +174,17 @@ There is an "Images Tester" utility under Slideshow > Configuration on the right
 6. Turn on Thickbox to show enlarged images in an overlay.
 
 == Changelog ==
+
+= 1.5.3.3 =
+* ADD: FontAwesome icons throughout
+* ADD: WPML multilingual support
+* ADD: qTranslate X multilingual support 
+* IMPROVE: Improved error handling on multiple slides adding
+* IMPROVE: Minimalistic Colorbox design
+* IMPROVE: Remove dashicons and fonts completely
+* IMPROVE: New WordPress 4.3 check-column styling 
+* FIX: Some notices/errors showing raw HTML code
+* FIX: Vulnerability/security issues 
 
 = 1.5.3.2 =
 * IMPROVE: Prevent plugin files from being accessed directly for security

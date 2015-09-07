@@ -199,8 +199,10 @@ class GallerySlide extends GalleryDbHelper {
 			$this -> errors[] = __('No data was posted', $this -> plugin_name);
 		}
 		
-		return $this -> errors;
+		return apply_filters('slideshow_slide_validation', $this -> errors, $data);
 	}
 }
+
+include_once(dirname(__FILE__) . DS . 'slideshow.php');
 
 ?>

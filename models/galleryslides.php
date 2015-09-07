@@ -80,4 +80,6 @@ class GalleryGallerySlides extends GalleryDbHelper {
 	}
 }
 
+include_once(dirname(__FILE__) . DS . 'slideshow.php');
+
 ?>

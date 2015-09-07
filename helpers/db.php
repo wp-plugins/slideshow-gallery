@@ -6,6 +6,17 @@ class GalleryDbHelper extends GalleryPlugin {
 
 	var $name = 'Db';
 	
+	function count($conditions = array()) {
+		global $wpdb;
+		
+		$query = "SELECT COUNT(*) FROM `" . $this -> table . "`";
+		if ($count = $wpdb -> get_var($query)) {
+			return $count;
+		}
+		
+		return false;
+	}
+	
 	function find($conditions = array(), $fields = false, $order = array('id', "DESC"), $assign = true, $atts = array()) {
 		global $wpdb;
 		
@@ -166,7 +177,11 @@ class GalleryDbHelper extends GalleryPlugin {
 		
 		if ($validate == true) {
 			if (method_exists($this, 'validate')) {
-				$this -> validate((array) $this -> data);
+				$errors = $this -> validate((array) $this -> data);
+				
+				if (!empty($errors)) {
+					$this -> errors = array_merge($this -> errors, $errors);
+				}
 			}
 		}
 		

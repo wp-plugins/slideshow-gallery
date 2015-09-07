@@ -44,7 +44,7 @@ $languages = $this -> language_getlanguages();
 							<input type="text" class="widefat" name="Gallery[title]" value="<?php echo esc_attr(stripslashes($this -> Gallery -> data -> title)); ?>" id="Gallery_title" />
 						<?php endif; ?>
 						<span class="howto"><?php _e('Title of this gallery for identification purposes.', $this -> plugin_name); ?></span>
-						<?php echo (!empty($this -> Gallery -> errors['title'])) ? '<span class="error">' . $this -> Gallery -> errors['title'] . '</span>' : ''; ?>
+						<?php echo (!empty($this -> Gallery -> errors['title'])) ? '<span class="slideshow_error">' . $this -> Gallery -> errors['title'] . '</span>' : ''; ?>
 					</td>
 				</tr>
 			</tbody>

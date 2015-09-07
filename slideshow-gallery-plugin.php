@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 class GalleryPlugin extends GalleryCheckinit {
 
-	var $version = '1.5.3.2';
+	var $version = '1.5.3.3';
 	var $plugin_name;
 	var $plugin_base;
 	var $pre = 'Gallery';
@@ -12,6 +12,7 @@ class GalleryPlugin extends GalleryCheckinit {
 	var $menus = array();
 	var $sections = array(
 		'welcome'			=>	'slideshow-slides',
+		'submitserial'		=>	'slideshow-submitserial',
 		'about'				=>	'slideshow-gallery-about',
 		'slides'			=>	'slideshow-slides',
 		'galleries'			=>	'slideshow-galleries',
@@ -26,7 +27,8 @@ class GalleryPlugin extends GalleryCheckinit {
 	function register_plugin($name, $base) {
 		$this -> plugin_name = $name;
 		$this -> plugin_base = rtrim(dirname($base), DS);
-		$this -> sections = (object) $this -> sections;
+		$this -> plugin_file = plugin_basename($base);
+		$this -> sections = apply_filters('slideshow_sections', (object) $this -> sections);
 		$this -> initialize_classes();
 		//$this -> initialize_options();
 		
@@ -47,9 +49,120 @@ class GalleryPlugin extends GalleryCheckinit {
 			@ini_set('display_errors', 0);
 		}
 		
-		$this -> ci_initialize();
-		
 		return true;
+	}
+	
+	function after_plugin_row($plugin_name = null) {		
+        $key = $this -> get_option('serialkey');
+        $update = $this -> vendor('update');
+        $version_info = $update -> get_version_info();
+        
+        if (!$this -> ci_serial_valid() && !empty($version_info) && $version_info['is_valid_key'] == "0") {
+	        echo '<tr id="slideshow-plugin-update-tr" class="plugin-update-tr">';
+	        echo '<td colspan="3" class="plugin-update">';
+	        echo '<div class="update-message">';
+
+			if (!$this -> ci_serial_valid()) {
+				echo sprintf(__('You are running Slideshow Gallery LITE. To remove limits, you can submit a serial key or %s.', $this -> plugin_name), '<a href="' . admin_url('admin.php?page=' . $this -> sections -> lite_upgrade) . '">' . __('Upgrade to PRO', $this -> plugin_name) . '</a>');
+			} else {
+				//echo sprintf('Your download for the Slideshow Gallery plugin has expired, please <a href="%s" target="_blank">renew it</a> for updates!', $version_info['url']);
+			}	        
+
+	        echo '</div>';
+	        echo '</td>';
+	        echo '</tr>';
+	        
+	        ?>
+	        
+	        <script type="text/javascript">
+		    jQuery(document).ready(function() {
+			    var row = jQuery('#slideshow-plugin-update-tr').closest('tr').prev();
+			    jQuery(row).addClass('update');
+		    });
+		    </script>
+	        
+	        <?php
+        }
+    }
+    
+	/**
+	 * This function outputs the changelog on the 'Plugins' page when the "View Details" link is clicked.
+	 */
+    function display_changelog() {	    	
+    	if (!empty($_GET['plugin']) && $_GET['plugin'] == $this -> plugin_name) {			
+	    	$update = $this -> vendor('update');
+	    	if ($changelog = $update -> get_changelog()) {				
+				$this -> render('changelog', array('changelog' => $changelog), true, 'admin');
+	    	}
+	    	
+	    	exit();
+    	}
+    }
+	
+	function has_update($cache = true) {
+		$update = $this -> vendor('update');
+        $version_info = $update -> get_version_info($cache);
+        return version_compare($this -> version, $version_info["version"], '<');
+    }
+	
+	function check_update($option, $cache = true) {
+		if ($update = $this -> vendor('update')) {
+	        $version_info = $update -> get_version_info($cache);
+	
+	        if (!$version_info) { return $option; }
+	        $plugin_path = $this -> plugin_file;
+	        
+	        if(empty($option -> response[$plugin_path])) {
+				$option -> response[$plugin_path] = new stdClass();
+	        }
+	
+	        //Empty response means that the key is invalid. Do not queue for upgrade
+	        if(empty($version_info['is_valid_key']) || version_compare($this -> version, $version_info["version"], '>=')){
+	            unset($option -> response[$plugin_path]);
+	        } else {
+	            $option -> response[$plugin_path] -> url = "http://tribulant.com";
+	            $option -> response[$plugin_path] -> slug = $this -> plugin_name;
+	            $option -> response[$plugin_path] -> package = $version_info['url'];
+	            $option -> response[$plugin_path] -> new_version = $version_info["version"];
+	            $option -> response[$plugin_path] -> id = "0";
+	        }
+        }
+
+        return $option;
+    }
+    
+    function ajax_serialkey() {
+		define('DOING_AJAX', true);
+		define('SHORTINIT', true);
+		$errors = array();
+		$success = false;
+		
+		if (!empty($_GET['delete'])) {
+			$this -> delete_option('serialkey');
+			$errors[] = __('Serial key has been deleted.', $this -> plugin_name);
+		} else {
+			if (!empty($_POST)) {
+				if (empty($_REQUEST['serialkey'])) { $errors[] = __('Please fill in a serial key.', $this -> plugin_name); }
+				else { 
+					$this -> update_option('serialkey', $_REQUEST['serialkey']);	//update the DB option
+					
+					if (!$this -> ci_serial_valid()) { $errors[] = __('Serial key is invalid, please try again.', $this -> plugin_name); }
+					else {
+						delete_transient($this -> pre . 'update_info');
+						$success = true; 
+					}
+				}
+			}
+		}
+		
+		delete_transient('slideshow_update_info');
+		
+		if (empty($_POST)) { ?><div id="slideshow_submitserial"><?php }
+		$this -> render('submitserial', array('errors' => $errors, 'success' => $success), true, 'admin');
+		if (empty($_POST)) { ?></div><?php }
+		
+		exit();
+		die();
 	}
 	
 	function ajax_slides_order() {	
@@ -164,11 +277,11 @@ class GalleryPlugin extends GalleryCheckinit {
 				$version = "1.5.3";
 			}
 			
-			if (version_compare($cur_version, "1.5.3.2") < 0) {
+			if (version_compare($cur_version, "1.5.3.3") < 0) {
 				
 				$this -> initialize_options();
 				
-				$version = "1.5.3.2";
+				$version = "1.5.3.3";
 			}
 		
 			//the current version is older.
@@ -195,7 +308,7 @@ class GalleryPlugin extends GalleryCheckinit {
 			'resizeimages'		=>	"Y",
 		);
 		
-		$this -> add_option('existing', 1);		
+		//$this -> add_option('existing', 1);	
 		$this -> add_option('resizeimagescrop', "Y");
 		$this -> update_option('imagespath', $this -> Html -> uploads_url() . '/' . $this -> plugin_name . '/');
 		$this -> add_option('styles', $styles);
@@ -304,14 +417,14 @@ class GalleryPlugin extends GalleryCheckinit {
 		}
 	}
 	
-	function render_msg($message = null) {
-		$message = esc_html($message);
-		$this -> render('msg-top', array('message' => $message), true, 'admin');
+	function render_msg($message = null, $dismissable = null, $escape = true) {
+		if (!empty($escape)) $message = esc_html($message);
+		$this -> render('msg-top', array('message' => $message, 'dismissable' => $dismissable), true, 'admin');
 	}
 	
-	function render_err($message = null) {
-		$message = esc_html($message);
-		$this -> render('err-top', array('message' => $message), true, 'admin');
+	function render_err($message = null, $dismissable = null, $escape = true) {
+		if (!empty($escape)) $message = esc_html($message);
+		$this -> render('err-top', array('message' => $message, 'dismissable' => $dismissable), true, 'admin');
 	}
 	
 	function redirect($location = null, $msgtype = null, $message = null, $action = null) {
@@ -435,6 +548,16 @@ class GalleryPlugin extends GalleryCheckinit {
 		return false;
 	}
 	
+	function ci_print_styles() {
+		wp_enqueue_style('slideshow', $this -> render_url('css/admin.css'), null, $this -> version, "all");
+		wp_enqueue_style('colorbox', $this -> render_url('css/colorbox.css'), false, $this -> version, "all");
+	}
+	
+	function ci_print_scripts() {
+		wp_enqueue_script('slideshow', $this -> render_url('js/admin.js'), array('jquery'), '1.0', true);	
+		wp_enqueue_script('colorbox', $this -> render_url('js/colorbox.js'), array('jquery'), false, true);
+	}
+	
 	function print_scripts() {
 		$this -> enqueue_scripts();
 	}
@@ -512,6 +635,7 @@ class GalleryPlugin extends GalleryCheckinit {
 			wp_enqueue_style('wp-color-picker');
 			wp_enqueue_style('jquery-ui', $this -> render_url('css/jquery-ui.css', "admin"), null, "1.0", "all");
 			wp_enqueue_style('colorbox', $this -> render_url('css/colorbox.css', "admin"), null, "1.3.19", "all");
+			wp_enqueue_style('fontawesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css', false, '4.4.0', "all");
 		} else {
 			wp_enqueue_style('colorbox', $this -> render_url('css/colorbox.css', "default"), null, "1.3.19", "all");
 		}
@@ -731,475 +855,444 @@ class GalleryPlugin extends GalleryCheckinit {
 	}
 	
 	function language_useordefault($content) {				
-			$text = $content;
-			
-			if (!empty($text)) {
-				$current_language = $this -> language_current();
-				$language = (empty($current_language)) ? $this -> language_default() : $current_language;
-				$text = $this -> language_use($language, $content, false);
+		$text = $content;
+		
+		if (!empty($text)) {
+			$current_language = $this -> language_current();
+			$language = (empty($current_language)) ? $this -> language_default() : $current_language;
+			$text = $this -> language_use($language, $content, false);
+		}
+		
+		return $text;
+	}
+	
+	function language_use($lang = null, $text = null, $show_available = false) {
+	
+		if (!$this -> language_isenabled($lang)) { 
+			return $text;
+		}
+		
+		if (is_array($text) || is_object($text)) {				
+			// handle arrays recursively
+			if (is_array($text)) {
+				foreach($text as $key => $t) {
+					$text[$key] = $this -> language_use($lang, $text[$key], $show_available);
+				}
+			} elseif (is_object($text)) {
+				foreach($text as $key => $t) {
+					$text -> {$key} = $this -> language_use($lang, $text -> {$key}, $show_available);
+				}
 			}
 			
 			return $text;
 		}
 		
-		function language_use($lang = null, $text = null, $show_available = false) {
+		if(is_object($text) && get_class($text) == '__PHP_Incomplete_Class') {
+			foreach(get_object_vars($text) as $key => $t) {
+				$text->$key = $this -> language_use($lang,$text -> $key,$show_available);
+			}
+			return $text;
+		}
 		
-			if (!$this -> language_isenabled($lang)) { 
-				return $text;
-			}
-			
-			if (is_array($text) || is_object($text)) {				
-				// handle arrays recursively
-				if (is_array($text)) {
-					foreach($text as $key => $t) {
-						$text[$key] = $this -> language_use($lang, $text[$key], $show_available);
-					}
-				} elseif (is_object($text)) {
-					foreach($text as $key => $t) {
-						$text -> {$key} = $this -> language_use($lang, $text -> {$key}, $show_available);
-					}
-				}
+		// prevent filtering weird data types and save some resources
+		if(!is_string($text) || $text == '') {
+			return $text;
+		}
+		
+		// get content
+		$content = $this -> language_split($text);
+		
+		if (!is_array($content)) {
+			return $content;
+		}
+		
+		// find available languages
+		$available_languages = array();
+		foreach($content as $language => $lang_text) {
+			$lang_text = trim($lang_text);
+			if(!empty($lang_text)) $available_languages[] = $language;
+		}
+		
+		// if no languages available show full text
+		if(sizeof($available_languages)==0) return $text;
+		// if content is available show the content in the requested language
+		if(!empty($content[$lang])) {
+			return $content[$lang];
+		}
+		// content not available in requested language (bad!!) what now?
+		if(!$show_available){
+			// check if content is available in default language, if not return first language found. (prevent empty result)
+			if($lang != $this -> language_default()) {
+				//if (!is_admin()) {
+					$str = $this -> language_use($this -> language_default(), $text, $show_available);
+				//}
 				
-				return $text;
+				if ($q_config['show_displayed_language_prefix'])
+					$str = "(". $this -> language_name($this -> language_default()) .") " . $str;
+				return $str;
 			}
-			
-			if(is_object($text) && get_class($text) == '__PHP_Incomplete_Class') {
-				foreach(get_object_vars($text) as $key => $t) {
-					$text->$key = $this -> language_use($lang,$text -> $key,$show_available);
-				}
-				return $text;
-			}
-			
-			// prevent filtering weird data types and save some resources
-			if(!is_string($text) || $text == '') {
-				return $text;
-			}
-			
-			// get content
-			$content = $this -> language_split($text);
-			
-			if (!is_array($content)) {
-				return $content;
-			}
-			
-			// find available languages
-			$available_languages = array();
 			foreach($content as $language => $lang_text) {
 				$lang_text = trim($lang_text);
-				if(!empty($lang_text)) $available_languages[] = $language;
-			}
-			
-			// if no languages available show full text
-			if(sizeof($available_languages)==0) return $text;
-			// if content is available show the content in the requested language
-			if(!empty($content[$lang])) {
-				return $content[$lang];
-			}
-			// content not available in requested language (bad!!) what now?
-			if(!$show_available){
-				// check if content is available in default language, if not return first language found. (prevent empty result)
-				if($lang != $this -> language_default()) {
-					//if (!is_admin()) {
-						$str = $this -> language_use($this -> language_default(), $text, $show_available);
-					//}
-					
+				if (!empty($lang_text)) {
+					$str = $lang_text;
 					if ($q_config['show_displayed_language_prefix'])
-						$str = "(". $this -> language_name($this -> language_default()) .") " . $str;
+						$str = "(". $this -> language_name($language) .") " . $str;
 					return $str;
 				}
-				foreach($content as $language => $lang_text) {
-					$lang_text = trim($lang_text);
-					if (!empty($lang_text)) {
-						$str = $lang_text;
-						if ($q_config['show_displayed_language_prefix'])
-							$str = "(". $this -> language_name($language) .") " . $str;
-						return $str;
-					}
-				}
 			}
-			// display selection for available languages
-			$available_languages = array_unique($available_languages);
-			$language_list = "";
-			if(preg_match('/%LANG:([^:]*):([^%]*)%/',$q_config['not_available'][$lang],$match)) {
-				$normal_seperator = $match[1];
-				$end_seperator = $match[2];
-				// build available languages string backward
-				$i = 0;
-				foreach($available_languages as $language) {
-					if($i==1) $language_list  = $end_seperator.$language_list;
-					if($i>1) $language_list  = $normal_seperator.$language_list;
-					$language_list = "<a href=\"". $this -> language_converturl('', $language)."\">". $this -> language_name($language) ."</a>".$language_list;
-					$i++;
-				}
-			}
-			return "<p>".preg_replace('/%LANG:([^:]*):([^%]*)%/', $language_list, $q_config['not_available'][$lang])."</p>";
 		}
-		
-		function language_converturl($url = null, $language = null) {
-			global $slideshow_languageplugin;
-		
-			if (!empty($url) && !empty($language)) {
-				switch ($slideshow_languageplugin) {
-					case 'qtranslate'				:
-						$url = qtrans_convertURL($url, $language);
-						break;
-					case 'qtranslate-x'				:
-						$url = qtranxf_convertURL($url, $language);
-						break;
-					case 'wpml'						:
-						if (function_exists('icl_get_languages')) {
-							$languages = icl_get_languages();
-							$language = $this -> language_current();
-							
-							if (!empty($languages[$language]['url'])) {
-								//$url = $languages[$language]['url'];
-							}
+		// display selection for available languages
+		$available_languages = array_unique($available_languages);
+		$language_list = "";
+		if(preg_match('/%LANG:([^:]*):([^%]*)%/',$q_config['not_available'][$lang],$match)) {
+			$normal_seperator = $match[1];
+			$end_seperator = $match[2];
+			// build available languages string backward
+			$i = 0;
+			foreach($available_languages as $language) {
+				if($i==1) $language_list  = $end_seperator.$language_list;
+				if($i>1) $language_list  = $normal_seperator.$language_list;
+				$language_list = "<a href=\"". $this -> language_converturl('', $language)."\">". $this -> language_name($language) ."</a>".$language_list;
+				$i++;
+			}
+		}
+		return "<p>".preg_replace('/%LANG:([^:]*):([^%]*)%/', $language_list, $q_config['not_available'][$lang])."</p>";
+	}
+	
+	function language_converturl($url = null, $language = null) {
+		global $slideshow_languageplugin;
+	
+		if (!empty($url) && !empty($language)) {
+			switch ($slideshow_languageplugin) {
+				case 'qtranslate'				:
+					$url = qtrans_convertURL($url, $language);
+					break;
+				case 'qtranslate-x'				:
+					$url = qtranxf_convertURL($url, $language);
+					break;
+				case 'wpml'						:
+					if (function_exists('icl_get_languages')) {
+						$languages = icl_get_languages();
+						$language = $this -> language_current();
+						
+						if (!empty($languages[$language]['url'])) {
+							//$url = $languages[$language]['url'];
 						}
-						break;
-				}
+					}
+					break;
 			}
-			
-			return $url;
 		}
 		
-		function language_default() {		
-			global $slideshow_languageplugin, $slideshow_languagedefault;
-			$default = false;
+		return $url;
+	}
+	
+	function language_default() {		
+		global $slideshow_languageplugin, $slideshow_languagedefault;
+		$default = false;
+		
+		if (!empty($slideshow_languagedefault)) {
+			return $slideshow_languagedefault;
+		}
+		
+		switch ($slideshow_languageplugin) {
+			case 'qtranslate'				:
+			case 'qtranslate-x'				:
+				global $q_config;
+				$default = $q_config['default_language'];
+				break;
+			case 'wpml'						:
+				global $sitepress;
+				$default = $sitepress -> get_default_language();
+				break;
+		}
+		
+		$slideshow_languagedefault = $default;
+		return $default;
+	}
+	
+	function language_name($language = null) {
+		$name = false;
+	
+		if (!empty($language)) {
+			global $slideshow_languageplugin, ${'slideshow_languagename_' . $language};
 			
-			if (!empty($slideshow_languagedefault)) {
-				return $slideshow_languagedefault;
+			if (!empty(${'slideshow_languagename_' . $language})) {
+				return ${'slideshow_languagename_' . $language};
 			}
 			
 			switch ($slideshow_languageplugin) {
 				case 'qtranslate'				:
 				case 'qtranslate-x'				:
 					global $q_config;
-					$default = $q_config['default_language'];
+					$name = $q_config['language_name'][$language];
 					break;
 				case 'wpml'						:
-					global $sitepress;
-					$default = $sitepress -> get_default_language();
-					break;
-			}
-			
-			$slideshow_languagedefault = $default;
-			return $default;
-		}
-		
-		function language_name($language = null) {
-			$name = false;
-		
-			if (!empty($language)) {
-				global $slideshow_languageplugin, ${'newsletters_languagename_' . $language};
-				
-				if (!empty(${'newsletters_languagename_' . $language})) {
-					return ${'newsletters_languagename_' . $language};
-				}
-				
-				switch ($slideshow_languageplugin) {
-					case 'qtranslate'				:
-					case 'qtranslate-x'				:
-						global $q_config;
-						$name = $q_config['language_name'][$language];
-						break;
-					case 'wpml'						:
-						if (function_exists('icl_get_languages')) {
-							$languages = icl_get_languages();
-							if (!empty($languages[$language]['translated_name'])) {
-								$name = $languages[$language]['translated_name'];
-							}
-						}
-						break;
-				}
-			}
-			
-			${'newsletters_languagename_' . $language} = $name;
-			return $name;
-		}
-		
-		function language_do() {
-			global $slideshow_languageplugin;
-		
-			if (empty($slideshow_languageplugin)) {			
-				if ($this -> is_plugin_active('qtranslate')) {
-					$slideshow_languageplugin = "qtranslate";
-					return true;
-				} elseif ($this -> is_plugin_active('qtranslate-x')) {
-					$slideshow_languageplugin = 'qtranslate-x';
-					return true;
-				} elseif ($this -> is_plugin_active('wpml')) {
-					if (!empty($_GET['lang']) && $_GET['lang'] == "all") {
-						return false;
-					}
-				
-					$slideshow_languageplugin = "wpml";
-					return true;
-				}
-			} else {
-				return true;
-			}
-			
-			return false;
-		}
-		
-		function language_current() {
-			global $slideshow_languageplugin, $slideshow_languagecurrent;
-			$current = false;
-			
-			if (!empty($slideshow_languagecurrent)) {
-				return $slideshow_languagecurrent;
-			}
-			
-			switch ($slideshow_languageplugin) {
-				case 'qtranslate'			:
-					if (function_exists('qtrans_getLanguage')) {
-						$current = qtrans_getLanguage();
-					}
-					break;
-				case 'qtranslate-x'			:
-					if (function_exists('qtranxf_getLanguage')) {
-						$current = qtranxf_getLanguage();
-					}
-					break;
-				case 'wpml'					:
-					$current = ICL_LANGUAGE_CODE;
-					break;
-			}
-			
-			$slideshow_languagecurrent = $current;
-			return $current;
-		}
-		
-		function language_flag($language = null) {
-			global $slideshow_languageplugin, ${'newsletters_languageflag_' . $language};
-			$flag = false;
-			
-			if (!empty(${'newsletters_languageflag_' . $language})) {
-				return ${'newsletters_languageflag_' . $language};
-			}
-		
-			switch ($slideshow_languageplugin) {
-				case 'qtranslate'			:
-				case 'qtranslate-x'			:
-					global $q_config;
-					$flag = '<img src="' . content_url() . '/' . $q_config['flag_location'] . '/' . $q_config['flag'][$language] . '" alt="' . $language . '" />';
-					break;
-				case 'wpml'					:
 					if (function_exists('icl_get_languages')) {
 						$languages = icl_get_languages();
-						$flag = '<img src="' . $languages[$language]['country_flag_url'] . '" alt="' . $language . '" />';
-					}
-					break;
-			}
-			
-			${'newsletters_languageflag_' . $language} = $flag;
-			return $flag;
-		}
-		
-		function language_isenabled($language = null) {
-			$enabled = false;
-		
-			if (!empty($language)) {
-				global $slideshow_languageplugin, ${'newsletters_languageenabled_' . $language};
-				
-				if (!empty(${'newsletters_languageenabled_' . $language})) {
-					return ${'newsletters_languageenabled_' . $language};
-				}
-			
-				switch ($slideshow_languageplugin) {
-					case 'qtranslate'				:
-						$enabled = qtrans_isEnabled($language);
-						break;
-					case 'qtranslate-x'				:
-						$enabled = qtranxf_isEnabled($language);
-						break;
-					case 'wpml'						:
-						if (function_exists('icl_get_languages')) {
-							$languages = icl_get_languages();
-							if (!empty($languages[$language])) {
-								$enabled = true;
-							}
-						}
-						break;
-				}
-			}
-			
-			${'newsletters_languageenabled_' . $language} = $enabled;
-			return $enabled;
-		}
-		
-		function language_join($texts = array(), $tagTypeMap = array(), $strip_tags = false) {
-			if(!is_array($texts)) $texts = $this -> language_split($texts, false);
-			$split_regex = "#<!--more-->#ism";
-			$max = 0;
-			$text = "";
-			$languages = $this -> language_getlanguages();
-			
-			foreach ($languages as $language) {
-				$tagTypeMap[$language] = true;
-			}
-			
-			foreach($languages as $language) {
-				if (!empty($texts[$language])) {
-					$texts[$language] = preg_split($split_regex, $texts[$language]);
-					if(sizeof($texts[$language]) > $max) $max = sizeof($texts[$language]);
-				}
-			}
-			
-			for ($i = 0; $i < $max; $i++) {
-				if($i>=1) {
-					$text .= '<!--more-->';
-				}
-				foreach($languages as $language) {
-					if (isset($texts[$language][$i]) && $texts[$language][$i] !== '') {
-						
-						if ($strip_tags) {
-							$texts[$language][$i] = strip_tags($texts[$language][$i]);
-						}
-						
-						if (empty($tagTypeMap[$language]))
-							$text .= '<!--:'.$language.'-->'.$texts[$language][$i].'<!--:-->';
-						else
-							$text .= "[:{$language}]{$texts[$language][$i]}";
-					}
-				}
-			}
-			
-			return $text;
-		}
-		
-		function language_split($text, $quicktags = true, array $languageMap = NULL) {
-			$array = false;
-			
-			if (!empty($text)) {	
-				//init vars
-				$split_regex = "#(<!--[^-]*-->|\[:[a-z-]{2,10}\])#ism";
-				$current_language = "";
-				$result = array();
-				
-				$languages = $this -> language_getlanguages();
-				foreach ($languages as $language) {
-					$result[$language] = "";
-				}
-				
-				// split text at all xml comments
-				$blocks = preg_split($split_regex, $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
-				
-				foreach($blocks as $block) {
-					# detect language tags
-					if(preg_match("#^<!--:([a-z-]{2,10})-->$#ism", $block, $matches)) {
-						if($this -> language_isenabled($matches[1])) {
-							$current_language = $matches[1];
-							$languageMap[$current_language] = false;
-						} else {
-							$current_language = "invalid";
-						}						
-						continue;
-					// detect quicktags
-					} elseif($quicktags && preg_match("#^\[:([a-z-]{2,10})\]$#ism", $block, $matches)) {						
-						if($this -> language_isenabled($matches[1])) {
-							$current_language = $matches[1];
-							$languageMap[$current_language] = true;
-						} else {
-							$current_language = "invalid";
-						}
-						
-						continue;
-					} elseif(preg_match("#^<!--:-->$#ism", $block, $matches)) {
-						$current_language = "";
-						continue;
-					} elseif(preg_match("#^<!--more-->$#ism", $block, $matches)) {
-						foreach($languages as $language) {
-							$result[$language] .= $block;
-						}
-						
-						continue;
-					}
-					
-					if($current_language == "") {
-						foreach($languages as $language) {
-							$result[$language] .= $block;
-						}
-					} elseif($current_language != "invalid") {
-						$result[$current_language] .= $block;
-					}
-				}
-				
-				foreach($result as $lang => $lang_content) {
-					$result[$lang] = str_replace('[:]', '', preg_replace("#(<!--more-->|<!--nextpage-->)+$#ism", "", $lang_content));
-				}
-				
-				return $result;
-			}
-			
-			return $array;
-		}
-		
-		function language_getlanguages() {
-			global $slideshow_languageplugin, $slideshow_languagelanguages;
-			$languages = false;
-			
-			if (!empty($slideshow_languagelanguages)) {
-				return $slideshow_languagelanguages;
-			}
-		
-			switch ($slideshow_languageplugin) {
-				case 'qtranslate'					:
-					if (function_exists('qtrans_getSortedLanguages')) {
-						$languages = qtrans_getSortedLanguages();
-					}
-					break;
-				case 'qtranslate-x'					:
-					if (function_exists('qtranxf_getSortedLanguages')) {
-						$languages = qtranxf_getSortedLanguages();
-					}
-					break;
-				case 'wpml'							:				
-					if (function_exists('icl_get_languages')) {
-						$icl_languages = icl_get_languages();
-						$languages = array();
-						foreach ($icl_languages as $lang => $icl_language) {
-							$languages[] = $lang;
+						if (!empty($languages[$language]['translated_name'])) {
+							$name = $languages[$language]['translated_name'];
 						}
 					}
 					break;
 			}
-			
-			$slideshow_languagelanguages = $languages;
-			return $languages;
 		}
+		
+		${'slideshow_languagename_' . $language} = $name;
+		return $name;
+	}
 	
-	/*function language_do() {
-		
-		if ($this -> is_plugin_active('qtranslate')) {
+	function language_do() {
+		global $slideshow_languageplugin;
+	
+		if (empty($slideshow_languageplugin)) {			
+			if ($this -> is_plugin_active('qtranslate')) {
+				$slideshow_languageplugin = "qtranslate";
+				return true;
+			} elseif ($this -> is_plugin_active('qtranslate-x')) {
+				$slideshow_languageplugin = 'qtranslate-x';
+				return true;
+			} elseif ($this -> is_plugin_active('wpml')) {
+				if (!empty($_GET['lang']) && $_GET['lang'] == "all") {
+					return false;
+				}
+			
+				$slideshow_languageplugin = "wpml";
+				return true;
+			}
+		} else {
 			return true;
-		} 
+		}
 		
 		return false;
 	}
 	
-	function language_getlanguages() {
-		if ($this -> language_do()) {
-			if (function_exists('qtrans_getSortedLanguages')) {
-				if ($languages = qtrans_getSortedLanguages()) {
-					return $languages;
-				}
-			}
+	function language_current() {
+		global $slideshow_languageplugin, $slideshow_languagecurrent;
+		$current = false;
+		
+		if (!empty($slideshow_languagecurrent)) {
+			return $slideshow_languagecurrent;
 		}
 		
-		return false;
+		switch ($slideshow_languageplugin) {
+			case 'qtranslate'			:
+				if (function_exists('qtrans_getLanguage')) {
+					$current = qtrans_getLanguage();
+				}
+				break;
+			case 'qtranslate-x'			:
+				if (function_exists('qtranxf_getLanguage')) {
+					$current = qtranxf_getLanguage();
+				}
+				break;
+			case 'wpml'					:
+				$current = ICL_LANGUAGE_CODE;
+				break;
+		}
+		
+		$slideshow_languagecurrent = $current;
+		return $current;
 	}
 	
 	function language_flag($language = null) {
+		global $slideshow_languageplugin, ${'slideshow_languageflag_' . $language};
 		$flag = false;
+		
+		if (!empty(${'slideshow_languageflag_' . $language})) {
+			return ${'slideshow_languageflag_' . $language};
+		}
 	
-		if ($this -> language_do()) {
-			global $q_config;
-			$flag = '<img src="' . content_url() . '/' . $q_config['flag_location'] . '/' . $q_config['flag'][$language] . '" alt="' . $language . '" />';
+		switch ($slideshow_languageplugin) {
+			case 'qtranslate'			:
+			case 'qtranslate-x'			:
+				global $q_config;
+				$flag = '<img src="' . content_url() . '/' . $q_config['flag_location'] . '/' . $q_config['flag'][$language] . '" alt="' . $language . '" />';
+				break;
+			case 'wpml'					:
+				if (function_exists('icl_get_languages')) {
+					$languages = icl_get_languages();
+					$flag = '<img src="' . $languages[$language]['country_flag_url'] . '" alt="' . $language . '" />';
+				}
+				break;
 		}
 		
+		${'slideshow_languageflag_' . $language} = $flag;
 		return $flag;
-	}*/
+	}
+	
+	function language_isenabled($language = null) {
+		$enabled = false;
+	
+		if (!empty($language)) {
+			global $slideshow_languageplugin, ${'slideshow_languageenabled_' . $language};
+			
+			if (!empty(${'slideshow_languageenabled_' . $language})) {
+				return ${'slideshow_languageenabled_' . $language};
+			}
+		
+			switch ($slideshow_languageplugin) {
+				case 'qtranslate'				:
+					$enabled = qtrans_isEnabled($language);
+					break;
+				case 'qtranslate-x'				:
+					$enabled = qtranxf_isEnabled($language);
+					break;
+				case 'wpml'						:
+					if (function_exists('icl_get_languages')) {
+						$languages = icl_get_languages();
+						if (!empty($languages[$language])) {
+							$enabled = true;
+						}
+					}
+					break;
+			}
+		}
+		
+		${'slideshow_languageenabled_' . $language} = $enabled;
+		return $enabled;
+	}
+	
+	function language_join($texts = array(), $tagTypeMap = array(), $strip_tags = false) {
+		if(!is_array($texts)) $texts = $this -> language_split($texts, false);
+		$split_regex = "#<!--more-->#ism";
+		$max = 0;
+		$text = "";
+		$languages = $this -> language_getlanguages();
+		
+		foreach ($languages as $language) {
+			$tagTypeMap[$language] = true;
+		}
+		
+		foreach($languages as $language) {
+			if (!empty($texts[$language])) {
+				$texts[$language] = preg_split($split_regex, $texts[$language]);
+				if(sizeof($texts[$language]) > $max) $max = sizeof($texts[$language]);
+			}
+		}
+		
+		for ($i = 0; $i < $max; $i++) {
+			if($i>=1) {
+				$text .= '<!--more-->';
+			}
+			foreach($languages as $language) {
+				if (isset($texts[$language][$i]) && $texts[$language][$i] !== '') {
+					
+					if ($strip_tags) {
+						$texts[$language][$i] = strip_tags($texts[$language][$i]);
+					}
+					
+					if (empty($tagTypeMap[$language])) {
+						$text .= '<!--:'.$language.'-->'.$texts[$language][$i].'<!--:-->';
+					} else {
+						$text .= "[:{$language}]{$texts[$language][$i]}";
+					}
+				}
+			}
+		}
+		
+		return $text;
+	}
+	
+	function language_split($text, $quicktags = true, array $languageMap = NULL) {
+		$array = false;
+		
+		if (!empty($text)) {	
+			//init vars
+			$split_regex = "#(<!--[^-]*-->|\[:[a-z-]{2,10}\])#ism";
+			$current_language = "";
+			$result = array();
+			
+			$languages = $this -> language_getlanguages();
+			foreach ($languages as $language) {
+				$result[$language] = "";
+			}
+			
+			// split text at all xml comments
+			$blocks = preg_split($split_regex, $text, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+			
+			foreach($blocks as $block) {
+				# detect language tags
+				if(preg_match("#^<!--:([a-z-]{2,10})-->$#ism", $block, $matches)) {
+					if($this -> language_isenabled($matches[1])) {
+						$current_language = $matches[1];
+						$languageMap[$current_language] = false;
+					} else {
+						$current_language = "invalid";
+					}						
+					continue;
+				// detect quicktags
+				} elseif($quicktags && preg_match("#^\[:([a-z-]{2,10})\]$#ism", $block, $matches)) {						
+					if($this -> language_isenabled($matches[1])) {
+						$current_language = $matches[1];
+						$languageMap[$current_language] = true;
+					} else {
+						$current_language = "invalid";
+					}
+					
+					continue;
+				} elseif(preg_match("#^<!--:-->$#ism", $block, $matches)) {
+					$current_language = "";
+					continue;
+				} elseif(preg_match("#^<!--more-->$#ism", $block, $matches)) {
+					foreach($languages as $language) {
+						$result[$language] .= $block;
+					}
+					
+					continue;
+				}
+				
+				if($current_language == "") {
+					foreach($languages as $language) {
+						$result[$language] .= $block;
+					}
+				} elseif($current_language != "invalid") {
+					$result[$current_language] .= $block;
+				}
+			}
+			
+			foreach($result as $lang => $lang_content) {
+				$result[$lang] = str_replace('[:]', '', preg_replace("#(<!--more-->|<!--nextpage-->)+$#ism", "", $lang_content));
+			}
+			
+			return $result;
+		}
+		
+		return $array;
+	}
+	
+	function language_getlanguages() {
+		global $slideshow_languageplugin, $slideshow_languagelanguages;
+		$languages = false;
+		
+		if (!empty($slideshow_languagelanguages)) {
+			return $slideshow_languagelanguages;
+		}
+	
+		switch ($slideshow_languageplugin) {
+			case 'qtranslate'					:
+				if (function_exists('qtrans_getSortedLanguages')) {
+					$languages = qtrans_getSortedLanguages();
+				}
+				break;
+			case 'qtranslate-x'					:
+				if (function_exists('qtranxf_getSortedLanguages')) {
+					$languages = qtranxf_getSortedLanguages();
+				}
+				break;
+			case 'wpml'							:				
+				if (function_exists('icl_get_languages')) {
+					$icl_languages = icl_get_languages();
+					$languages = array();
+					foreach ($icl_languages as $lang => $icl_language) {
+						$languages[] = $lang;
+					}
+				}
+				break;
+		}
+		
+		$slideshow_languagelanguages = $languages;
+		return $languages;
+	}
 	
 	function is_plugin_active($name = null, $orinactive = false) {
 		if (!empty($name)) {		
@@ -1300,7 +1393,7 @@ class GalleryPlugin extends GalleryCheckinit {
 		if (!empty($file)) {
 			$this -> plugin_name = basename(dirname(__FILE__));
 			$this -> plugin_base = rtrim(dirname(__FILE__), DS);
-			$this -> sections = (object) $this -> sections;
+			$this -> sections = apply_filters('slideshow_sections', (object) $this -> sections);
 			
 			$theme_serve = false;
 			$filename = $file . '.php';
